@@ -1,7 +1,7 @@
 <template>
   <div class="page-container clearfix">
     <transition name="l">
-    <div class="page-sidebar fl page-scroll" ref="l">
+    <div class="page-sidebar fl page-scroll" ref="l" v-show="flag">
       <div class="page-detail">
         <!-- Site header  -->
         <header class="site-header">
@@ -86,7 +86,6 @@
       </div>
     </div>
     </transition>
-    <transition name="r">
     <div class="main-container fr" ref="r">
       <div class="main-top flex">
         <i class="icon icon-menu" @click="toggleMenu"></i>
@@ -97,7 +96,6 @@
       </p>
       <router-view></router-view>
     </div>
-    </transition>
   </div>
 </template>
 
@@ -106,8 +104,7 @@ export default {
     data() {
         return {
           title: '首页',
-          flag: false,
-          showL: true
+          flag: true
         }
     },
     methods: {
@@ -115,19 +112,20 @@ export default {
         this.title = title
       },
       toggleMenu() {
-        if( !this.flag ) {
+        if( this.flag ) {
           this.$refs.r.style.width = '100%'
-          this.$refs.l.style.width = 0
-          this.flag = true
+          this.flag = false
         }else {
           this.$refs.r.style.width = '85.4%'
-          this.$refs.l.style.width = '14.6%'
-          this.flag = false
+          this.flag = true
         }
       },
       loginout() {
 
       }
+    },
+    watch: {
+      
     }
 };
 </script>
@@ -137,7 +135,6 @@ html,body {
 }
 .page-container {
     width: 100%;
-    /* height: 100%; */
     position: relative;
     min-width: 1220px;
 }
@@ -177,9 +174,11 @@ html,body {
     display: block;
     padding: 14px 8.2%;
     color: #a2aab2;
+    transition: all .2s;
 }
 .main-menu>li>a:hover {
   color: #fff;
+  background: #001529;
 }
 .in {
     background-color: #001529;
@@ -238,44 +237,6 @@ html,body {
     background: url(./assets/images/13.png) 0px 1px no-repeat;
 }
 
-.page-footer {
-    width: 100%;
-    margin-top: 70px;
-}
-
-.page-footer ul {
-    width: 100%;
-    text-align: center;
-}
-
-.person {
-    font-size: 1.1em;
-    color: #D8D8D8;
-    margin-bottom: 4px;
-}
-
-.time {
-    font-size: 0.875em;
-    color: #777;
-}
-
-.logout {
-    font-size: 0.875em;
-    margin: 10px 0 15px 0;
-}
-
-.logout a {
-    color: #F68271;
-}
-
-.version {
-    color: #777777;
-    font-size: 0.9em;
-}
-
-.home {
-    margin-top: 25px;
-}
 /*导航侧边框*/
 
 .page-simple {
@@ -301,7 +262,7 @@ html,body {
 .main-container {
     width: 85.4%;
     min-height: 560px;
-    
+    transition: width .5s;
 }
 
 .main-top {
@@ -320,23 +281,13 @@ html,body {
     font-size: 1em;
 }
 .main-title {
-  height: 70px;
-  line-height: 70px;
+  height: 60px;
+  line-height: 60px;
   font-size: 16px;
   color: #858585;
   padding-left: 24px;
 }
-.color {
-    color: #F9AA9E!important;
-}
-.color>span.level2{
-    color:#858585;
-}
-.page-footer > ul > li:first-child > img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-}
+
 .mask {
     position: absolute;
     left: 0;
@@ -347,16 +298,10 @@ html,body {
     background: rgba(0, 0, 0, .5);
     z-index: 999;
 }
-/* .l-enter-active, .l-leave-active {
+.l-enter-active, .l-leave-active {
   transition: all .5s;
 }
 .l-enter, .l-leave-to {
-  left: -200px;
+  left: -14.6%;
 }
-.r-enter-active, .r-leave-active {
-  transition: all .5s;
-}
-.r-enter, .r-leave-to {
-  width: 100%;
-} */
 </style>
