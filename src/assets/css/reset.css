@@ -1,0 +1,30 @@
+/*reset*/
+@charset "utf-8";
+/* CSS Document */
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input,button,a{margin:0;padding:0;}
+body{background-color:#F5F5F5;font-family: "Microsoft YaHei",arial;font-size: 13px;}
+h1,h2,h3,h4{font-weight:normal}
+img{border:none;}
+li{list-style:none;}
+input,select,textarea,button{outline:none;border:none; background:none;}
+textarea{resize:none;font-family: "Microsoft YaHei",arial;}
+a{color:#FFFAF9;text-decoration:none;outline:0;}
+a:hover{text-decoration:none;cursor: pointer;}
+
+/*清浮动*/
+.clearfix:after{content:"";display:block;clear:both;height: 0;visibility: hidden}
+.clearfix{zoom:1;}
+.fl{float:left;}
+.fr{float:right;}
+
+.page-scroll {
+    -ms-overflow-style:none;
+}
+.page-scroll::-webkit-scrollbar{width:0px}
+/* 去除input[type="number"]上下箭头 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+.flex{display: flex;justify-content: space-between;align-items: center;}
