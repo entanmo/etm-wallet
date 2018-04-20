@@ -17,7 +17,38 @@
         </ul>
     </div>
     <div class="transaction">
-      
+      <p>交易记录</p>
+      <!-- table -->
+      <el-table :data="tableData" style="width: 100%;">
+      <el-table-column
+        prop="date"
+        label="ID">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="类型">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="发送者">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="接收者">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="日期">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="备注">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="金额">
+      </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -26,6 +57,27 @@
 export default {
   components: {
 
+  },
+  data () {
+    return {
+      tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }]
+    }
   }
 }
 </script>
@@ -34,6 +86,7 @@ export default {
 .w {
     padding: 0 24px;
 }
+/*主要信息*/
 .info {
   width: 100%;
   height: 100px;
@@ -51,7 +104,6 @@ export default {
   height: 100%;
   text-align: center;
   line-height: 30px;
-  /* flex-direction: column; */
 }
 .info li > p {
   border-right: 1px solid #e9e9e9;
@@ -66,6 +118,15 @@ export default {
 .info li > p:last-child {
   color: #4b4b4b;
   font-size: 24px;
+}
+/*交易记录*/
+.transaction {
+  margin-top: 20px;
+}
+.transaction p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 </style>
 
