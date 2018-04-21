@@ -8,6 +8,8 @@ const blockScan = () => import('@/components/block-scan')
 const vote = () => import('@/components/vote')
 const transfer = () => import('@/components/transfer')
 const node = () => import('@/components/node')
+const applist = () => import('@/base/applist')
+const download = () => import('@/base/download')
 Vue.use(Router)
 
 export default new Router({
@@ -27,7 +29,18 @@ export default new Router({
     },
     {
       path: '/application',
-      component: application
+      component: application,
+      redirect: '/application/applist',
+      children: [
+        {
+          path: 'applist',
+          component: applist
+        },
+        {
+          path: 'download',
+          component: download
+        }
+      ]
     },
     {
       path: '/block-appear',

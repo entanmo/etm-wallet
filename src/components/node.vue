@@ -1,6 +1,6 @@
 <template>
   <div>
-      <!-- 节点 -->
+      节点
   </div>
 </template>
 

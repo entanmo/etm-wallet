@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <!-- 区块浏览 -->
+  <div class="w">
+    
   </div>
 </template>
 
@@ -12,5 +12,8 @@ export default {
 </script>
 
 <style scoped>
-
+.w {
+  padding: 0 24px;
+  /* background: #fff; */
+}
 </style>

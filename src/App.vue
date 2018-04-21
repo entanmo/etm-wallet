@@ -19,14 +19,14 @@
             </router-link>
           </li>
         </ul>
-        <ul class="main-menu">
+        <!-- <ul class="main-menu">
           <li class="has-sub" @click="changeTitle('资产')">
             <router-link to="/assets">
               <i class="icon icon-post"></i>
               <span class="title">资产</span>
             </router-link>
           </li>
-        </ul>
+        </ul> -->
         <ul class="main-menu">
           <li class="has-sub" @click="changeTitle('个人中心')">
             <router-link to="/person">
@@ -96,6 +96,7 @@
       </p>
       <router-view></router-view>
     </div>
+    <div class="mask" v-show="showPop"></div>
   </div>
 </template>
 
@@ -104,8 +105,14 @@ export default {
     data() {
         return {
           title: '首页',
-          flag: true
+          flag: true,
+          showPop: false
         }
+    },
+    updated () {
+      Bus.$on('showMask', (data) => {
+        this.showPop = data
+      })
     },
     methods: {
       changeTitle(title) {
@@ -261,7 +268,7 @@ html,body {
 
 .main-container {
     width: 85.4%;
-    min-height: 560px;
+    min-height: 780px;
     transition: width .5s;
 }
 

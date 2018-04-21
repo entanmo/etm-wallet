@@ -8,7 +8,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 import './assets/css/reset.css'
 Vue.config.productionTip = false
-
+window.Bus = new Vue()
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
