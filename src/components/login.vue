@@ -24,7 +24,7 @@
 	</div>
 	<footer>
 	  <p><span>帮助</span><span>隐私</span><span>条款</span></p>
-      <p>copyright© 2018 etm-wallet</p>
+      <p>copyright© 2018 Etm-Wallet</p>
 	</footer>
   </div>
 </template>
@@ -33,12 +33,15 @@
 export default {
   data () {
       return {
-        showPassword: true
+        showPassword: false
       }
+  },
+  created () {
+      
   },
   computed: {
       toggelIcon() {
-        return this.showPassword ? 'icon-show' : 'icon-hide'
+        return this.showPassword ? 'icon-hide' : 'icon-show'
       }
   },
   methods: {

@@ -19,13 +19,13 @@ const voteforme = () => import('@/base/vote/vote-for-me')
 const login = () => import('@/components/login')
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   linkActiveClass: 'in',
   mode: 'history',
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/first-view'
     },
     {
       path: '/login',
@@ -107,4 +107,19 @@ export default new Router({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  let pw = sessionStorage.getItem('pw')
+    if( pw ) {
+      next()
+    }else {
+      if(to.path === '/login') {
+        next()
+      }else {
+        next({ path: '/login' })
+      }
+    }
+  
+})
+
+export default router
 

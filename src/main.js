@@ -10,36 +10,22 @@ Vue.use(TableColumn)
 import './assets/css/reset.css'
 Vue.config.productionTip = false
 window.Bus = new Vue()
-// router.beforeEach((to, from, next) => {
-//   console.log(to)
-//   console.log(from)
-//   let pw = sessionStorage.getItem('pw')
-//   // if( pw == null ) {
-//   //   next('/login')
-//   // }else {
-//   //   next('/')
-//   // }
-//   next()
-  
-// })
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App, Login },
-  template: '<Login/>',
+  // template: '<Login/>',
+  render(h) {
+    return h(this.pw?'app':'login')
+  },
   data () {
     return {
       pw: ''
     }
   },
   created () {
-    // this.pw = sessionStorage.getItem('pw')
-    // if( this.pw == null || !this.pw ) {
-    //   sessionStorage.setItem('pw', 'zzzzz')
-    //   this.pw = sessionStorage.getItem('pw')
-    //   console.log(this.pw)
-    // }
+    this.pw = sessionStorage.getItem('pw')
   }
 })
