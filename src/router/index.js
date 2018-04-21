@@ -16,6 +16,7 @@ const lockup = () => import('@/base/person/lock-up')
 const trusteelist = () => import('@/base/vote/trustee-list')
 const record = () => import('@/base/vote/record')
 const voteforme = () => import('@/base/vote/vote-for-me')
+const login = () => import('@/components/login')
 Vue.use(Router)
 
 export default new Router({
@@ -24,7 +25,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/first-view'
+      redirect: '/login'
+    },
+    {
+      path: '/login',
+      component: login
     },
     {
       path: '/first-view',
@@ -101,3 +106,5 @@ export default new Router({
     },
   ]
 })
+
+
