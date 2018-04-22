@@ -26,6 +26,6 @@ new Vue({
     }
   },
   created () {
-    this.pw = sessionStorage.getItem('pw')
+    this.pw = localStorage.getItem('pw')
   }
 })

@@ -108,7 +108,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let pw = sessionStorage.getItem('pw')
+  let pw = localStorage.getItem('pw')
     if( pw ) {
       next()
     }else {
