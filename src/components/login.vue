@@ -6,11 +6,13 @@
 		</div>
 		<form class="login_form">
 			<div style="position:relative;">
-			<input class="pwd_ipt" :type="showPassword ? 'text' : 'password'" placeholder="输入主密码" />
+			<input class="pwd_ipt" :type="showPassword ? 'text' : 'password'" placeholder="输入主密码" ref="pw"/>
             <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
 			</div>
 			<div class="check_div">
-			   	<input class="check_ipt" type="checkbox" id="check"/> <label for="check" class="radioInput"></label>保持登录状态
+			   	<input class="check_ipt" type="checkbox" id="check" v-model="toggleSavePW"/>
+				<label for="check" class="radioInput"></label>
+				保持登录状态
 			</div>
 			<div>
 			<select class="login_select" name="">
@@ -18,7 +20,7 @@
 			</select>
 			</div>
 			<div class="div_btn">
-			<button type="button">登录</button><button type="button">新账户</button>
+			<button type="button" @click="login">登录</button><button type="button">新账户</button>
 			</div>
 		</form>
 	</div>
@@ -33,7 +35,8 @@
 export default {
   data () {
       return {
-        showPassword: false
+		showPassword: false,
+		toggleSavePW: true
       }
   },
   created () {
@@ -45,6 +48,16 @@ export default {
       }
   },
   methods: {
+	  login() {
+		//   登录时是否选中“记住密码”，如果是，则保存密码
+		if(this.toggleSavePW) {
+		  localStorage.setItem('pw', this.$refs.pw.value)
+		}
+		this.$router.push('/')
+		setTimeout(() => {
+		  window.location.reload()
+		}, 500)
+	  }
   }
 }
 </script>

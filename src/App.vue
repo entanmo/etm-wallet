@@ -128,7 +128,8 @@ export default {
         }
       },
       loginout() {
-
+        localStorage.removeItem('pw')
+        window.location.reload()
       }
     },
     watch: {
