@@ -108,7 +108,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let pw = localStorage.getItem('pw')
+  let pw = localStorage.getItem('etmaddress')
     if( pw ) {
       next()
     }else {

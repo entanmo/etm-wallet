@@ -7,7 +7,7 @@
 		<form class="login_form">
 			<div style="position:relative;">
 			<input class="pwd_ipt" :type="showPassword ? 'text' : 'password'" placeholder="输入主密码" ref="pw"/>
-            <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
+        <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
 			</div>
 			<div class="check_div">
 			   	<input class="check_ipt" type="checkbox" id="check" v-model="toggleSavePW"/>
@@ -24,10 +24,6 @@
 			</div>
 		</form>
 	</div>
-	<footer>
-	  <p><span>帮助</span><span>隐私</span><span>条款</span></p>
-      <p>copyright© 2018 Etm-Wallet</p>
-	</footer>
   </div>
 </template>
 
@@ -35,28 +31,51 @@
 export default {
   data () {
       return {
-		showPassword: false,
-		toggleSavePW: true
+		    showPassword: false,
+				toggleSavePW: true,
+				publicKey: '',
+				address: ''
       }
   },
   created () {
-      
+    
   },
   computed: {
       toggelIcon() {
         return this.showPassword ? 'icon-hide' : 'icon-show'
       }
-  },
+	},
+	// this.$store.commit('getAccount', res.account)
+					// this.$store.commit('getLatestBlock', res.latestBlock)
+					// this.$store.commit('getVersion', res.version)
   methods: {
-	  login() {
-		//   登录时是否选中“记住密码”，如果是，则保存密码
-		if(this.toggleSavePW) {
-		  localStorage.setItem('pw', this.$refs.pw.value)
-		}
-		this.$router.push('/')
-		setTimeout(() => {
-		  window.location.reload()
-		}, 500)
+		login() {
+		  //密码
+			let password = this.$refs.pw.value
+			// 根据密码生成公钥
+			let publicKey = entanmoJs.crypto.getKeys(password).publicKey
+			// // 根据密码生成地址
+			this.address = entanmoJs.crypto.getAddress(this.publicKey)
+			// 登录
+			this.$http.post('/api/accounts/open2/', {
+					publicKey: this.publicKey
+				}).then(res => {
+				if(res.data.success) {
+					// this.$store.commit('setAddress', this.address)
+					this.$router.push('/')
+		  		setTimeout(() => {
+		    		window.location.reload()
+					}, 500)
+				}
+			}).catch(err => {
+				console.log(err)
+			})
+			//  登录时是否选中“记住密码”，如果是，则保存密码
+		  if(this.toggleSavePW) {
+		    localStorage.setItem('etmaddress', this.address)
+			}
+			// 登录跳转
+		  
 	  }
   }
 }

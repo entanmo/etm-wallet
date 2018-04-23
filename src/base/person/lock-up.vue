@@ -19,7 +19,15 @@ export default {
     return {
       
     }
-  }
+	},
+	mounted () {
+		this._setPassword()
+	},
+	methods: {
+		_setPassword() {
+			this.$http.put('/api/signatures', )
+		}
+	}
 }
 </script>
 

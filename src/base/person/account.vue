@@ -3,13 +3,13 @@
     <p class="title">账号信息</p>
     <div class="list">
         <ul>
-            <li><span>总余额：</span><span>fdfdfdfdfdfdfdffdfdfdf</span></li>
-            <li><span>地址：</span><span>fdfdfdfdfdfdfdffdfdfdf</span></li>
-            <li><span>二级密码：</span><span>23432432432434</span></li>
-            <li><span>锁仓状态：</span><span>湖北省武汉市西湖区转炉</span></li>
-            <li><span>公钥：</span><span>3423432434324324324343243243</span></li>
-            <li><span>主秘钥二维码：</span><span><a href="#">点击获取</a></span></li>
-            <li><span>地址二维码：</span><span><a href="#">点击获取</a></span></li>
+            <li><span>总余额：</span><span>{{accountInfo.balance}}</span></li>
+            <li><span>地址：</span><span>{{accountInfo.address}}</span></li>
+            <li><span>二级密码：</span><span>?</span></li>
+            <li><span>锁仓状态：</span><span>?</span></li>
+            <li><span>公钥：</span><span>{{accountInfo.publicKey}}</span></li>
+            <li><span>主秘钥二维码：</span><span><a href="javascript:;" @click="keyQrcode">点击获取</a></span></li>
+            <li><span>地址二维码：</span><span><a href="javascript:;">点击获取</a></span></li>
         </ul>
     </div>
   </div>
@@ -21,7 +21,27 @@ export default {
   },
   data () {
     return {
-      
+      accountInfo: {}
+    }
+  },
+  mounted () {
+    let address = localStorage.getItem('etmaddress')
+    this._getAccounts(address)
+  },
+  methods: {
+    _getAccounts(address) {
+      this.$http.get('/api/accounts', {
+        params: {
+          address
+        }
+      }).then(res => {
+        if(res.data.success) {
+          this.accountInfo = Object.assign({}, res.data.account, res.data.latestBlock, res.data.version)
+        }
+      })
+    },
+    keyQrcode() {
+
     }
   }
 }
