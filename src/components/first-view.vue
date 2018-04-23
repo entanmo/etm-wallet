@@ -19,8 +19,8 @@
     <div class="transaction">
       <p>交易记录</p>
       <!-- table -->
-             <div class="event">
-            <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="true">
+          <div class="event" >
+            <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
                 <thead class="table_th">
                     <th>ID</th>
                     <th>类型</th>
@@ -51,8 +51,8 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading>
-            <no-data v-show="!beforeConfirm.length && cannotfind"></no-data> -->
+            <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
+            <no-data v-show="!tableData.length"></no-data>
         </div>
         <page v-show="PageTotal > 1" :PageTotal="PageTotal" :routeName="routeName" @renderDiff="renderDiff"></page>
     </div>
@@ -61,9 +61,10 @@
 
 <script>
 import Page from '../base/page'
+import NoData from '../base/nodata'
 export default {
   components: {
-    Page
+    Page,NoData
   },
   created () {
     let address = localStorage.getItem('etmaddress')
@@ -250,11 +251,13 @@ export default {
         }
       }).then(res => {
         if(res.data.success) {
-          // this.tableData = res.data.transactions
+          this.tableData = res.data.transactions
         }
       })
     },
     totalAmount() {
+      // 如果没有数据
+      if(!this.tableData.length) return
       let values = this.tableData.map(item => item.amount / 100000000)
       return values.reduce((prev,cur) => {
               return prev + cur

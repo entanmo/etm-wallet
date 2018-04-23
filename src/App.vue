@@ -98,7 +98,7 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-    <div class="mask" v-show="showPop"></div>
+    <div class="mask" v-show="showPop" @click="hidePop"></div>
   </div>
 </template>
 
@@ -132,6 +132,10 @@ export default {
       loginout() {
         localStorage.removeItem('pw')
         window.location.reload()
+      },
+      hidePop() {
+        this.showPop = false
+        Bus.$emit('hideQrcode', true)
       }
     },
     watch: {

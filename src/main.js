@@ -7,9 +7,10 @@ import Login from './components/login'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-// import { Table, TableColumn} from 'element-ui'
-// Vue.use(Table)
-// Vue.use(TableColumn)
+import { Table, TableColumn} from 'element-ui'
+Vue.use(Table)
+Vue.use(TableColumn)
+// qrcode
 import VueQrcode from '@xkeshi/vue-qrcode'
 Vue.component('qrcode', VueQrcode)
 
@@ -19,6 +20,7 @@ import './assets/css/public.css'
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
+
 window.Bus = new Vue()
 
 /* eslint-disable no-new */

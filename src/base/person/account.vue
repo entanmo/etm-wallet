@@ -12,7 +12,10 @@
             <li><span>地址二维码：</span><span><a href="javascript:;" @click="addressQrcode">点击获取</a></span></li>
         </ul>
     </div>
-    <qrcode :value="address" :options="{ size: 400 }" v-show="showQrcode"></qrcode>
+    <div class="popout" v-show="showQrcode">
+      <!-- <div class="close"><span @click="hideQrcode">×</span></div> -->
+      <qrcode :value="address" :options="{ size: 300 }"></qrcode>
+    </div>
   </div>
 </template>
 
@@ -31,6 +34,11 @@ export default {
     this.address = localStorage.getItem('etmaddress')
     this._getAccounts(this.address)
   },
+  updated () {
+    Bus.$on('hideQrcode', data => {
+      this.showQrcode = false
+    })
+  },
   methods: {
     _getAccounts(address) {
       this.$http.get('/api/accounts', {
@@ -48,6 +56,11 @@ export default {
     },
     addressQrcode() {
       this.showQrcode = true
+      Bus.$emit('showMask', true)
+    },
+    hideQrcode() {
+      this.showQrcode = false
+      Bus.$emit('showMask', false)
     }
   }
 }
@@ -85,5 +98,29 @@ export default {
 }
 .list>ul>li>span>a{
 	color: #5093fc;
+}
+
+/*弹框*/
+.popout {
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+  z-index: 1000;
+}
+.close {
+  font-size: 36px;
+  text-align: right;
+}
+.close span {
+  display: inline-block;
+  width: 47px;
+  text-align: center;
+  cursor: pointer;
 }
 </style>

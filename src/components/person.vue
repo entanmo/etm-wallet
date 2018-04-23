@@ -7,7 +7,9 @@
         <router-link to="lock-up" tag="li">锁仓</router-link>
       </ul>
       <div class="nav-content">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
   </div>
