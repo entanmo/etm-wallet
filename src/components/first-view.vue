@@ -19,25 +19,29 @@
     <div class="transaction">
       <p>交易记录</p>
       <!-- table -->
-      <el-table :data="tableData" style="width: 100%;" :summary-method="getSummaries" show-summary >
+      <el-table :data="tableData" style="width: 100%;" :summary-method="getSummaries" show-summary>
       <el-table-column
         prop="id"
         label="ID"
-        style="color:green">
+        width="200"
+        style="color:#eee;"
+        >
       </el-table-column>
       <el-table-column
         label="类型">
-        <template slot-scope="scope">
+        <template slot-scope="scope" style="color:#eee;">
         {{mapType(scope.row.type)}}
         </template>
       </el-table-column>
       <el-table-column
         prop="senderId"
-        label="发送者">
+        label="发送者"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="recipientId"
-        label="接收者">
+        label="接收者"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="timestamp"
@@ -52,7 +56,7 @@
       <el-table-column
         label="金额">
         <template slot-scope="scope">
-        {{Number(scope.row.amount / 100000000)}}
+        {{scope.row.amount / 100000000}}
         </template>
       </el-table-column>
       </el-table>
@@ -159,7 +163,6 @@ export default {
       })
     },
     getSummaries(param) {
-      console.log(param)
       const { columns, data } = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -172,37 +175,12 @@ export default {
             return
           }
           if(index === 6) {
-            // const values = data.map(item => item[column.property])
-            // sums[index] = values.reduce((prev, curr) => {
-            //   const value = Number(curr);
-            //   if (!isNaN(value)) {
-            //     return prev + curr;
-            //   } else {
-            //     return prev;
-            //   }
-            // }, 0);
-            const values = data.map(item => item.amount)
+            const values = data.map(item => item.amount / 100000000)
             sums[index] = values.reduce((prev,cur) => {
               return prev + cur
             })
-            // data.forEach(item => {
-            //   sums[index] += item.amount
-            // })
           }
-          // const values = data.map(item => item[column.property]);
-          // if (!values.every(value => isNaN(value))) {
-          //   sums[index] = values.reduce((prev, curr) => {
-          //     const value = Number(curr);
-          //     if (!isNaN(value)) {
-          //       return prev + curr;
-          //     } else {
-          //       return prev;
-          //     }
-          //   }, 0);
-          //   sums[index] += ' 元';
-          // } else {
-          //   sums[index] = '';
-          // }
+
         });
 
         return sums;
@@ -233,6 +211,9 @@ export default {
 </script>
 
 <style scoped>
+el-table__row > td:first-child > .cell {
+  color: blue;
+}
 .w {
     padding: 0 24px;
 }

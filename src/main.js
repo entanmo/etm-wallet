@@ -24,10 +24,10 @@ new Vue({
   router,
   store,
   components: { App, Login },
-  template: '<App/>',
-  // render(h) {
-  //   return h(this.etmaddress?'app':'login')
-  // },
+  // template: '<App/>',
+  render(h) {
+    return h(this.etmaddress ? 'app' : 'login')
+  },
   data () {
     return {
       pw: ''

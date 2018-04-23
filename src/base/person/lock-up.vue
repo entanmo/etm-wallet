@@ -21,12 +21,10 @@ export default {
     }
 	},
 	mounted () {
-		this._setPassword()
+		
 	},
 	methods: {
-		_setPassword() {
-			this.$http.put('/api/signatures', )
-		}
+		
 	}
 }
 </script>
@@ -69,11 +67,8 @@ export default {
 .pwd_form>p{
 	font-family: MicrosoftYaHei;
 	font-size: 14px;
-	line-height: 40px;
+	line-height: 60px;
 	color: #343434;
-	padding-top: 47px;
-	padding-bottom: 27px;
-	line-height: 14px;
 }
 .pwd_form label{
 	width: 137px;

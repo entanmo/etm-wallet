@@ -45,13 +45,11 @@ export default {
         return this.showPassword ? 'icon-hide' : 'icon-show'
       }
 	},
-	// this.$store.commit('getAccount', res.account)
-					// this.$store.commit('getLatestBlock', res.latestBlock)
-					// this.$store.commit('getVersion', res.version)
   methods: {
 		login() {
-		  //密码
+		    //密码
 			let password = this.$refs.pw.value
+			localStorage.setItem('etmsecret', password)
 			// 根据密码生成公钥
 			let publicKey = entanmoJs.crypto.getKeys(password).publicKey
 			// // 根据密码生成地址

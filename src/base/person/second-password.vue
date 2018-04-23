@@ -1,16 +1,17 @@
 <template>
   <div class="w">
     <p class="title">设置二级密码</p>
-    <form class="pwd_form">
+    <div class="pwd_form">
     <div>
-    <label>密码&nbsp;&nbsp;：</label><input type="password" placeholder="请输入8-16字母和数字组合" />
+    <label>密码&nbsp;&nbsp;：</label><input type="password" placeholder="请输入字母和数字组合,最短为1，最长为100" v-model="secondSecret"/>
     </div>
     <div>
-    <label>确认密码&nbsp;&nbsp;：</label><input type="password" placeholder="请再次输入" />
+    <label>确认密码&nbsp;&nbsp;：</label><input type="password" placeholder="请再次输入" v-model="confirmSecondSecret"/>
     </div>
+    <p v-show="falseSecret">两次密码输入不一致</p>
     <p>请确认您已经安全保存了二级密码，一旦丢失，您在Mole系统中的财产将无法找回，设置二级密码需要5Mole手续费</p>
-    <button type="submit">提交</button>
-    </form>
+    <button @click="setSecret">提交</button>
+    </div>
   </div>
 </template>
 
@@ -20,7 +21,23 @@ export default {
   },
   data () {
     return {
-      
+      secondSecret: '',
+      confirmSecondSecret: '',
+      falseSecret: false
+    }
+  },
+  methods: {
+    setSecret() {
+      if(this.secondSecret != this.confirmSecondSecret) {
+        this.falseSecret = true
+        return
+      }
+      this.$http.put('/api/signatures', {
+          secret: localStorage.getItem('etmsecret'),
+          secondSecret: this.secondSecret
+      }).then(res => {
+        console.log(res)
+      })
     }
   }
 }
@@ -64,11 +81,8 @@ export default {
 .pwd_form>p{
 	font-family: MicrosoftYaHei;
 	font-size: 14px;
-	line-height: 40px;
+	line-height: 60px;
 	color: #343434;
-	padding-top: 47px;
-	padding-bottom: 27px;
-	line-height: 14px;
 }
 button{
 	width: 57px;

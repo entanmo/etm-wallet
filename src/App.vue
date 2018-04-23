@@ -94,7 +94,9 @@
       <p class="main-title">
         {{title}}
       </p>
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
     <div class="mask" v-show="showPop"></div>
   </div>
