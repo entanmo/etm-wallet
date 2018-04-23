@@ -9,9 +9,10 @@
             <li><span>锁仓状态：</span><span>?</span></li>
             <li><span>公钥：</span><span>{{accountInfo.publicKey}}</span></li>
             <li><span>主秘钥二维码：</span><span><a href="javascript:;" @click="keyQrcode">点击获取</a></span></li>
-            <li><span>地址二维码：</span><span><a href="javascript:;">点击获取</a></span></li>
+            <li><span>地址二维码：</span><span><a href="javascript:;" @click="addressQrcode">点击获取</a></span></li>
         </ul>
     </div>
+    <qrcode :value="address" :options="{ size: 400 }" v-show="showQrcode"></qrcode>
   </div>
 </template>
 
@@ -21,12 +22,14 @@ export default {
   },
   data () {
     return {
-      accountInfo: {}
+      accountInfo: {},
+      showQrcode: false,
+      address: ''
     }
   },
   mounted () {
-    let address = localStorage.getItem('etmaddress')
-    this._getAccounts(address)
+    this.address = localStorage.getItem('etmaddress')
+    this._getAccounts(this.address)
   },
   methods: {
     _getAccounts(address) {
@@ -42,6 +45,9 @@ export default {
     },
     keyQrcode() {
 
+    },
+    addressQrcode() {
+      this.showQrcode = true
     }
   }
 }

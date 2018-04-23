@@ -62,11 +62,11 @@ export default {
     margin-top: 75px;
 }
 .pwd_form>div>input{
-	width: 240px;
+	width: 360px;
 	height: 32px;
 	border-radius: 4px;
-    border: solid 1px #d9d9d9;
-    padding-left: 10px;
+  border: solid 1px #d9d9d9;
+  padding-left: 10px;
 }
 .pwd_form>div>label{
 	    display: inline-block;

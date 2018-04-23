@@ -1,0 +1,96 @@
+/*分页*/
+.pag {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.pag>li {
+   display: inline-block;
+}
+
+.pag>li>a,
+.pag>li>span {
+    display: inline-block;
+    width: 33px;
+    height: 33px;
+    margin-left: -1px;
+    line-height: 33px;
+    font-size: 12px;
+    font-weight: 550;
+    color: #000;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    text-align: center;
+    margin: 0 2px;
+    user-select: none;
+    border-radius: 4px;
+}
+
+.pag>li.prev>a {
+    background-image: url(../images/left.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.pag>li.next>a {
+    background-image: url(../images/right.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.pag>li.first-page>a,
+.pag>li.last-page>a {
+    padding: 0 15px;
+    width: 60px;
+}
+
+.pag>.active>a,
+.pag>.active>a:focus,
+.pag>.active>a:hover,
+.pag>.active>span,
+.pag>.active>span:focus,
+.pag>.active>span:hover {
+    z-index: 3;
+    color: blue;
+    cursor: default;
+    border-color: blue;
+}
+.pag li.disabled>a{
+    cursor: not-allowed;
+}
+
+/* 表格样式 */
+.event{
+	background: #fff;
+	/* min-height: 440px; */
+	position: relative;
+}
+.event table{
+	text-align: center;
+	border-collapse:collapse;
+	border:none;
+}
+.event td,.event th{
+	border:solid #E5E5E5 1px;
+}
+.event th{
+	background-color: #EEEEEE;
+	line-height: 40px;
+	text-align: center;
+}
+.event tbody tr {
+	color: #999 !important;
+	font-size: 12px;
+}
+.event tr:hover {
+    background: #f8f8f8;
+}
+.event td{
+	height: 47px;
+}
+
+.event td>a:hover{
+	text-decoration: underline;
+	color: blue;
+}

@@ -19,55 +19,51 @@
     <div class="transaction">
       <p>交易记录</p>
       <!-- table -->
-      <el-table :data="tableData" style="width: 100%;" :summary-method="getSummaries" show-summary>
-      <el-table-column
-        prop="id"
-        label="ID"
-        width="200"
-        style="color:#eee;"
-        >
-      </el-table-column>
-      <el-table-column
-        label="类型">
-        <template slot-scope="scope" style="color:#eee;">
-        {{mapType(scope.row.type)}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="senderId"
-        label="发送者"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="recipientId"
-        label="接收者"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="timestamp"
-        label="日期">
-      </el-table-column>
-      <el-table-column
-        label="备注">
-        <template slot-scope="scope">
-        {{scope.row.asset}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="金额">
-        <template slot-scope="scope">
-        {{scope.row.amount / 100000000}}
-        </template>
-      </el-table-column>
-      </el-table>
+             <div class="event">
+            <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="true">
+                <thead class="table_th">
+                    <th>ID</th>
+                    <th>类型</th>
+                    <th>发送者</th>
+                    <th>接收者</th>
+                    <th>日期</th>
+                    <th>备注</th>
+                    <th>金额（Mole）</th>
+                </thead>
+                <tbody class="table_tb">
+                    <tr v-for="(item, index) in tableData" :key="index">
+                        <td style="color: blue;">{{item.id}}</td>
+                        <td>{{mapType(item.type)}}</td>
+                        <td>{{item.senderId}}</td>
+                        <td>{{item.recipientId}}</td>
+                        <td>{{item.timestamp}}</td>
+                        <td>{{item.asset}}</td>
+                        <td>{{item.amount / 100000000}}</td>
+                    </tr>
+                    <tr>
+                      <td>总计</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>{{totalAmount()}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading>
+            <no-data v-show="!beforeConfirm.length && cannotfind"></no-data> -->
+        </div>
+        <page v-show="PageTotal > 1" :PageTotal="PageTotal" :routeName="routeName" @renderDiff="renderDiff"></page>
     </div>
   </div>
 </template>
 
 <script>
+import Page from '../base/page'
 export default {
   components: {
-
+    Page
   },
   created () {
     let address = localStorage.getItem('etmaddress')
@@ -76,6 +72,8 @@ export default {
   },
   data () {
     return {
+      PageTotal: 2,
+      routeName: '',
       accountInfo: {},
       tableData: [{   
         "id": "17192581936339156329",   
@@ -133,6 +131,101 @@ export default {
         "asset": {   
 
         }   
+    },
+    {   
+        "id": "14093929199102906687",   
+        "height": "105460",   
+        "blockId": "2237504897174225512",   
+        "type": 2,   
+        "timestamp": 4380024,   
+        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
+        "senderId": "16358246403719868041",   
+        "recipientId": "16723473400748954103",   
+        "amount": 10000000000,   
+        "fee": 10000000,   
+        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
+        "signSignature": "",   
+        "signatures": null,   
+        "confirmations": "32293",   
+        "asset": {   
+
+        }   
+    },
+    {   
+        "id": "14093929199102906687",   
+        "height": "105460",   
+        "blockId": "2237504897174225512",   
+        "type": 2,   
+        "timestamp": 4380024,   
+        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
+        "senderId": "16358246403719868041",   
+        "recipientId": "16723473400748954103",   
+        "amount": 10000000000,   
+        "fee": 10000000,   
+        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
+        "signSignature": "",   
+        "signatures": null,   
+        "confirmations": "32293",   
+        "asset": {   
+
+        }   
+    },
+    {   
+        "id": "14093929199102906687",   
+        "height": "105460",   
+        "blockId": "2237504897174225512",   
+        "type": 2,   
+        "timestamp": 4380024,   
+        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
+        "senderId": "16358246403719868041",   
+        "recipientId": "16723473400748954103",   
+        "amount": 10000000000,   
+        "fee": 10000000,   
+        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
+        "signSignature": "",   
+        "signatures": null,   
+        "confirmations": "32293",   
+        "asset": {   
+
+        }   
+    },
+    {   
+        "id": "14093929199102906687",   
+        "height": "105460",   
+        "blockId": "2237504897174225512",   
+        "type": 2,   
+        "timestamp": 4380024,   
+        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
+        "senderId": "16358246403719868041",   
+        "recipientId": "16723473400748954103",   
+        "amount": 10000000000,   
+        "fee": 10000000,   
+        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
+        "signSignature": "",   
+        "signatures": null,   
+        "confirmations": "32293",   
+        "asset": {   
+
+        }   
+    },
+    {   
+        "id": "14093929199102906687",   
+        "height": "105460",   
+        "blockId": "2237504897174225512",   
+        "type": 2,   
+        "timestamp": 4380024,   
+        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
+        "senderId": "16358246403719868041",   
+        "recipientId": "16723473400748954103",   
+        "amount": 10000000000,   
+        "fee": 10000000,   
+        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
+        "signSignature": "",   
+        "signatures": null,   
+        "confirmations": "32293",   
+        "asset": {   
+
+        }   
     }
 ]
     }
@@ -157,34 +250,15 @@ export default {
         }
       }).then(res => {
         if(res.data.success) {
-          console.log(res.data)
           // this.tableData = res.data.transactions
         }
       })
     },
-    getSummaries(param) {
-      const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '总计';
-            return;
-          }
-          if(index > 0 && index < 6) {
-            sums[index] = ''
-            return
-          }
-          if(index === 6) {
-            const values = data.map(item => item.amount / 100000000)
-            sums[index] = values.reduce((prev,cur) => {
+    totalAmount() {
+      let values = this.tableData.map(item => item.amount / 100000000)
+      return values.reduce((prev,cur) => {
               return prev + cur
             })
-          }
-
-        });
-
-        return sums;
-      
     },
     mapType(type) {
       switch(type) {
@@ -205,6 +279,9 @@ export default {
         case 7: return 'OUT_TRANSFER';
         break;
       }
+    },
+    renderDiff(data) {
+
     }
   }
 }
@@ -252,7 +329,7 @@ el-table__row > td:first-child > .cell {
 }
 /*交易记录*/
 .transaction {
-  margin-top: 20px;
+  margin: 20px 0;
 }
 .transaction p {
   font-size: 20px;
