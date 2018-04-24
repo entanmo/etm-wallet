@@ -7,7 +7,7 @@
 		<form class="login_form">
 			<div style="position:relative;">
 			<input class="pwd_ipt" :type="showPassword ? 'text' : 'password'" placeholder="输入主密码" ref="pw"/>
-        <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
+            <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
 			</div>
 			<div class="check_div">
 			   	<input class="check_ipt" type="checkbox" id="check" v-model="toggleSavePW"/>
@@ -33,12 +33,13 @@ export default {
       return {
 		    showPassword: false,
 				toggleSavePW: true,
+				password: '',
 				publicKey: '',
 				address: ''
       }
   },
   created () {
-    
+    console.log(entanmoJs)
   },
   computed: {
       toggelIcon() {
@@ -48,32 +49,34 @@ export default {
   methods: {
 		login() {
 		    //密码
-			let password = this.$refs.pw.value
-			localStorage.setItem('etmsecret', password)
+			this.password = this.$refs.pw.value
+			
 			// 根据密码生成公钥
-			let publicKey = entanmoJs.crypto.getKeys(password).publicKey
+			this.publicKey = entanmoJs.crypto.getKeys(this.password).publicKey
+
 			// // 根据密码生成地址
-			this.address = entanmoJs.crypto.getAddress(this.publicKey)
+			this.address = entanmoJs.crypto.getNewAddress(this.publicKey)
+			
 			// 登录
 			this.$http.post('/api/accounts/open2/', {
 					publicKey: this.publicKey
 				}).then(res => {
 				if(res.data.success) {
-					// this.$store.commit('setAddress', this.address)
+					// 登录跳转
 					this.$router.push('/')
-		  		setTimeout(() => {
-		    		window.location.reload()
+		  			setTimeout(() => {
+		    			window.location.reload()
 					}, 500)
 				}
 			}).catch(err => {
 				console.log(err)
 			})
 			//  登录时是否选中“记住密码”，如果是，则保存密码
-		  if(this.toggleSavePW) {
-		    localStorage.setItem('etmaddress', this.address)
-			}
-			// 登录跳转
-		  
+		    if(this.toggleSavePW) {
+		      localStorage.setItem('etmsecret', this.password)
+		    }else {
+		      sessionStorage.setItem('etmsecret', this.password)			
+		    }
 	  }
   }
 }
@@ -131,7 +134,7 @@ footer>p>span {
 	height: 40px;
 	background-color: #f8f8f8;
 	border-radius: 2px;
-	/* background: url(../assets/images/icon-14.png) 96% no-repeat; */
+	padding-right: 40px;
 	border: solid 1px #cacaca;
 }
 .icon {

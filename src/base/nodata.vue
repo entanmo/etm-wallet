@@ -27,7 +27,7 @@ export default {
 <style scoped>
 .wrapper {
     position: relative;
-    height: 400px;
+    height: 500px;
     /* background: #f0f2f5; */
 }
 .no-data {

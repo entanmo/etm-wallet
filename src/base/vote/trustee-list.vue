@@ -1,65 +1,52 @@
 <template>
   <div class="w">
     <div class="head flex">
-        <p>共500人</p>
+        <p>共{{totalVoters}}人</p>
         <button @click="vote">投票</button>
     </div>
-    <el-table
-    ref="multipleTable"
-    :data="tableData3"
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      prop="rank"
-      label="排名"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="受托人"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      label="生产率"
-      width="100">
-      <template slot-scope="scope">{{ scope.row.date }}</template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="生产块数"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="得票率"
-      width="100">
-    </el-table-column>
-  </el-table>
-  <!-- popout -->
+    <div class="event" >
+      <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
+          <thead class="table_th">
+              <th></th>
+              <th>排名</th>
+              <th>受托人</th>
+              <th>地址</th>
+              <th>生产率</th>
+              <th>生产块数</th>
+              <th>得票率</th>
+          </thead>
+          <tbody class="table_tb">
+              <tr v-for="(item, index) in tableData" :key="index">
+                  <td><input type="checkbox" :value="item" v-model="selectDelegates"></td>
+                  <td>{{index + 1}}</td>
+                  <td>{{item.username}}</td>
+                  <td style="color: #399dff;">{{item.address}}</td>
+                  <td>{{item.productivity}}%</td>
+                  <td>{{item.producedblocks}}</td>
+                  <td>{{item.approval}}%</td>
+              </tr>
+          </tbody>
+      </table>
+      <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
+      <no-data v-show="!tableData.length"></no-data>
+    </div>
+  <!-- 分页 -->
+  <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
+  <!-- 弹框 -->
   <div class="popout" v-show="showPop">
       <div class="close"><span @click="hidePopout">×</span></div>
       <p class="title">投票给受托人</p>
       <p class="care">请确认您的选择与投票，每张票最多可同时投33人</p>
       <div class="input-list">
-      <div class="input-line" v-for="(item,index) in multipleSelection" :key="index">
+      <div class="input-line" v-for="(item,index) in selectDelegates" :key="index">
         <div class="input clearfix">
-        <span class="fl">{{item.name}}</span>
+        <span class="fl">{{item.username}}</span>
         <span class="gre fr">{{item.address}}</span>
         </div>
       </div>
       </div>
       <div class="set-btm">
-        <div class="confirm"><button>提交</button></div>
+        <div class="confirm"><button @click="submitVote">提交</button></div>
         <p class="tip">投票需支付0.01Mole</p>
       </div>
     </div>
@@ -67,65 +54,60 @@
 </template>
 
 <script>
+import Page from '../page'
+import NoData from '../nodata'
 export default {
   components: {
+    Page,NoData
   },
   data() {
       return {
+        totalVoters: 0,
+        selectDelegates: [],
+        delegate: [],
+        PageTotal: 1,
         showPop: false,
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }],
-        multipleSelection: []
+        tableData: [],
+        ONE_PAGE_NUM: 10 //每页展示10条数据
       }
-    },
+  },
+  computed: {
+    // delegate() {
+    //   return this.selectDelegates.forEach(item => {
+    //     return item.publicKey
+    //   })
+    // }
+  },
+  created () {
+    this.routeName = this.$route.name
+  },
+  mounted () {
+    this._getTotalDelegates(0)
+  },
   methods: {
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
+      _getTotalDelegates(p) {
+        // 受托人列表及总数
+        this.$http.get('/api/delegates/', {
+          params: {
+            orderby: 'approval:desc',
+            offset: this.ONE_PAGE_NUM * p,
+            limit: this.ONE_PAGE_NUM
+          }
+        }).then(res => {
+          if(res.data.success) {
+            this.tableData = res.data.delegates
+            this.totalVoters = res.data.totalCount
+            this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM)
+          }
+        }).catch(err => {console.log(err)})
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val);
-        
+      submitVote() {
+        this.$http.put('/api/accounts/delegates', {
+          secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
+          delegates: this.delegate
+        }).then(res => {
+          console.log(res)
+        })
       },
       vote() {
         this.showPop = true
@@ -134,7 +116,19 @@ export default {
       hidePopout() {
         this.showPop = false
         Bus.$emit('showMask', false)
+      },
+      renderDiff(p) {
+        this._getTotalDelegates(p)
       }
+  },
+  watch: {
+    selectDelegates(newV, oldV) {
+      this.delegate = []
+      newV.forEach(item => {
+        this.delegate.push('+' + item.publicKey)
+      })
+      console.log(this.delegate)
+    },
   }
 }
 </script>

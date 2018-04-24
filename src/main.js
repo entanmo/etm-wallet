@@ -7,15 +7,14 @@ import Login from './components/login'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-import { Table, TableColumn} from 'element-ui'
-Vue.use(Table)
-Vue.use(TableColumn)
+
 // qrcode
 import VueQrcode from '@xkeshi/vue-qrcode'
 Vue.component('qrcode', VueQrcode)
 
 import './assets/css/reset.css'
 import './assets/css/public.css'
+import '../static/browserify-entanmo-min'
 
 Vue.prototype.$http = axios
 
@@ -31,14 +30,14 @@ new Vue({
   components: { App, Login },
   // template: '<App/>',
   render(h) {
-    return h(this.etmaddress ? 'app' : 'login')
+    return h(this.etmsecret ? 'app' : 'login')
   },
   data () {
     return {
-      pw: ''
+      etmsecret: ''
     }
   },
   created () {
-    this.etmaddress = localStorage.getItem('etmaddress')
+    this.etmsecret = localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')
   }
 })

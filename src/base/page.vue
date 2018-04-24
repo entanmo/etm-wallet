@@ -88,7 +88,7 @@ export default {
   },
   methods: {
       getData(p) {
-        
+        this.$emit('renderDiff', p)
         // 改变page，实现分页样式的变化
         this.page = p
         // 边界情况左右按钮禁止点击

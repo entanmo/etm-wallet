@@ -52,9 +52,9 @@
 .pag>.active>span:focus,
 .pag>.active>span:hover {
     z-index: 3;
-    color: blue;
+    color: #399dff;
     cursor: default;
-    border-color: blue;
+    border-color: #399dff;
 }
 .pag li.disabled>a{
     cursor: not-allowed;
@@ -75,7 +75,7 @@
 	border:solid #E5E5E5 1px;
 }
 .event th{
-	background-color: #EEEEEE;
+	background-color: #f0f2f5;
 	line-height: 40px;
 	text-align: center;
 }
@@ -91,6 +91,6 @@
 }
 
 .event td>a:hover{
-	text-decoration: underline;
-	color: blue;
+	text-decoration: none;
+	color: #399dff;
 }

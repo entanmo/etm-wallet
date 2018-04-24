@@ -1,7 +1,7 @@
 <template>
   <div class="w">
     <!-- info -->
-    <p class="name">受托人基本信息<span class="btn">未开启</span><span class="btn" @click="showPopout">注册受托人</span></p>
+    <p class="name">受托人基本信息<span class="btn">{{onOff}}</span><span class="btn" @click="showPopout">注册受托人</span></p>
     <div class="info">
         <ul class="flex">
             <li>
@@ -22,47 +22,45 @@
             </li>
         </ul>
     </div>
-    <!-- table -->
     <p class="name" style="margin-top:26px;">生产的区块</p>
     <!-- table -->
-      <el-table :data="tableData" style="width: 100%;">
-      <el-table-column
-        prop="date"
-        label="高度">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="日期">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="ID">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="交易">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="金额">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="费用">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="奖励">
-      </el-table-column>
-      </el-table>
+    <div class="event" >
+      <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
+          <thead class="table_th">
+              <th>高度</th>
+              <th>日期</th>
+              <th>ID</th>
+              <th>交易</th>
+              <th>金额</th>
+              <th>费用</th>
+              <th>奖励</th>
+          </thead>
+          <tbody class="table_tb">
+              <tr v-for="(item, index) in tableData" :key="index">
+                  <td style="color: #399dff;">{{item.id}}</td>
+                  <td>{{item.type}}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+              </tr>
+          </tbody>
+      </table>
+      <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
+      <no-data v-show="!tableData.length"></no-data>
+    </div>
+    <!-- 分页 -->
+    <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
+    <!-- 弹框 -->
     <div class="popout" v-show="showPop">
       <div class="close"><span @click="hidePopout">×</span></div>
       <p class="title">注册为受托人</p>
       <div class="input">
         <label>受托人名称：</label>
-        <input type="text" placeholder="请输入名称">
+        <input type="text" placeholder="用户名只能包含除了@$&_的字母、数字、字符" v-model="delegateName">
       </div>
-      <div class="confirm"><button>提交</button></div>
+      <div class="confirm"><button @click="setDelegates">提交</button></div>
       <p class="tip">注册需支付100Mole</p>
     </div>
     
@@ -70,30 +68,25 @@
 </template>
 
 <script>
+import Page from '../base/page'
+import NoData from '../base/nodata'
+import {genPublicKey} from '../assets/js/gen'
 export default {
   components: {
+    Page,NoData
   },
   data () {
     return {
+      PageTotal: 1,
+      onOff: '未开启',
+      delegateName:'',
       showPop: false,
-      tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+      tableData: []
     }
+  },
+  created () {
+    let publickey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
+    this._getDelegateDetail(publickey)
   },
   methods: {
     showPopout() {
@@ -103,6 +96,36 @@ export default {
     hidePopout() {
       this.showPop = false
       Bus.$emit('showMask', false)
+    },
+    setDelegates() {
+      this.$http.put('/api/delegates', {
+        secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
+        username: this.delegateName
+      }).then(res => {
+        // 注册后关闭弹框
+        this.hidePopout()
+        if(res.data.success) {
+          alert('注册成功')
+          this.onOff = '已开启'
+        }else {
+          alert('注册失败')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 获取该受托人信息
+    _getDelegateDetail(key) {
+      this.$http.get('/api/delegates/get/', {
+        params: {
+          publickey: key
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    },
+    renderDiff() {
+
     }
   }
 }
@@ -202,7 +225,7 @@ export default {
   font-weight: bold;
 }
 .popout .input input {
-  width: 240px;
+  width: 320px;
   height: 32px;
   border: 1px solid #d9d9d9;
   padding-left: 10px;

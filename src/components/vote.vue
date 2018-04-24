@@ -7,7 +7,9 @@
         <router-link to="vote-for-me" tag="li">谁投了我</router-link>
       </ul>
       <div class="nav-content">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
   </div>

@@ -44,10 +44,10 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('区块产生')">
+          <li class="has-sub" @click="changeTitle('区块生产')">
             <router-link to="/block-appear">
               <i class="icon icon-promote"></i>
-              <span class="title">区块产生</span>
+              <span class="title">区块生产</span>
             </router-link>
           </li>
         </ul>

@@ -32,13 +32,13 @@
                 </thead>
                 <tbody class="table_tb">
                     <tr v-for="(item, index) in tableData" :key="index">
-                        <td style="color: blue;">{{item.id}}</td>
+                        <td style="color: #399dff;">{{item.id}}</td>
                         <td>{{mapType(item.type)}}</td>
                         <td>{{item.senderId}}</td>
                         <td>{{item.recipientId}}</td>
                         <td>{{item.timestamp}}</td>
-                        <td>{{item.asset}}</td>
-                        <td>{{item.amount / 100000000}}</td>
+                        <td>{{item.message}}</td>
+                        <td>{{item.amount}}</td>
                     </tr>
                     <tr>
                       <td>总计</td>
@@ -54,7 +54,7 @@
             <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
             <no-data v-show="!tableData.length"></no-data>
         </div>
-        <page v-show="PageTotal > 1" :PageTotal="PageTotal" :routeName="routeName" @renderDiff="renderDiff"></page>
+        <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
     </div>
   </div>
 </template>
@@ -62,173 +62,23 @@
 <script>
 import Page from '../base/page'
 import NoData from '../base/nodata'
+import {genPublicKey, genAddress} from '../assets/js/gen'
 export default {
   components: {
     Page,NoData
   },
   created () {
-    let address = localStorage.getItem('etmaddress')
-    this._getAccounts(address)
-    this._getTransaction(address)
+    this.address = genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')) 
+    this._getAccounts(this.address)
+    this._getTransaction(0)
   },
   data () {
     return {
-      PageTotal: 2,
-      routeName: '',
+      PageTotal: 1,
       accountInfo: {},
-      tableData: [{   
-        "id": "17192581936339156329",   
-        "height": "105951",   
-        "blockId": "15051364118100195665",   
-        "type": 0,   
-        "timestamp": 4385190,   
-        "senderPublicKey": "d39d6f26869067473d685da742339d1a9117257fe14b3cc7261e3f2ed5a339e3",   
-        "senderId": "15745540293890213312",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "98d65df3109802c707eeed706e90a907f337bddab58cb4c1fbe6ec2179aa1c85ec2903cc0cf44bf0092926829aa5a0a6ec99458f65b6ebd11f0988772e58740e",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "31802",   
-        "asset": {   
-
-        }   
-    },   
-    {   
-        "id": "7000452951235123088",   
-        "height": "105473",   
-        "blockId": "11877628176330539727",   
-        "type": 1,   
-        "timestamp": 4380147,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "dc84044d4f6b4779eecc3a986b6507e458cc5964f601ebeb4d3b68a96129813f4940e14de950526dd685ca1328b6e477e6c57e95aeac45859a2ea62a587d0204",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32280",   
-        "asset": {   
-
-        }   
-    },   
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    },
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    },
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    },
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    },
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    },
-    {   
-        "id": "14093929199102906687",   
-        "height": "105460",   
-        "blockId": "2237504897174225512",   
-        "type": 2,   
-        "timestamp": 4380024,   
-        "senderPublicKey": "fafcd01f6b813fdeb3c086e60bc7fa9bfc8ef70ae7be47ce0ac5d06e7b1a8575",   
-        "senderId": "16358246403719868041",   
-        "recipientId": "16723473400748954103",   
-        "amount": 10000000000,   
-        "fee": 10000000,   
-        "signature": "73ceddc3cbe5103fbdd9eee12f7e4d9a125a3bcf2e7cd04282b7329719735aeb36936762f17d842fb14813fa8f857b8144040e5117dffcfc7e2ae88e36440a0f",   
-        "signSignature": "",   
-        "signatures": null,   
-        "confirmations": "32293",   
-        "asset": {   
-
-        }   
-    }
-]
+      tableData: [],
+      address: '',
+      ONE_PAGE_NUM: 10
     }
   },
   methods: {
@@ -243,22 +93,24 @@ export default {
         }
       })
     },
-    _getTransaction(address) {
+    _getTransaction(p) {
       this.$http.get('/api/transactions', {
         params: {
-          senderId: address,
-          orderBy: 't_timestamp:desc'
+          senderId: this.address,
+          orderBy: 't_timestamp:desc',
+          offset: this.ONE_PAGE_NUM * p,
+          limit: this.ONE_PAGE_NUM
         }
       }).then(res => {
         if(res.data.success) {
           this.tableData = res.data.transactions
         }
-      })
+      }).catch(e => {console.log(e)})
     },
     totalAmount() {
       // 如果没有数据
       if(!this.tableData.length) return
-      let values = this.tableData.map(item => item.amount / 100000000)
+      let values = this.tableData.map(item => item.amount)
       return values.reduce((prev,cur) => {
               return prev + cur
             })
@@ -283,7 +135,7 @@ export default {
         break;
       }
     },
-    renderDiff(data) {
+    renderDiff(p) {
 
     }
   }

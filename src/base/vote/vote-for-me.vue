@@ -1,97 +1,65 @@
 <template>
   <div class="w">
     <div class="head flex">
-        <p>共500人</p>
+        <p>共{{voters}}人</p>
     </div>
-    <el-table
-    ref="multipleTable"
-    :data="tableData3"
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      prop="rank"
-      label="用户名"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      show-overflow-tooltip>
-    </el-table-column>    
-    <el-table-column
-      prop="name"
-      label="权重">
-    </el-table-column>
-  </el-table>
+    <div class="event" >
+      <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
+          <thead class="table_th">
+              <th>用户名</th>
+              <th>地址</th>
+              <th>权重</th>
+          </thead>
+          <tbody class="table_tb">
+              <tr v-for="(item, index) in tableData" :key="index">
+                  <td>{{item.name}}</td>
+                  <td style="color: #399dff;">{{item.address}}</td>
+                  <td>{{item.weight}}</td>
+              </tr>
+          </tbody>
+      </table>
+      <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
+      <no-data v-show="!tableData.length"></no-data>
+    </div>
+    <!-- 分页 -->
+    <page v-show="PageTotal > 1" :PageTotal="PageTotal" :routeName="routeName" @renderDiff="renderDiff"></page>
   </div>
 </template>
 
 <script>
+import Page from '../page'
+import NoData from '../nodata'
+import {genPublicKey} from '../../assets/js/gen'
 export default {
   components: {
+    Page,NoData
   },
   data() {
       return {
+        PageTotal: 1,
+        routeName: '',
         showPop: false,
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          rank: 1
-        }],
-        multipleSelection: []
+        tableData: [],
+        voters: 0
       }
     },
+    mounted () {
+      this._getWhoVoteForMe()
+    },
   methods: {
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
+    _getWhoVoteForMe() {
+      this.$http.get('/api/delegates/voters', {
+        params: {
+          publicKey: genPublicKey(localStorage.getItem('etmsecret'))
         }
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val);
-        
-      }
+      }).then(res => {
+        this.tableData = res.data.accounts
+        this.voters = res.data.accounts.length
+      }).catch(e => {console.log(e)})
+    },
+    renderDiff(p) {
+
+    }
   }
 }
 </script>

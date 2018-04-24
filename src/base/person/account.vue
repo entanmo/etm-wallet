@@ -7,36 +7,43 @@
             <li><span>地址：</span><span>{{accountInfo.address}}</span></li>
             <li><span>二级密码：</span><span>?</span></li>
             <li><span>锁仓状态：</span><span>?</span></li>
-            <li><span>公钥：</span><span>{{accountInfo.publicKey}}</span></li>
+            <li><span>公钥：</span><span>{{publicKey}}</span></li>
             <li><span>主秘钥二维码：</span><span><a href="javascript:;" @click="keyQrcode">点击获取</a></span></li>
             <li><span>地址二维码：</span><span><a href="javascript:;" @click="addressQrcode">点击获取</a></span></li>
         </ul>
     </div>
-    <div class="popout" v-show="showQrcode">
-      <!-- <div class="close"><span @click="hideQrcode">×</span></div> -->
-      <qrcode :value="address" :options="{ size: 300 }"></qrcode>
+    <div class="popout flex" v-show="showKeyQrcode">
+      <qrcode :value="publicKey" :options="{ size: 280 }"></qrcode>
+    </div>
+    <div class="popout flex" v-show="showAddressQrcode">
+      <qrcode :value="address" :options="{ size: 280 }"></qrcode>
     </div>
   </div>
 </template>
 
 <script>
+import {genPublicKey, genAddress}  from '../../assets/js/gen'
 export default {
   components: {
   },
   data () {
     return {
       accountInfo: {},
-      showQrcode: false,
-      address: ''
+      showKeyQrcode: false,
+      showAddressQrcode: false,
+      address: '',
+      publicKey: ''
     }
   },
   mounted () {
-    this.address = localStorage.getItem('etmaddress')
+    this.address = genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')) 
     this._getAccounts(this.address)
+    this.publicKey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
   },
   updated () {
     Bus.$on('hideQrcode', data => {
-      this.showQrcode = false
+      this.showKeyQrcode = false
+      this.showAddressQrcode = false
     })
   },
   methods: {
@@ -52,14 +59,16 @@ export default {
       })
     },
     keyQrcode() {
-
+      this.showKeyQrcode = true
+      Bus.$emit('showMask', true)
     },
     addressQrcode() {
-      this.showQrcode = true
+      this.showAddressQrcode = true
       Bus.$emit('showMask', true)
     },
     hideQrcode() {
-      this.showQrcode = false
+      this.showKeyQrcode = false
+      this.showAddressQrcode = false
       Bus.$emit('showMask', false)
     }
   }
@@ -112,6 +121,8 @@ export default {
   margin: auto;
   background: #fff;
   z-index: 1000;
+  justify-content: center;
+  border-radius: 3px;
 }
 .close {
   font-size: 36px;

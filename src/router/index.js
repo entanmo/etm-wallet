@@ -1,22 +1,90 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const firstView = () => import('@/components/first-view')
-const person = () => import('@/components/person')
-const application = () => import('@/components/application')
-const blockAppear = () => import('@/components/block-appear')
-const blockScan = () => import('@/components/block-scan')
-const vote = () => import('@/components/vote')
-const transfer = () => import('@/components/transfer')
-const node = () => import('@/components/node')
-const applist = () => import('@/base/application/applist')
-const download = () => import('@/base/application/download')
-const account = () => import('@/base/person/account')
-const secondpassword = () => import('@/base/person/second-password')
-const lockup = () => import('@/base/person/lock-up')
-const trusteelist = () => import('@/base/vote/trustee-list')
-const record = () => import('@/base/vote/record')
-const voteforme = () => import('@/base/vote/vote-for-me')
-const login = () => import('@/components/login')
+const firstView = (resolve) => {
+  import('@/components/first-view').then((module) => {
+    resolve(module)
+  })
+}
+const person = (resolve) => {
+  import('@/components/person').then((module) => {
+    resolve(module)
+  })
+}
+const application = (resolve) => {
+  import('@/components/application').then((module) => {
+    resolve(module)
+  })
+}
+const blockAppear = (resolve) => {
+  import('@/components/block-appear').then((module) => {
+    resolve(module)
+  })
+}
+const blockScan = (resolve) => {
+  import('@/components/block-scan').then((module) => {
+    resolve(module)
+  })
+}
+const vote = (resolve) => {
+  import('@/components/vote').then((module) => {
+    resolve(module)
+  })
+}
+const transfer = (resolve) => {
+  import('@/components/transfer').then((module) => {
+    resolve(module)
+  })
+}
+const node = (resolve) => {
+  import('@/components/node').then((module) => {
+    resolve(module)
+  })
+}
+const applist = (resolve) => {
+  import('@/base/application/applist').then((module) => {
+    resolve(module)
+  })
+}
+const download = (resolve) => {
+  import('@/base/application/download').then((module) => {
+    resolve(module)
+  })
+}
+const account = (resolve) => {
+  import('@/base/person/account').then((module) => {
+    resolve(module)
+  })
+}
+const secondpassword = (resolve) => {
+  import('@/base/person/second-password').then((module) => {
+    resolve(module)
+  })
+}
+const lockup = (resolve) => {
+  import('@/base/person/lock-up').then((module) => {
+    resolve(module)
+  })
+}
+const trusteelist = (resolve) => {
+  import('@/base/vote/trustee-list').then((module) => {
+    resolve(module)
+  })
+}
+const record = (resolve) => {
+  import('@/base/vote/record').then((module) => {
+    resolve(module)
+  })
+}
+const voteforme = (resolve) => {
+  import('@/base/vote/vote-for-me').then((module) => {
+    resolve(module)
+  })
+}
+const login = (resolve) => {
+  import('@/components/login').then((module) => {
+    resolve(module)
+  })
+}
 Vue.use(Router)
 
 const router = new Router({
@@ -84,15 +152,18 @@ const router = new Router({
       children: [
         {
           path: 'trustee-list',
-          component: trusteelist
+          component: trusteelist,
+          name: 'trusteelist'
         },
         {
           path: 'record',
-          component: record
+          component: record,
+          name: 'record'
         },
         {
           path: 'vote-for-me',
-          component: voteforme
+          component: voteforme,
+          name: 'voteforme'
         }
       ]
     },
@@ -108,8 +179,9 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let pw = localStorage.getItem('etmaddress')
-    if( pw ) {
+  if (localStorage.getItem('etmsecret') || 
+      sessionStorage.getItem('etmsecret')
+    ) {
       next()
     }else {
       if(to.path === '/login') {

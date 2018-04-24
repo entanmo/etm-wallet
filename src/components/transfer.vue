@@ -2,15 +2,15 @@
   <div>
     <div class="user_content" >
       <div >
-        <form class="Transfer_form">
+        <div class="Transfer_form">
         <div>
-        <label>发送者：</label><input type="text"  />
+        <label>发送者：</label><input type="text"  v-model="address"/>
         </div>
         <div>
-        <label>接收者：</label><input type="text"  />
+        <label>接收者：</label><input type="text"  v-model="recipientId"/>
         </div>
         <div>
-        <label>金额：</label><input type="text"  />
+        <label>金额：</label><input type="number"  v-model="amount"/>
         </div>
         <div>
         <label>费用：</label><input type="text" class="moeny" />
@@ -19,17 +19,42 @@
         <label>备注：</label><input type="text" />
         </div>
           <p>请确保您正在发送Mole给正确的地址，本操作无法撤消</p>
-          <button type="button">发送</button>
-        </form>
+          <button type="button" @click="transfer">发送</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {genAddress} from '../assets/js/gen'
 export default {
   components: {
-  }
+	},
+	data () {
+		return {
+			secret: '',
+			address: '',
+			recipientId: '',
+			amount: null
+		}
+	},
+	created () {
+		this.secret = localStorage.getItem('etmsecret')
+		this.address = genAddress(this.secret)
+	},
+	methods: {
+		transfer() {
+			this.$http.put('/api/transactions', {
+				secret: this.secret,
+				amount: Number(this.amount),
+				recipientId: '17484924273970460319'
+			}).then(res => {
+				console.log(res)
+			}).catch(e => {console.log(e)})
+		}
+	}
+	
 }
 </script>
 

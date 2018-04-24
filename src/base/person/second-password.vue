@@ -33,10 +33,15 @@ export default {
         return
       }
       this.$http.put('/api/signatures', {
-          secret: localStorage.getItem('etmsecret'),
+          secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
           secondSecret: this.secondSecret
       }).then(res => {
-        console.log(res)
+        if(res.data.success) {
+          alert('设置成功')
+          this.$router.push('/person/account')
+        }else {
+          alert('设置失败')
+        }
       })
     }
   }

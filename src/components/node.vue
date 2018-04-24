@@ -2,46 +2,60 @@
   <div class="w">
     <p class="title">节点列表</p>
     <!-- table -->
-      <el-table :data="tableData" style="width: 100%;">
-      <el-table-column
-        prop="date"
-        label="IP">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="版本">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="操作系统">
-      </el-table-column>
-      </el-table>
+    <div class="event" >
+      <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
+          <thead class="table_th">
+              <th>IP</th>
+              <th>版本</th>
+              <th>操作系统</th>
+          </thead>
+          <tbody class="table_tb">
+              <tr v-for="(item, index) in tableData" :key="index">
+                  <td style="color: #399dff;">{{item.ip}}</td>
+                  <td style="color: #399dff;">V{{item.version}}</td>
+                  <td>{{item.os}}</td>
+              </tr>
+          </tbody>
+      </table>
+      <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
+      <no-data v-show="!tableData.length"></no-data>
+    </div>
+    <!-- 分页 -->
+    <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
   </div>
 </template>
 
 <script>
+import Page from '../base/page'
+import NoData from '../base/nodata'
 export default {
   components: {
+    Page,NoData
   },
   data () {
     return {
-      tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+      ONE_PAGE_NUM: 10,
+      PageTotal: 1,
+      tableData: []
+    }
+  },
+  created () {
+    this._getPeers(0)
+  },
+  methods: {
+    _getPeers(p) {
+      this.$http.get('/api/peers', {
+        params: {
+          limit: this.ONE_PAGE_NUM,
+          offset: this.ONE_PAGE_NUM * p
+        }
+      }).then(res => {
+        this.tableData = res.data.peers
+        this.PageTotal = Number(res.data.totalCount[0])
+      }).catch(e => {console.log(e)})
+    },
+    renderDiff(p) {
+      this._getPeers(p)
     }
   }
 }
@@ -50,6 +64,7 @@ export default {
 <style scoped>
 .w {
   padding: 0 24px;
+  height: 700px;
 }
 .title {
   font-size: 20px;
