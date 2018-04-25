@@ -22,7 +22,7 @@ export default {
   },
   activated () {
     this.$store.commit('changeTitle', '投票')
-  },
+  }
 }
 </script>
 

@@ -115,8 +115,6 @@ export default {
       Bus.$on('showMask', (data) => {
         this.showPop = data
       })
-    },
-    updated () {
       this.title = this.$store.state.title
     },
     methods: {

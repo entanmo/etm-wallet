@@ -2,7 +2,7 @@
   <div class="w">
     <div class="head flex">
         <p>共{{totalVoters}}人</p>
-        <button @click="vote">投票</button>
+        <button @click="vote" ref="voteBtn">投票</button>
     </div>
     <div class="event" >
       <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
@@ -17,8 +17,13 @@
           </thead>
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
-                  <td><input type="checkbox" :value="item" v-model="selectDelegates"></td>
-                  <td>{{index + 1}}</td>
+                  <td>
+                    <input type="checkbox"
+                     :value="item" 
+                     v-model="selectDelegates" 
+                     ref="checkBox">
+                  </td>
+                  <td>{{item.index + 1}}</td>
                   <td>{{item.username}}</td>
                   <td style="color: #399dff;">{{item.address}}</td>
                   <td>{{item.productivity}}%</td>
@@ -30,10 +35,10 @@
       <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
       <no-data v-show="!tableData.length"></no-data>
     </div>
-  <!-- 分页 -->
-  <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
-  <!-- 弹框 -->
-  <div class="popout" v-show="showPop">
+    <!-- 分页 -->
+    <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
+    <!-- 弹框 -->
+    <div class="popout" v-show="showPop">
       <div class="close"><span @click="hidePopout">×</span></div>
       <p class="title">投票给受托人</p>
       <p class="care">请确认您的选择与投票，每张票最多可同时投33人</p>
@@ -46,16 +51,21 @@
       </div>
       </div>
       <div class="set-btm">
-        <div class="confirm"><button @click="submitVote">提交</button></div>
-        <p class="tip">投票需支付0.01Mole</p>
+        <div class="confirm"><button @click="submitVoter">提交</button></div>
+        <p class="tips">投票需支付0.01Mole</p>
       </div>
     </div>
+    <div class="tip" v-show="submitVote" :class="yesOrNo">
+			投票{{voteType}}！
+		</div>
   </div>
 </template>
 
 <script>
 import Page from '../page'
 import NoData from '../nodata'
+import {genAddress} from '../../assets/js/gen'
+import {compareArrObj} from '../../assets/js/utils'
 export default {
   components: {
     Page,NoData
@@ -68,25 +78,58 @@ export default {
         PageTotal: 1,
         showPop: false,
         tableData: [],
-        ONE_PAGE_NUM: 10 //每页展示10条数据
+        haveVoted: [],
+        ONE_PAGE_NUM: 10, //每页展示10条数据,
+        voteType: '',
+        submitVote: false,
+        filterDisabled: []
       }
   },
   computed: {
-    // delegate() {
-    //   return this.selectDelegates.forEach(item => {
-    //     return item.publicKey
-    //   })
-    // }
-  },
-  created () {
-    this.routeName = this.$route.name
-  },
+		yesOrNo() {
+			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
+		}
+	},
   mounted () {
     this._getTotalDelegates(0)
+    this._getRecord()
+    this._getTotalD()
+    if(!this.delegate.length) {
+      this.$refs.voteBtn.disabled = true
+    }
+  },
+  updated () {
+    Bus.$on('hideQrcode', data => {
+      this.showPop = false
+    })
   },
   methods: {
+    // 投票列表
+     _getRecord() {
+      this.$http.get('/api/accounts/delegates', {
+        params: {
+          address: genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
+        }
+      }).then(res => {
+        if(res.data.success) {
+          this.haveVoted = res.data.delegates
+        }
+      }).catch(e => {console.log(e)})
+    },
+    // 受托人列表（全部）
+    _getTotalD() {
+      this.$http.get('/api/delegates/', {
+          params: {
+            orderby: 'approval:desc'
+          }
+        }).then(res => {
+          // 比较两数组，找出不同项
+          this.filterDisabled = compareArrObj(this.haveVoted, res.data.delegates)
+            console.log(this.filterDisabled)
+        })
+    },
+     // 受托人列表及总数（分页）
       _getTotalDelegates(p) {
-        // 受托人列表及总数
         this.$http.get('/api/delegates/', {
           params: {
             orderby: 'approval:desc',
@@ -96,17 +139,55 @@ export default {
         }).then(res => {
           if(res.data.success) {
             this.tableData = res.data.delegates
+
+            // 设置排名
+            this.tableData.forEach((item,index) => {
+              this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
+            })
+
             this.totalVoters = res.data.totalCount
             this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM)
+            
+            let arr = this.tableData.filter(item => {
+                return this.filterDisabled.indexOf(item) === -1
+              })
+            
+            let indexs = arr.map(item => {
+              return this.tableData.indexOf(item)
+            })
+            this.$nextTick(() => {
+              this.$refs.checkBox.forEach((item,i) => {
+                if(indexs.indexOf(item) === -1) {
+                  item.disabled = true
+                }
+              })
+            })
+           
           }
         }).catch(err => {console.log(err)})
       },
-      submitVote() {
+      submitVoter() {
         this.$http.put('/api/accounts/delegates', {
           secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
-          delegates: this.delegate
+          delegates: this.delegate,
+          secondSecret: 'xietian'
         }).then(res => {
-          console.log(res)
+          // 投票后自动关闭弹框
+          Bus.$emit('showMask', false)
+          this.showPop = false
+          if(res.data.success) {
+					  this.voteType = '成功'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
+				  }else {
+					  this.voteType = '失败'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
+				  }
         })
       },
       vote() {
@@ -123,11 +204,14 @@ export default {
   },
   watch: {
     selectDelegates(newV, oldV) {
+      console.log(newV)
       this.delegate = []
       newV.forEach(item => {
         this.delegate.push('+' + item.publicKey)
       })
-      console.log(this.delegate)
+      if(!this.delegate.length) {
+        this.$refs.voteBtn.disabled = true
+      }
     },
   }
 }
@@ -217,7 +301,7 @@ export default {
   color: #fff;
   line-height: 40px;
 }
-.popout .tip {
+.popout .tips {
   text-align: center;
 }
 .set-btm {
@@ -225,5 +309,26 @@ export default {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.tip {
+	width: 160px;
+	height: 80px;
+	position: absolute;
+	top: 0;
+	left: 40%;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgb(200, 200, 200);
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 18px;
+}
+.success-tip {
+	background: #399bff;
+}
+.fail-tip {
+	background: #EE4000;
 }
 </style>

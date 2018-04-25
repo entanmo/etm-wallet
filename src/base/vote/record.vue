@@ -2,7 +2,7 @@
   <div class="w">
     <div class="head flex">
         <p>共{{totalVoters}}条</p>
-        <button>删除</button>
+        <button @click="deleteVote" ref="voteBtn">删除</button>
     </div>
     <!-- table -->
     <div class="event" >
@@ -19,7 +19,7 @@
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
                   <td><input type="checkbox" :value="item" v-model="selectRecord"></td>
-                  <td>{{index + 1}}</td>
+                  <td>{{item.index + 1}}</td>
                   <td>{{item.username}}</td>
                   <td style="color: #399dff;">{{item.address}}</td>
                   <td>{{item.productivity}}%</td>
@@ -36,21 +36,24 @@
     <!-- popout -->
     <div class="popout" v-show="showPop">
         <div class="close"><span @click="hidePopout">×</span></div>
-        <p class="title">投票给受托人</p>
-        <p class="care">请确认您的选择与投票，每张票最多可同时投33人</p>
+        <p class="title">取消投票</p>
+        <p class="care">请确认您的选择，最多可同时取消33份投票</p>
         <div class="input-list">
         <div class="input-line" v-for="(item,index) in selectRecord" :key="index">
           <div class="input clearfix">
-          <span class="fl">{{item.name}}</span>
+          <span class="fl">{{item.username}}</span>
           <span class="gre fr">{{item.address}}</span>
           </div>
         </div>
         </div>
         <div class="set-btm">
-          <div class="confirm"><button>提交</button></div>
-          <p class="tip">投票需支付0.01Mole</p>
+          <div class="confirm"><button @click="submitVoter">提交</button></div>
+          <p class="tips">投票需支付0.01Mole</p>
         </div>
       </div>
+    <div class="tip" v-show="submitVote" :class="yesOrNo">
+			删除{{voteType}}！
+		</div>
     </div>
 </template>
 
@@ -58,6 +61,7 @@
 import Page from '../page'
 import NoData from '../nodata'
 import {genAddress} from '../../assets/js/gen'
+
 export default {
   components: {
     Page,NoData
@@ -70,38 +74,92 @@ export default {
         showPop: false,
         tableData: [],
         totalVoters: 0,
-        ONE_PAGE_NUM: 10
+        ONE_PAGE_NUM: 10,
+        cancelVote: [],
+        voteType: '',
+        submitVote: false
       }
-    },
-    mounted () {
-      this._getRecord(0)
-    },
+  },
+  computed: {
+		yesOrNo() {
+			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
+		}
+	},
+  mounted () {
+    this._getRecord(0)
+    if(!this.cancelVote.length) {
+      this.$refs.voteBtn.disabled = true
+    }else {
+      this.$refs.voteBtn.disabled = false
+    }
+  },
   methods: {
     _getRecord(p) {
       this.$http.get('/api/accounts/delegates', {
         params: {
-          address: genAddress(localStorage.getItem('etmsecret'))
+          address: genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
         }
       }).then(res => {
         if(res.data.success) {
           this.totalVoters = res.data.delegates.length
-          this.tableData = res.data.delegates.splice(this.ONE_PAGE_NUM * p, this.ONE_PAGE_NUM)
-          
+          this.tableData = res.data.delegates.slice(this.ONE_PAGE_NUM * p, this.ONE_PAGE_NUM * p + 10)
+          // 设置排名
+            this.tableData.forEach((item,index) => {
+              this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
+            })
           this.PageTotal = Math.ceil(res.data.delegates.length / this.ONE_PAGE_NUM)
         }
       }).catch(e => {console.log(e)})
     },
-      vote() {
-        this.showPop = true
-        Bus.$emit('showMask', true)
+    submitVoter() {
+        this.$http.put('/api/accounts/delegates', {
+          secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
+          delegates: this.cancelVote,
+          secondSecret: 'xietian'
+        }).then(res => {
+          // 投票后自动关闭弹框
+          Bus.$emit('showMask', false)
+          this.showPop = false
+          if(res.data.success) {
+					  this.voteType = '成功'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
+				  }else {
+					  this.voteType = '失败'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
+				  }
+        })
       },
-      hidePopout() {
-        this.showPop = false
-        Bus.$emit('showMask', false)
-      },
-      renderDiff(p) {
-        this._getRecord(p)
+    deleteVote() {
+      this.showPop = true
+      Bus.$emit('showMask', true)
+    },
+    hidePopout() {
+      this.showPop = false
+      Bus.$emit('showMask', false)
+    },
+    renderDiff(p) {
+      this._getRecord(p)
+    }
+  },
+  watch: {
+    selectRecord(newV, oldV) {
+      this.cancelVote = []
+      newV.forEach(item => {
+        this.cancelVote.push('-' + item.publicKey)
+      })
+      if(!this.cancelVote.length) {
+        this.$refs.voteBtn.disabled = true
+      }else {
+        this.$refs.voteBtn.disabled = false
       }
+      console.log(this.cancelVote)
+    },
   }
 }
 </script>
@@ -190,7 +248,7 @@ export default {
   color: #fff;
   line-height: 40px;
 }
-.popout .tip {
+.popout .tips {
   text-align: center;
 }
 .set-btm {
@@ -198,5 +256,26 @@ export default {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.tip {
+	width: 160px;
+	height: 80px;
+	position: absolute;
+	top: 0;
+	left: 40%;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgb(200, 200, 200);
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 18px;
+}
+.success-tip {
+	background: #399bff;
+}
+.fail-tip {
+	background: #EE4000;
 }
 </style>

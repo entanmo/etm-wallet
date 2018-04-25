@@ -38,9 +38,6 @@ export default {
 				address: ''
       }
   },
-  created () {
-    console.log(entanmoJs)
-  },
   computed: {
       toggelIcon() {
         return this.showPassword ? 'icon-hide' : 'icon-show'

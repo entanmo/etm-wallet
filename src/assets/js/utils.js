@@ -1,5 +1,5 @@
 export function timestampToTime(timestamp) {
-    var addZero = function (num) {
+    let addZero = function (num) {
         if (num <= 9) {
             return '0' + num;
         }
@@ -13,4 +13,26 @@ export function timestampToTime(timestamp) {
     let m = addZero(date.getMinutes()) + ':';
     let s = addZero(date.getSeconds());
     return Y + M + D + h + m + s;
+}
+
+// 比较两个数组对象，找出不同的项组成的心得数组对象
+export function compareArrObj(arr1, arr2) {
+    let result = [];
+    for (let i = 0; i < arr2.length; i++) {
+        let obj = arr2[i];
+        let num = obj.username;
+        let flag = false;
+        for (let j = 0; j < arr1.length; j++) {
+            let aj = arr1[j];
+            let n = aj.username;
+            if (n == num) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            result.push(obj);
+        }
+    }
+    return result
 }

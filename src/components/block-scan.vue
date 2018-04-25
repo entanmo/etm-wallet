@@ -111,6 +111,11 @@ export default {
   created () {
     this._getBlocks(0)
   },
+  updated() {
+    Bus.$on('hideQrcode', data => {
+      this.showPop = false
+    })
+  },
   activated () {
     this.$store.commit('changeTitle', '区块浏览')
   },
