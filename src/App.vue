@@ -12,7 +12,7 @@
         <!-- /site header -->
         <!-- Main navigation -->
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('首页')">
+          <li class="has-sub">
             <router-link to="/first-view">
               <i class="icon icon-department"></i>
               <span class="title">首页</span>
@@ -28,7 +28,7 @@
           </li>
         </ul> -->
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('个人中心')">
+          <li class="has-sub">
             <router-link to="/person">
               <i class="icon icon-employee"></i>
               <span class="title">个人中心</span>
@@ -36,7 +36,7 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('应用中心')">
+          <li class="has-sub">
             <router-link to="/application">
               <i class="icon icon-probation"></i>
               <span class="title">应用中心</span>
@@ -44,7 +44,7 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('区块生产')">
+          <li class="has-sub">
             <router-link to="/block-appear">
               <i class="icon icon-promote"></i>
               <span class="title">区块生产</span>
@@ -52,7 +52,7 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('区块浏览')">
+          <li class="has-sub">
             <router-link to="/block-scan">
               <i class="icon icon-transfer"></i>
               <span class="title">区块浏览</span>
@@ -106,7 +106,7 @@
 export default {
     data() {
         return {
-          title: '首页',
+          title: '',
           flag: true,
           showPop: false
         }
@@ -115,6 +115,9 @@ export default {
       Bus.$on('showMask', (data) => {
         this.showPop = data
       })
+    },
+    updated () {
+      this.title = this.$store.state.title
     },
     methods: {
       changeTitle(title) {
@@ -130,7 +133,7 @@ export default {
         }
       },
       loginout() {
-        localStorage.removeItem('pw')
+        localStorage.removeItem('etmsecret') || sessionStorage.removeItem('etmsecret')
         window.location.reload()
       },
       hidePop() {

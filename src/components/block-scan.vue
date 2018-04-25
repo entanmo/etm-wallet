@@ -111,6 +111,9 @@ export default {
   created () {
     this._getBlocks(0)
   },
+  activated () {
+    this.$store.commit('changeTitle', '区块浏览')
+  },
   methods: {
     search() {
       this.$http.get('/api/blocks/get', {
@@ -234,8 +237,5 @@ export default {
   width: 120px;
   text-align: right;
   color: #343434;
-}
-.input span {
-
 }
 </style>

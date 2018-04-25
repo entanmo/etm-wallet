@@ -19,7 +19,7 @@
     <div class="transaction">
       <p>交易记录</p>
       <!-- table -->
-          <div class="event" >
+          <div class="event">
             <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
                 <thead class="table_th">
                     <th>ID</th>
@@ -36,7 +36,7 @@
                         <td>{{mapType(item.type)}}</td>
                         <td>{{item.senderId}}</td>
                         <td>{{item.recipientId}}</td>
-                        <td>{{item.timestamp}}</td>
+                        <td>{{convertTime(item.timestamp)}}</td>
                         <td>{{item.message}}</td>
                         <td>{{item.amount}}</td>
                     </tr>
@@ -63,6 +63,7 @@
 import Page from '../base/page'
 import NoData from '../base/nodata'
 import {genPublicKey, genAddress} from '../assets/js/gen'
+import {timestampToTime} from '../assets/js/utils'
 export default {
   components: {
     Page,NoData
@@ -71,6 +72,11 @@ export default {
     this.address = genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')) 
     this._getAccounts(this.address)
     this._getTransaction(0)
+    
+    console.log(entanmoJs)
+  },
+  activated () {
+    this.$store.commit('changeTitle', '首页')
   },
   data () {
     return {
@@ -104,6 +110,7 @@ export default {
       }).then(res => {
         if(res.data.success) {
           this.tableData = res.data.transactions
+          this.PageTotal = Math.ceil(res.data.count / this.ONE_PAGE_NUM)
         }
       }).catch(e => {console.log(e)})
     },
@@ -114,6 +121,10 @@ export default {
       return values.reduce((prev,cur) => {
               return prev + cur
             })
+    },
+    convertTime(time) {
+      let stampTime = entanmoJs.transaction.getTime(time)
+      return timestampToTime(stampTime)
     },
     mapType(type) {
       switch(type) {

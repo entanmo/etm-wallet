@@ -23,6 +23,9 @@
         </div>
       </div>
     </div>
+		<div class="tip" v-show="submitTransfer" :class="yesOrNo">
+			交易{{transferType}}！
+		</div>
   </div>
 </template>
 
@@ -36,21 +39,46 @@ export default {
 			secret: '',
 			address: '',
 			recipientId: '',
-			amount: null
+			amount: null,
+			submitTransfer: false,
+			transferType: ''
 		}
 	},
+	activated () {
+    this.$store.commit('changeTitle', '转账')
+  },
 	created () {
-		this.secret = localStorage.getItem('etmsecret')
+		this.secret = localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')
 		this.address = genAddress(this.secret)
+	},
+	computed: {
+		yesOrNo() {
+			return this.transferType === '成功' ? 'success-tip' : 'fail-tip'
+		}
 	},
 	methods: {
 		transfer() {
+			
 			this.$http.put('/api/transactions', {
 				secret: this.secret,
 				amount: Number(this.amount),
-				recipientId: '17484924273970460319'
+				recipientId: '17484924273970460319',
+				secondSecret: 'xietian'
 			}).then(res => {
-				console.log(res)
+				// 根据交易是否成功来显示tip框颜色
+				if(res.data.success) {
+					this.transferType = '成功'
+					this.submitTransfer = true
+					setTimeout(() => {
+						this.submitTransfer = false
+					}, 2000);
+				}else {
+					this.transferType = '失败'
+					this.submitTransfer = true
+					setTimeout(() => {
+						this.submitTransfer = false
+					}, 2000);
+				}
 			}).catch(e => {console.log(e)})
 		}
 	}
@@ -120,5 +148,26 @@ input.moeny{
 }
 .Transfer_form{
 	padding-top: 18px;
+}
+.tip {
+	width: 160px;
+	height: 80px;
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	margin: 0 auto;
+	border-radius: 5px;
+	
+	box-shadow: 0 0 20px rgb(200, 200, 200);
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 18px;
+}
+.success-tip {
+	background: #399bff;
+}
+.fail-tip {
+	background: #EE4000;
 }
 </style>

@@ -84,6 +84,9 @@ export default {
       tableData: []
     }
   },
+  activated () {
+    this.$store.commit('changeTitle', '区块生产')
+  },
   created () {
     let publickey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
     this._getDelegateDetail(publickey)

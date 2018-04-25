@@ -5,8 +5,8 @@
         <ul>
             <li><span>总余额：</span><span>{{accountInfo.balance}}</span></li>
             <li><span>地址：</span><span>{{accountInfo.address}}</span></li>
-            <li><span>二级密码：</span><span>?</span></li>
-            <li><span>锁仓状态：</span><span>?</span></li>
+            <li><span>二级密码：</span><span>{{accountInfo.secondPublicKey ? '已设置' : '未设置'}}</span></li>
+            <li><span>锁仓状态：</span><span>未锁仓</span></li>
             <li><span>公钥：</span><span>{{publicKey}}</span></li>
             <li><span>主秘钥二维码：</span><span><a href="javascript:;" @click="keyQrcode">点击获取</a></span></li>
             <li><span>地址二维码：</span><span><a href="javascript:;" @click="addressQrcode">点击获取</a></span></li>
@@ -35,6 +35,7 @@ export default {
       publicKey: ''
     }
   },
+
   mounted () {
     this.address = genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')) 
     this._getAccounts(this.address)

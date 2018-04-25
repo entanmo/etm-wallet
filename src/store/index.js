@@ -3,12 +3,12 @@ import vuex from 'vuex'
 Vue.use(vuex)
 
 const state = {
-    address: ''
+    title: ''
 }
 
 const mutations = {
-    setAddress(state,payload) {
-        state.address = payload
+    changeTitle(state,payload) {
+        state.title = payload
     }
 }
 
