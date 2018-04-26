@@ -103,112 +103,137 @@
 </template>
 
 <script>
+import { genAddress } from "./assets/js/gen";
+
 export default {
-    data() {
-        return {
-          title: '',
-          flag: true,
-          showPop: false
-        }
+  data() {
+    return {
+      title: "",
+      flag: true,
+      showPop: false
+    };
+  },
+  updated() {
+    Bus.$on("showMask", data => {
+      this.showPop = data;
+    });
+    this.title = this.$store.state.title;
+  },
+  created() {
+    let address = genAddress(
+      localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret")
+    );
+    this._getAccounts(address);
+  },
+  methods: {
+    changeTitle(title) {
+      this.title = title;
     },
-    updated () {
-      Bus.$on('showMask', (data) => {
-        this.showPop = data
-      })
-      this.title = this.$store.state.title
-    },
-    methods: {
-      changeTitle(title) {
-        this.title = title
-      },
-      toggleMenu() {
-        if( this.flag ) {
-          this.$refs.r.style.width = '100%'
-          this.flag = false
-        }else {
-          this.$refs.r.style.width = '85.4%'
-          this.flag = true
-        }
-      },
-      loginout() {
-        localStorage.removeItem('etmsecret') || sessionStorage.removeItem('etmsecret')
-        window.location.reload()
-      },
-      hidePop() {
-        this.showPop = false
-        Bus.$emit('hideQrcode', true)
+    toggleMenu() {
+      if (this.flag) {
+        this.$refs.r.style.width = "100%";
+        this.flag = false;
+      } else {
+        this.$refs.r.style.width = "85.4%";
+        this.flag = true;
       }
     },
-    watch: {
-      
+    loginout() {
+      localStorage.removeItem("etmsecret") ||
+        sessionStorage.removeItem("etmsecret");
+      window.location.reload();
+    },
+    hidePop() {
+      this.showPop = false;
+      Bus.$emit("hideQrcode", true);
+    },
+    // 全局，判断该账户是否设置了二级密码
+    _getAccounts(address) {
+      this.$http
+        .get("/api/accounts", {
+          params: {
+            address
+          }
+        })
+        .then(res => {
+          if (res.data.success) {
+            // 如果设置了二级密码，那么以后要根据这个状态来决定交易时是否弹出二级密码框
+            if (res.data.account.secondSignature) {
+              this.$store.commit("changeNeedsSecondSecret", true);
+            }
+          }
+        });
     }
+  },
+  watch: {}
 };
 </script>
 <style scoped>
-html,body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 .page-container {
-    width: 100%;
-    position: relative;
-    min-width: 1220px;
+  width: 100%;
+  position: relative;
+  min-width: 1220px;
 }
 
 /* 侧边栏导航 */
 
 .page-sidebar {
-    width: 14.6%;
-    height: 100%;
-    background-color: #00284d;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 997;
+  width: 14.6%;
+  height: 100%;
+  background-color: #00284d;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 997;
 }
 .page-detail {
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 .site-header {
-    padding: 15px 7%;
-    height: 60px;
-    box-sizing: border-box;
+  padding: 15px 7%;
+  height: 60px;
+  box-sizing: border-box;
 }
 
 .site-logo a {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .site-logo img {
-    width: 100%;
+  width: 100%;
 }
 
-.main-menu>li>a {
-    display: block;
-    padding: 14px 8.2%;
-    color: #a2aab2;
-    transition: all .2s;
+.main-menu > li > a {
+  display: block;
+  padding: 14px 8.2%;
+  color: #a2aab2;
+  transition: all 0.2s;
 }
-.main-menu>li>a:hover {
+.main-menu > li > a:hover {
   color: #fff;
   background: #001529;
 }
 .in {
-    background-color: #001529;
-    color: #fff !important;
+  background-color: #001529;
+  color: #fff !important;
 }
 .icon::before {
-    content: " ";
-    float: left;
-    display: block;
-    height: 25px;
-    width: 25px;
-    cursor: pointer;
+  content: " ";
+  float: left;
+  display: block;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
 }
 .icon-department::before {
-    background: url(./assets/images/1.png) 0px 2px no-repeat;
+  background: url(./assets/images/1.png) 0px 2px no-repeat;
 }
 
 .icon-post::before {
@@ -240,60 +265,60 @@ html,body {
 }
 
 .icon-service::before {
-    background: url(./assets/images/9.png) 0px 5px no-repeat;
+  background: url(./assets/images/9.png) 0px 5px no-repeat;
 }
 .icon-arrow::before {
-    background: url(./assets/images/11.png) 0px 1px no-repeat;
+  background: url(./assets/images/11.png) 0px 1px no-repeat;
 }
 .icon-menu::before {
-    background: url(./assets/images/12.png) 0px 1px no-repeat;
+  background: url(./assets/images/12.png) 0px 1px no-repeat;
 }
 .icon-loginout::before {
-    background: url(./assets/images/13.png) 0px 1px no-repeat;
+  background: url(./assets/images/13.png) 0px 1px no-repeat;
 }
 
 /*导航侧边框*/
 
 .page-simple {
-    padding-top: 20px;
-    display: none;
-    height: 1000px;
+  padding-top: 20px;
+  display: none;
+  height: 1000px;
 }
 
 .page-simple li {
-    width: 100%;
+  width: 100%;
 }
 
 .page-simple li.simple-in {
-    background-color: #F68271;
+  background-color: #f68271;
 }
 
 .page-simple a {
-    display: block;
-    background: url(./assets/images/8.png) center center no-repeat;
-    height: 47px;
+  display: block;
+  background: url(./assets/images/8.png) center center no-repeat;
+  height: 47px;
 }
 
 .main-container {
-    width: 85.4%;
-    min-height: 780px;
-    transition: width .5s;
+  width: 85.4%;
+  min-height: 780px;
+  transition: width 0.5s;
 }
 
 .main-top {
-    background-color: #fff;
-    padding: 0 20px;
-    height: 60px;
-    line-height: 60px;
+  background-color: #fff;
+  padding: 0 20px;
+  height: 60px;
+  line-height: 60px;
 }
 
 .main-top ul li {
-    float: left;
+  float: left;
 }
 
 .main-top ul li a {
-    color: #858585;
-    font-size: 1em;
+  color: #858585;
+  font-size: 1em;
 }
 .main-title {
   height: 60px;
@@ -304,19 +329,21 @@ html,body {
 }
 
 .mask {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    margin: auto;
-    background: rgba(0, 0, 0, .5);
-    z-index: 999;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
-.l-enter-active, .l-leave-active {
-  transition: all .5s;
+.l-enter-active,
+.l-leave-active {
+  transition: all 0.5s;
 }
-.l-enter, .l-leave-to {
+.l-enter,
+.l-leave-to {
   left: -14.6%;
 }
 </style>

@@ -2,16 +2,19 @@
   <div class="w">
     <p class="title">设置二级密码</p>
     <div class="pwd_form">
-    <div>
-    <label>密码&nbsp;&nbsp;：</label><input type="password" placeholder="请输入字母和数字组合,最短为1，最长为100" v-model="secondSecret"/>
+      <div>
+        <label>密码&nbsp;&nbsp;：</label><input type="password" placeholder="请输入字母和数字组合,最短为1，最长为100" v-model="secondSecret"/>
+      </div>
+      <div>
+        <label>确认密码&nbsp;&nbsp;：</label><input type="password" placeholder="请再次输入" v-model="confirmSecondSecret"/>
+      </div>
+      <p v-show="falseSecret">两次密码输入不一致</p>
+      <p>请确认您已经安全保存了二级密码，一旦丢失，您在Mole系统中的财产将无法找回，设置二级密码需要5Mole手续费</p>
+      <button @click="setSecret">提交</button>
     </div>
-    <div>
-    <label>确认密码&nbsp;&nbsp;：</label><input type="password" placeholder="请再次输入" v-model="confirmSecondSecret"/>
-    </div>
-    <p v-show="falseSecret">两次密码输入不一致</p>
-    <p>请确认您已经安全保存了二级密码，一旦丢失，您在Mole系统中的财产将无法找回，设置二级密码需要5Mole手续费</p>
-    <button @click="setSecret">提交</button>
-    </div>
+    <div class="tip" v-show="submitVote" :class="yesOrNo">
+			设置{{voteType}}！
+		</div>
   </div>
 </template>
 
@@ -23,9 +26,16 @@ export default {
     return {
       secondSecret: '',
       confirmSecondSecret: '',
-      falseSecret: false
+      falseSecret: false,
+      submitVote: false,
+      voteType: ''
     }
   },
+  computed: {
+		yesOrNo() {
+			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
+		}
+	},
   methods: {
     setSecret() {
       if(this.secondSecret != this.confirmSecondSecret) {
@@ -37,10 +47,18 @@ export default {
           secondSecret: this.secondSecret
       }).then(res => {
         if(res.data.success) {
-          alert('设置成功')
+          this.voteType = '成功'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
           this.$router.push('/person/account')
         }else {
-          alert('设置失败')
+          this.voteType = '失败'
+					  this.submitVote = true
+					  setTimeout(() => {
+						  this.submitVote = false
+					  }, 2000);
         }
       })
     }
@@ -97,5 +115,26 @@ button{
 	color: #fff;
 	position: relative;
     right: 47px;
+}
+
+.tip {
+	width: 160px;
+	height: 80px;
+	position: absolute;
+	top: 0;
+	left: 40%;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgb(200, 200, 200);
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 18px;
+}
+.success-tip {
+	background: #399bff;
+}
+.fail-tip {
+	background: #EE4000;
 }
 </style>

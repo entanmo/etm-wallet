@@ -1,7 +1,10 @@
 <template>
   <div class="w">
     <!-- info -->
-    <p class="name">受托人基本信息<span class="btn">{{onOff}}</span><button class="btn" ref="registerBtn" @click="showPopout">注册受托人</button></p>
+    <p class="name">受托人基本信息
+      <span class="btn">{{onOff}}</span>
+      <button class="btn" ref="registerBtn" @click="showPopout">注册受托人</button>
+    </p>
     <div class="info">
         <ul class="flex">
             <li>
@@ -63,6 +66,8 @@
       <div class="confirm"><button @click="setDelegates">提交</button></div>
       <p class="tips">注册需支付100Mole</p>
     </div>
+    <s-secret v-show="showPop1" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
+
     <div class="tip" v-show="submitVote" :class="yesOrNo">
 			注册{{voteType}}！
 		</div>
@@ -70,119 +75,172 @@
 </template>
 
 <script>
-import Page from '../base/page'
-import NoData from '../base/nodata'
-import {genPublicKey} from '../assets/js/gen'
+import Page from "../base/page";
+import NoData from "../base/nodata";
+import SSecret from "../base/second-secret";
+import { genPublicKey } from "../assets/js/gen";
 export default {
   components: {
-    Page,NoData
+    Page,
+    NoData,
+    SSecret
   },
-  data () {
+  data() {
     return {
       PageTotal: 1,
-      onOff: '未开启',
-      delegateName:'',
+      onOff: "未开启",
+      delegateName: "",
       showPop: false,
       delegateInfo: {},
       tableData: [],
-      publickey: '',
+      publickey: "",
       ONE_PAGE_NUM: 10,
       submitVote: false,
-      voteType: '',
-    }
+      voteType: "",
+      showPop1: false,
+      secondSecret: ""
+    };
   },
   computed: {
-		yesOrNo() {
-			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
-		}
-	},
-  activated () {
-    this.$store.commit('changeTitle', '区块生产')
+    yesOrNo() {
+      return this.voteType === "成功" ? "success-tip" : "fail-tip";
+    }
   },
-  created () {
-    this.publickey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
+  updated() {
+    Bus.$on("hideQrcode", data => {
+      this.showPop = false;
+    });
+  },
+  activated() {
+    this.$store.commit("changeTitle", "区块生产");
+  },
+  created() {
+    this.publickey = genPublicKey(
+      localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret")
+    );
     // 根据公钥查看受托人详情
-    this._getDelegateDetail(this.publickey)
+    this._getDelegateDetail(this.publickey);
   },
   methods: {
     showPopout() {
-      this.showPop = true
-      Bus.$emit('showMask', true)
+      this.showPop = true;
+      Bus.$emit("showMask", true);
     },
     hidePopout() {
-      this.showPop = false
-      Bus.$emit('showMask', false)
+      this.showPop = false;
+      Bus.$emit("showMask", false);
     },
     setDelegates() {
-      this.$http.put('/api/delegates', {
-        secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
-        username: this.delegateName,
-        secondSecret: 'xietian'
-      }).then(res => {
-        // 注册后关闭弹框
+      this.showPop = false;
+      Bus.$emit("showMask", false);
 
-        this.hidePopout()
-        if(res.data.success) {
-          this.onOff = '已开启'
-          this.voteType = '成功'
-					this.submitVote = true
-					setTimeout(() => {
-						this.submitVote = false
-					}, 2000)
-        }else {
-          this.voteType = '失败'
-					this.submitVote = true
-					setTimeout(() => {
-						this.submitVote = false
-					}, 2000)
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      // 是否需要二级密码
+      if (this.$store.state.needsSecondSecret) {
+        this.showPop1 = true;
+      } else {
+        this._setDelegates();
+      }
+    },
+    _setDelegates() {
+      this.$http
+        .put("/api/delegates", {
+          secret:
+            localStorage.getItem("etmsecret") ||
+            sessionStorage.getItem("etmsecret"),
+          username: this.delegateName,
+          secondSecret: this.secondSecret
+        })
+        .then(res => {
+          // 注册后关闭弹框
+          this.hidePopout();
+          if (res.data.success) {
+            this.onOff = "已开启";
+            this.voteType = "成功";
+            this.submitVote = true;
+            setTimeout(() => {
+              this.submitVote = false;
+            }, 2000);
+          } else {
+            this.voteType = "失败";
+            this.submitVote = true;
+            setTimeout(() => {
+              this.submitVote = false;
+            }, 2000);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 获取该受托人信息
     _getDelegateDetail(key) {
-      this.$http.get('/api/delegates/get/', {
-        params: {
-          publicKey: key
-        }
-      }).then(res => {
-        if(res.data.success) {
-          this.onOff = '已开启'
-          this.$refs.registerBtn.disabled = true
-          this.delegateInfo = res.data.delegate
-          // 如果有受托人，那么获取其生产的区块
-          this._getBlocks(key, 0)
-        }else {
-          this.onOff = '未开启'
-        }
-      })
+      this.$http
+        .get("/api/delegates/get/", {
+          params: {
+            publicKey: key
+          }
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.onOff = "已开启";
+            // this.$refs.registerBtn.disabled = true
+            this.delegateInfo = res.data.delegate;
+            // 如果有受托人，那么获取其生产的区块
+            this._getBlocks(key, 0);
+          } else {
+            this.onOff = "未开启";
+          }
+        });
     },
     // 获取受托人生产的区块
     _getBlocks(key, p) {
-      this.$http.get('/api/blocks', {
-        params: {
-          generatorPublicKey: key,
-          offset: this.ONE_PAGE_NUM * p,
-          limit: this.ONE_PAGE_NUM
-        }
-      }).then(res => {
-        if(res.data.success) {
-          this.tableData = res.data.blocks
-          this.PageTotal = Math.ceil(res.data.blocks.length / this.ONE_PAGE_NUM)
-        }
-      })
+      this.$http
+        .get("/api/blocks", {
+          params: {
+            generatorPublicKey: key,
+            offset: this.ONE_PAGE_NUM * p,
+            limit: this.ONE_PAGE_NUM
+          }
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.tableData = res.data.blocks;
+            this.PageTotal = Math.ceil(
+              res.data.blocks.length / this.ONE_PAGE_NUM
+            );
+          }
+        });
     },
     renderDiff(p) {
-      this._getBlocks(this.publickey, p)
+      this._getBlocks(this.publickey, p);
+    },
+    hidePop(data) {
+      this.showPop1 = data;
+    },
+    inputSSecret(data) {
+      this.secondSecret = data;
+      this._setDelegates();
     }
+  },
+  watch: {
+    // 关闭弹窗后清空输入框
+    // showPop(newVal) {
+    //   if(newVal === false) {
+    //     this.delegateName = ''
+    //   }
+    // },
+    // sjowPop1(newVal) {
+    //   if(newVal === false) {
+    //     Bus.$emit('clearSSecret', '')
+    //   }
+    // }
   }
-}
+};
 </script>
 
 <style scoped>
 .w {
-    padding: 0 24px;
+  padding: 0 24px;
 }
 .name {
   font-size: 20px;
@@ -296,23 +354,23 @@ export default {
   text-align: center;
 }
 .tip {
-	width: 160px;
-	height: 80px;
-	position: absolute;
-	top: 3%;
-	left: 48%;
-	margin: 0 auto;
-	border-radius: 5px;
-	box-shadow: 0 0 20px rgb(200, 200, 200);
-	text-align: center;
-	line-height: 80px;
-	color: #fff;
-	font-size: 18px;
+  width: 160px;
+  height: 80px;
+  position: absolute;
+  top: 3%;
+  left: 48%;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 0 20px rgb(200, 200, 200);
+  text-align: center;
+  line-height: 80px;
+  color: #fff;
+  font-size: 18px;
 }
 .success-tip {
-	background: #399bff;
+  background: #399bff;
 }
 .fail-tip {
-	background: #EE4000;
+  background: #ee4000;
 }
 </style>
