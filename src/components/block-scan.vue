@@ -24,7 +24,7 @@
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index" @click="showDetail(item,index)">
                   <td style="color: #399dff;">{{item.height}}</td>
-                  <td>{{item.timestamp}}</td>
+                  <td>{{convertTime(item.timestamp)}}</td>
                   <td style="color: #399dff;">{{item.id}}</td>
                   <td style="color: #399dff;">{{item.generatorId}}</td>
                   <td>{{item.numberOfTransactions}}</td>
@@ -94,6 +94,7 @@
 <script>
 import Page from '../base/page'
 import NoData from '../base/nodata'
+import {timestampToTime} from '../assets/js/utils'
 export default {
   components: {
     Page,NoData
@@ -160,7 +161,11 @@ export default {
     },
     renderDiff(p) {
       this._getBlocks(p)
-    }
+    },
+    convertTime(time) {
+      let stampTime = entanmoJs.transaction.getTime(time)
+      return timestampToTime(stampTime)
+    },
   },
   watch: {
     searchBlock(newVal,oldVal) {
@@ -242,5 +247,8 @@ export default {
   width: 120px;
   text-align: right;
   color: #343434;
+}
+td:hover {
+  cursor: pointer;
 }
 </style>

@@ -20,10 +20,11 @@
                   <td>
                     <input type="checkbox"
                      :value="item" 
-                     v-model="selectDelegates" 
+                     v-model="selectDelegates"
+                     disabled
                      ref="checkBox">
                   </td>
-                  <td>{{item.index + 1}}</td>
+                  <td>{{item.rate}}</td>
                   <td>{{item.username}}</td>
                   <td style="color: #399dff;">{{item.address}}</td>
                   <td>{{item.productivity}}%</td>
@@ -65,7 +66,8 @@
 import Page from '../page'
 import NoData from '../nodata'
 import {genAddress} from '../../assets/js/gen'
-import {compareArrObj} from '../../assets/js/utils'
+import {compareArrObj, compareEqualArrObj} from '../../assets/js/utils'
+import axios from 'axios'
 export default {
   components: {
     Page,NoData
@@ -91,11 +93,18 @@ export default {
 		}
 	},
   mounted () {
-    this._getTotalDelegates(0)
-    this._getRecord()
-    this._getTotalD()
+    // 获取受托人（分页）
+    // this._getTotalDelegates(0)
+    // 获取投票记录
+    // this._getRecord()
+    // 获取受托人（全部）
+    // this._getTotalD()
+    axios.all([this._getTotalDelegates(0),this._getRecord()])
+    .then(axios.spread(() => {}))
     if(!this.delegate.length) {
       this.$refs.voteBtn.disabled = true
+    }else {
+      this.$refs.voteBtn.disabled = false
     }
   },
   updated () {
@@ -124,8 +133,7 @@ export default {
           }
         }).then(res => {
           // 比较两数组，找出不同项
-          this.filterDisabled = compareArrObj(this.haveVoted, res.data.delegates)
-            console.log(this.filterDisabled)
+          this.filterDisabled = compareArrObj(this.haveVoted, res.data.delegates).result
         })
     },
      // 受托人列表及总数（分页）
@@ -139,27 +147,25 @@ export default {
         }).then(res => {
           if(res.data.success) {
             this.tableData = res.data.delegates
-
+            
             // 设置排名
-            this.tableData.forEach((item,index) => {
-              this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
-            })
+            // this.tableData.forEach((item,index) => {
+            //   this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
+            // })
 
             this.totalVoters = res.data.totalCount
             this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM)
             
-            let arr = this.tableData.filter(item => {
-                return this.filterDisabled.indexOf(item) === -1
-              })
+            let arr = compareEqualArrObj(this.filterDisabled, this.tableData).result
+            let indexs = compareEqualArrObj(this.filterDisabled, this.tableData).indexs
             
-            let indexs = arr.map(item => {
-              return this.tableData.indexOf(item)
-            })
             this.$nextTick(() => {
-              this.$refs.checkBox.forEach((item,i) => {
-                if(indexs.indexOf(item) === -1) {
-                  item.disabled = true
-                }
+              for (let i = 0; i < this.$refs.checkBox.length; i++) {
+                let element = this.$refs.checkBox[i]
+                element.disabled = true
+              }
+              indexs.forEach(item => {
+                this.$refs.checkBox[item].disabled = false
               })
             })
            
@@ -204,15 +210,23 @@ export default {
   },
   watch: {
     selectDelegates(newV, oldV) {
-      console.log(newV)
+      // 选择受托人投票列表
       this.delegate = []
       newV.forEach(item => {
         this.delegate.push('+' + item.publicKey)
       })
       if(!this.delegate.length) {
         this.$refs.voteBtn.disabled = true
+      }else {
+        this.$refs.voteBtn.disabled = false
       }
     },
+    haveVoted(newVal) {
+      // 获取投票记录列表后再去请求全部受托人列表
+      if(newVal.length) {
+        this._getTotalD()
+      }
+    }
   }
 }
 </script>

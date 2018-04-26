@@ -1,24 +1,24 @@
 <template>
   <div class="w">
     <!-- info -->
-    <p class="name">受托人基本信息<span class="btn">{{onOff}}</span><span class="btn" @click="showPopout">注册受托人</span></p>
+    <p class="name">受托人基本信息<span class="btn">{{onOff}}</span><button class="btn" ref="registerBtn" @click="showPopout">注册受托人</button></p>
     <div class="info">
         <ul class="flex">
             <li>
               <p>总收益</p>
-              <p>44444</p>
+              <p>{{delegateInfo.rewards}}</p>
             </li>
             <li>
               <p>排名</p>
-              <p>4</p>
+              <p>{{delegateInfo.rate}}</p>
             </li>
             <li>
               <p>生产率</p>
-              <p>V1.4</p>
+              <p>{{delegateInfo.productivity}}</p>
             </li>
             <li>
               <p>得票率</p>
-              <p>5.4%</p>
+              <p>{{delegateInfo.approval}}</p>
             </li>
         </ul>
     </div>
@@ -61,9 +61,11 @@
         <input type="text" placeholder="用户名只能包含除了@$&_的字母、数字、字符" v-model="delegateName">
       </div>
       <div class="confirm"><button @click="setDelegates">提交</button></div>
-      <p class="tip">注册需支付100Mole</p>
+      <p class="tips">注册需支付100Mole</p>
     </div>
-    
+    <div class="tip" v-show="submitVote" :class="yesOrNo">
+			注册{{voteType}}！
+		</div>
   </div>
 </template>
 
@@ -81,15 +83,26 @@ export default {
       onOff: '未开启',
       delegateName:'',
       showPop: false,
-      tableData: []
+      delegateInfo: {},
+      tableData: [],
+      publickey: '',
+      ONE_PAGE_NUM: 10,
+      submitVote: false,
+      voteType: '',
     }
   },
+  computed: {
+		yesOrNo() {
+			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
+		}
+	},
   activated () {
     this.$store.commit('changeTitle', '区块生产')
   },
   created () {
-    let publickey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
-    this._getDelegateDetail(publickey)
+    this.publickey = genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
+    // 根据公钥查看受托人详情
+    this._getDelegateDetail(this.publickey)
   },
   methods: {
     showPopout() {
@@ -103,15 +116,25 @@ export default {
     setDelegates() {
       this.$http.put('/api/delegates', {
         secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
-        username: this.delegateName
+        username: this.delegateName,
+        secondSecret: 'xietian'
       }).then(res => {
         // 注册后关闭弹框
+
         this.hidePopout()
         if(res.data.success) {
-          alert('注册成功')
           this.onOff = '已开启'
+          this.voteType = '成功'
+					this.submitVote = true
+					setTimeout(() => {
+						this.submitVote = false
+					}, 2000)
         }else {
-          alert('注册失败')
+          this.voteType = '失败'
+					this.submitVote = true
+					setTimeout(() => {
+						this.submitVote = false
+					}, 2000)
         }
       }).catch(err => {
         console.log(err)
@@ -121,14 +144,37 @@ export default {
     _getDelegateDetail(key) {
       this.$http.get('/api/delegates/get/', {
         params: {
-          publickey: key
+          publicKey: key
         }
       }).then(res => {
-        console.log(res)
+        if(res.data.success) {
+          this.onOff = '已开启'
+          this.$refs.registerBtn.disabled = true
+          this.delegateInfo = res.data.delegate
+          // 如果有受托人，那么获取其生产的区块
+          this._getBlocks(key, 0)
+        }else {
+          this.onOff = '未开启'
+        }
       })
     },
-    renderDiff() {
-
+    // 获取受托人生产的区块
+    _getBlocks(key, p) {
+      this.$http.get('/api/blocks', {
+        params: {
+          generatorPublicKey: key,
+          offset: this.ONE_PAGE_NUM * p,
+          limit: this.ONE_PAGE_NUM
+        }
+      }).then(res => {
+        if(res.data.success) {
+          this.tableData = res.data.blocks
+          this.PageTotal = Math.ceil(res.data.blocks.length / this.ONE_PAGE_NUM)
+        }
+      })
+    },
+    renderDiff(p) {
+      this._getBlocks(this.publickey, p)
     }
   }
 }
@@ -246,7 +292,27 @@ export default {
   color: #fff;
   line-height: 40px;
 }
-.popout .tip {
+.popout .tips {
   text-align: center;
+}
+.tip {
+	width: 160px;
+	height: 80px;
+	position: absolute;
+	top: 3%;
+	left: 48%;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgb(200, 200, 200);
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 18px;
+}
+.success-tip {
+	background: #399bff;
+}
+.fail-tip {
+	background: #EE4000;
 }
 </style>

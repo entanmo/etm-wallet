@@ -19,7 +19,7 @@
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
                   <td><input type="checkbox" :value="item" v-model="selectRecord"></td>
-                  <td>{{item.index + 1}}</td>
+                  <td>{{item.rate}}</td>
                   <td>{{item.username}}</td>
                   <td style="color: #399dff;">{{item.address}}</td>
                   <td>{{item.productivity}}%</td>
@@ -104,9 +104,9 @@ export default {
           this.totalVoters = res.data.delegates.length
           this.tableData = res.data.delegates.slice(this.ONE_PAGE_NUM * p, this.ONE_PAGE_NUM * p + 10)
           // 设置排名
-            this.tableData.forEach((item,index) => {
-              this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
-            })
+            // this.tableData.forEach((item,index) => {
+            //   this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
+            // })
           this.PageTotal = Math.ceil(res.data.delegates.length / this.ONE_PAGE_NUM)
         }
       }).catch(e => {console.log(e)})

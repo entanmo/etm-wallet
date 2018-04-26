@@ -41,7 +41,6 @@
 
 .pag>li.first-page>a,
 .pag>li.last-page>a {
-    padding: 0 15px;
     width: 60px;
 }
 

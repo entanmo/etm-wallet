@@ -15,9 +15,10 @@ export function timestampToTime(timestamp) {
     return Y + M + D + h + m + s;
 }
 
-// 比较两个数组对象，找出不同的项组成的心得数组对象
+// 比较两个数组对象，找出不同的项组成的新的数组对象
 export function compareArrObj(arr1, arr2) {
     let result = [];
+    let indexs = [];
     for (let i = 0; i < arr2.length; i++) {
         let obj = arr2[i];
         let num = obj.username;
@@ -32,7 +33,34 @@ export function compareArrObj(arr1, arr2) {
         }
         if (!flag) {
             result.push(obj);
+            indexs.push(i)
         }
     }
-    return result
+    return {
+        result,
+        indexs
+    }
+}
+// 比较两个数组对象，找出相同项组成的新的数组对象
+
+export function compareEqualArrObj(arr1, arr2) {
+    let result = [];
+    let indexs = [];
+    for (let i = 0; i < arr2.length; i++) {
+        let obj = arr2[i];
+        let num = obj.username;
+        let flag = false;
+        for (let j = 0; j < arr1.length; j++) {
+            let aj = arr1[j];
+            let n = aj.username;
+            if (n == num) {
+                result.push(obj);
+                indexs.push(i)
+            }
+        }
+    }
+    return {
+        result,
+        indexs
+    }
 }
