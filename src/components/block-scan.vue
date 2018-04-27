@@ -182,7 +182,6 @@ export default {
         if(res.data.success) {
           this.blockHeight = res.data.height
           if(this.height === this.blockHeight) return
-          console.log(this.height)
           this.height += 1
           this.showDetail(this.height)
         }
