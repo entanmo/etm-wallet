@@ -22,7 +22,7 @@
               <th>奖励</th>
           </thead>
           <tbody class="table_tb">
-              <tr v-for="(item, index) in tableData" :key="index" @click="showDetail(item,index)">
+              <tr v-for="(item, index) in tableData" :key="index" @click="showDetail(item.height)">
                   <td style="color: #399dff;">{{item.height}}</td>
                   <td>{{convertTime(item.timestamp)}}</td>
                   <td style="color: #399dff;">{{item.id}}</td>
@@ -87,6 +87,10 @@
         <label>生产者公钥：</label>
         <span>{{blockDetail.generatorPublicKey}}</span>
       </div>
+      <p class="selectBlock">
+        <a href="javascript:;" @click="prevBlock">上一块</a>
+        <a href="javascript:;" @click="nextBlock">下一块</a>
+      </p>
     </div>
   </div>
 </template>
@@ -106,7 +110,9 @@ export default {
       tableData: [],
       ONE_PAGE_NUM: 10,
       blockDetail: {},
-      searchBlock: ''  
+      searchBlock: '',
+      height: 0,
+      blockHeight: 0
     }
   },
   created () {
@@ -144,12 +150,13 @@ export default {
         this.PageTotal = Math.ceil(res.data.count / this.ONE_PAGE_NUM)
       }).catch(e => {console.log(e)})
     },
-    showDetail(item,index) {
+    showDetail(height) {
+      this.height = height
       this.showPop = true
       Bus.$emit('showMask', true)
       this.$http.get('/api/blocks/get', {
         params: {
-          height: item.height
+          height: height
         }
       }).then(res => {
         this.blockDetail = res.data.block
@@ -166,6 +173,23 @@ export default {
       let stampTime = entanmoJs.transaction.getTime(time)
       return timestampToTime(stampTime)
     },
+    prevBlock() {
+      this.height -= 1
+      this.showDetail(this.height)
+    },
+    nextBlock() {
+      this.$http.get('/api/blocks/getHeight').then(res => {
+        if(res.data.success) {
+          this.blockHeight = res.data.height
+          if(this.height === this.blockHeight) return
+          console.log(this.height)
+          this.height += 1
+          this.showDetail(this.height)
+        }
+      }).catch(e => {console.log(e)})
+      
+      
+    }
   },
   watch: {
     searchBlock(newVal,oldVal) {
@@ -250,5 +274,12 @@ export default {
 }
 td:hover {
   cursor: pointer;
+}
+.selectBlock {
+  text-align: center;
+  margin-top: 10px;
+}
+.selectBlock a {
+  color: #399dff;
 }
 </style>

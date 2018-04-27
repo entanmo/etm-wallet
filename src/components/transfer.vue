@@ -77,7 +77,8 @@ export default {
         .put("/api/transactions", {
           secret: this.secret,
           amount: Number(this.amount),
-          recipientId: "17484924273970460319",
+          // recipientId: "17484924273970460319",
+          recipientId: this.recipientId,
           secondSecret: this.secondSecret
         })
         .then(res => {

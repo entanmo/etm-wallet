@@ -89,7 +89,7 @@
     <div class="main-container fr" ref="r">
       <div class="main-top flex">
         <i class="icon icon-menu" @click="toggleMenu"></i>
-        <i class="icon icon-loginout" @click="loginout"></i>
+        <i class="icon icon-loginout" @click="loginout" title="退出登录"></i>
       </div>
       <p class="main-title">
         {{title}}
