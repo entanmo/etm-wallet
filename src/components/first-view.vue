@@ -72,8 +72,6 @@ export default {
     this.address = genAddress(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')) 
     this._getAccounts(this.address)
     this._getTransaction(0)
-    
-    console.log(entanmoJs)
   },
   activated () {
     this.$store.commit('changeTitle', '首页')
@@ -147,7 +145,7 @@ export default {
       }
     },
     renderDiff(p) {
-
+      this._getTransaction(p)
     }
   }
 }
