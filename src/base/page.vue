@@ -86,6 +86,11 @@ export default {
     //     this.stuffLists = data
     // })  
   },
+  updated () {
+    Bus.$on('zeroPage', () => {
+        this.page = 0
+    })  
+  },
   methods: {
       getData(p) {
         this.$emit('renderDiff', p)

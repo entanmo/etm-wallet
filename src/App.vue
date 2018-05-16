@@ -60,7 +60,7 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('投票')">
+          <li class="has-sub">
             <router-link to="/vote">
               <i class="icon icon-holiday"></i>
               <span class="title">投票</span>
@@ -68,18 +68,36 @@
           </li>
         </ul>
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('转账')">
+          <li class="has-sub">
             <router-link to="/transfer">
-              <i class="icon icon-dismiss"></i>
+              <i class="icon icon-zhuanzhang"></i>
               <span class="title">转账</span>
             </router-link>
           </li>
         </ul>
+        <!-- 投票 -->
         <ul class="main-menu">
-          <li class="has-sub" @click="changeTitle('节点')">
-            <router-link to="/node">
+          <li class="has-sub">
+            <router-link to="/select-miners">
+              <i class="icon icon-holiday"></i>
+              <span class="title">选择矿工</span>
+            </router-link>
+          </li>
+        </ul>
+        <!-- 节点 -->
+        <ul class="main-menu">
+          <li class="has-sub">
+            <router-link to="/miners-list">
+              <i class="icon icon-dismiss"></i>
+              <span class="title">SCV矿工列表</span>
+            </router-link>
+          </li>
+        </ul>
+        <ul class="main-menu">
+          <li class="has-sub">
+            <router-link to="/selected-miners">
               <i class="icon icon-service"></i>
-              <span class="title">节点</span>
+              <span class="title">已选矿工</span>
             </router-link>
           </li>
         </ul>
@@ -249,7 +267,7 @@ body {
 }
 
 .icon-promote::before {
-  background: url(./assets/images/5.png) 0px 2px no-repeat;
+  background: url(./assets/images/icon-2.png) 0px 2px no-repeat;
 }
 
 .icon-transfer::before {
@@ -259,13 +277,15 @@ body {
 .icon-holiday::before {
   background: url(./assets/images/7.png) 0px 2px no-repeat;
 }
-
-.icon-dismiss::before {
+.icon-zhuanzhang::before {
   background: url(./assets/images/8.png) 0px 2px no-repeat;
+}
+.icon-dismiss::before {
+  background: url(./assets/images/9.png) 0px 2px no-repeat;
 }
 
 .icon-service::before {
-  background: url(./assets/images/9.png) 0px 5px no-repeat;
+  background: url(./assets/images/5.png) 0px 5px no-repeat;
 }
 .icon-arrow::before {
   background: url(./assets/images/11.png) 0px 1px no-repeat;

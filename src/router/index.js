@@ -85,6 +85,43 @@ const login = (resolve) => {
     resolve(module)
   })
 }
+// 2018/5/15
+const selectMiners = (resolve) => {
+  import('@/components/select-miners').then((module) => {
+    resolve(module)
+  })
+}
+const minersList = (resolve) => {
+  import('@/components/miners-list').then((module) => {
+    resolve(module)
+  })
+}
+const formalMiners = (resolve) => {
+  import('@/base/scv-miner/formal-miners').then((module) => {
+    resolve(module)
+  })
+}
+const candidateMiners = (resolve) => {
+  import('@/base/scv-miner/candidate-miners').then((module) => {
+    resolve(module)
+  })
+}
+const remainingMiners = (resolve) => {
+  import('@/base/scv-miner/remaining-miners').then((module) => {
+    resolve(module)
+  })
+}
+const selectedMiners = (resolve) => {
+  import('@/components/selected-miners').then((module) => {
+    resolve(module)
+  })
+}
+
+const minerDetail = (resolve) => {
+  import('@/components/miner-detail').then((module) => {
+    resolve(module)
+  })
+}
 Vue.use(Router)
 
 const router = new Router({
@@ -175,6 +212,43 @@ const router = new Router({
       path: '/node',
       component: node
     },
+    {
+      path: '/select-miners',
+      component: selectMiners,
+      children: [
+        {
+          path: ':id',
+          component: minerDetail
+        }
+      ]
+    },
+    {
+      path: '/miners-list',
+      component: minersList,
+      redirect: '/miners-list/formal-miners',
+      children: [
+        {
+          path: 'formal-miners',
+          component: formalMiners,
+          name: 'formalMiners'
+        },
+        {
+          path: 'candidate-miners',
+          component: candidateMiners,
+          name: 'candidateMiners'   
+        },
+        {
+          path: 'remaining-miners',
+          component: remainingMiners,
+          name: 'remainingMiners'          
+        }
+      ]
+
+    },
+    {
+      path: '/selected-miners',
+      component: selectedMiners
+    }
   ]
 })
 

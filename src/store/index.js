@@ -4,7 +4,9 @@ Vue.use(vuex)
 
 const state = {
     title: '',
-    needsSecondSecret: null
+    needsSecondSecret: null,
+    sortAs: true,
+    sortBy: 0
 }
 
 const mutations = {
@@ -13,6 +15,12 @@ const mutations = {
     },
     changeNeedsSecondSecret(state, payload) {
         state.needsSecondSecret = payload
+    },
+    reverseSort(state, payload) {
+        state.sortAs = payload
+    },
+    changeSort(state, payload) {
+        state.sortBy = payload
     }
 }
 

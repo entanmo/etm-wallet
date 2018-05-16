@@ -13,6 +13,7 @@
   "dependencies": {
     "@xkeshi/vue-qrcode": "^0.3.0",
     "axios": "^0.18.0",
+    "echarts": "^4.1.0",
     "long": "^4.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

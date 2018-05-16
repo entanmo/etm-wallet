@@ -1,35 +1,37 @@
 <template>
-  <div class="w">
+<div>
+  <div class="w" v-show="minerDetail == undefined">
     <div class="head flex">
-        <p>共{{totalVoters}}人</p>
-        <button @click="vote" ref="voteBtn">投票</button>
+      <p>共{{totalMinersNum}}台</p>
+      <button @click="vote" ref="voteBtn">投票</button>
     </div>
     <div class="event" >
       <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
           <thead class="table_th">
               <th></th>
               <th>排名</th>
-              <th>受托人</th>
-              <th>地址</th>
+              <th>名称</th>
+              <th>得票数</th>
+              <th>欺诈次数</th>
               <th>生产率</th>
-              <th>生产块数</th>
-              <th>得票率</th>
+              <th>平均算力</th>
+              <th>已运行时间</th>
           </thead>
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
                   <td>
                     <input type="checkbox"
                      :value="item" 
-                     v-model="selectDelegates"
-                     disabled
+                     v-model="selectMiners"
                      ref="checkBox">
                   </td>
-                  <td>{{item.rate}}</td>
-                  <td>{{item.username}}</td>
-                  <td style="color: #399dff;">{{item.address}}</td>
-                  <td>{{item.productivity}}%</td>
-                  <td>{{item.producedblocks}}</td>
-                  <td>{{item.approval}}%</td>
+                  <td>{{item.index + 1}}</td>
+                  <td class="gre" @click="goToDetail(item)">{{item.minerName}}</td>
+                  <td>{{item.vote}}</td>
+                  <td>{{item.cheat}}</td>
+                  <td>{{(item.productivity * 100).toFixed(2)}}%</td>
+                  <td>{{(item.averagepower).toFixed(2)}} MH/s</td>
+                  <td>{{calcTime(item.alreadyruntime)}}</td>
               </tr>
           </tbody>
       </table>
@@ -41,13 +43,13 @@
     <!-- 弹框 -->
     <div class="popout" v-show="showPop">
       <div class="close"><span @click="hidePopout">×</span></div>
-      <p class="title">投票给受托人</p>
+      <p class="title">投票</p>
       <p class="care">请确认您的选择与投票，每张票最多可同时投33人</p>
       <div class="input-list">
-      <div class="input-line" v-for="(item,index) in selectDelegates" :key="index">
+      <div class="input-line" v-for="(item,index) in selectMiners" :key="index">
         <div class="input clearfix">
-        <span class="fl">{{item.username}}</span>
-        <span class="gre fr">{{item.address}}</span>
+        <span class="fl">{{item.minerName}}</span>
+        <span class="gre fr">{{item.vote}}票</span>
         </div>
       </div>
       </div>
@@ -56,42 +58,37 @@
         <p class="tips">投票需支付0.01Mole</p>
       </div>
     </div>
-    <s-secret v-show="showSecondSecretPop" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
-
     <div class="tip" v-show="submitVote" :class="yesOrNo">
-			投票{{voteType}}！
-		</div>
+		  投票{{voteType}}！
+	  </div>
+    
   </div>
+  <router-view @setMinerDetail="setMinerDetail"></router-view>
+</div>
 </template>
 
 <script>
-import Page from "../page";
-import NoData from "../nodata";
-import SSecret from "../second-secret";
-import { genAddress } from "../../assets/js/gen";
-import { compareArrObj, compareEqualArrObj } from "../../assets/js/utils";
-import axios from "axios";
+import Page from "../base/page";
+import NoData from "../base/nodata";
 export default {
   components: {
     Page,
-    NoData,
-    SSecret
+    NoData
   },
   data() {
     return {
-      totalVoters: 0,
-      selectDelegates: [],
-      delegate: [],
-      PageTotal: 1,
-      showPop: false,
       tableData: [],
-      haveVoted: [],
-      ONE_PAGE_NUM: 10, //每页展示10条数据,
+      selectMiners: [],
+      PageTotal: 1,
+      totalMinersNum: 0,
+      ONE_PAGE_NUM: 10,
+      showPop: false,
+      secondSecret: "",
+      miners: [],
+      showSecondSecretPop: false,
       voteType: "",
       submitVote: false,
-      filterDisabled: [],
-      secondSecret: "",
-      showSecondSecretPop: false
+      minerDetail: null
     };
   },
   computed: {
@@ -99,39 +96,20 @@ export default {
       return this.voteType === "成功" ? "success-tip" : "fail-tip";
     }
   },
+  activated() {
+    this.$store.commit("changeTitle", "选择旷工");
+  },
+  created() {
+    this.getMinersNum();
+    this.getMiners(0);
+    
+  },
   mounted() {
-    // 获取受托人（分页）
-    // this._getTotalDelegates(0)
-    // 获取投票记录
-    // this._getRecord()
-    // 获取受托人（全部）
-    // this._getTotalD()
-    axios
-      .all([this._getTotalDelegates(0), this._getRecord()])
-      .then(axios.spread(() => {}));
-
-    if (!this.delegate.length) {
+    //   未选择无法点击投票
+    if (!this.miners.length) {
       this.$refs.voteBtn.disabled = true;
     } else {
       this.$refs.voteBtn.disabled = false;
-    }
-
-    
-  },
-  created () {
-    // 如果未设置二级密码，那么不用传secondSecret
-    if (this.$store.needsSecondSecret) {
-      this.showSecondSecretPop = true;
-    } else {
-      // this.$http.interceptors.request.use(
-      //   config => {
-      //     delete config.data.secondSecret;
-      //     return config;
-      //   },
-      //   e => {
-      //     return Promise.reject(error);
-      //   }
-      // );
     }
   },
   updated() {
@@ -140,83 +118,61 @@ export default {
     });
   },
   methods: {
-    // 投票列表
-    _getRecord() {
+    
+    getMinersNum() {
       this.$http
-        .get("/api/accounts/delegates", {
-          params: {
-            address: genAddress(
-              localStorage.getItem("etmsecret") ||
-                sessionStorage.getItem("etmsecret")
-            )
-          }
-        })
+        .get("/api/miner")
         .then(res => {
           if (res.data.success) {
-            this.haveVoted = res.data.delegates;
+            this.totalMinersNum = res.data.totalCount;
+            this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM);
           }
         })
         .catch(e => {
           console.log(e);
         });
     },
-    // 受托人列表（全部）
-    _getTotalD() {
+    getMiners(p) {
       this.$http
-        .get("/api/delegates/", {
+        .get("/api/miner", {
           params: {
-            orderby: "approval:desc"
-          }
-        })
-        .then(res => {
-          // 比较两数组，找出不同项
-          this.filterDisabled = compareArrObj(
-            this.haveVoted,
-            res.data.delegates
-          ).result;
-        });
-    },
-    // 受托人列表及总数（分页）
-    _getTotalDelegates(p) {
-      this.$http
-        .get("/api/delegates/", {
-          params: {
-            orderby: "approval:desc",
+            orderBy: "productivity:desc",
             offset: this.ONE_PAGE_NUM * p,
             limit: this.ONE_PAGE_NUM
           }
         })
         .then(res => {
           if (res.data.success) {
-            this.tableData = res.data.delegates;
-
-            this.totalVoters = res.data.totalCount;
-            this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM);
-
-            let arr = compareEqualArrObj(this.filterDisabled, this.tableData)
-              .result;
-            let indexs = compareEqualArrObj(this.filterDisabled, this.tableData)
-              .indexs;
-
-            this.$nextTick(() => {
-              for (let i = 0; i < this.$refs.checkBox.length; i++) {
-                let element = this.$refs.checkBox[i];
-                element.disabled = true;
-              }
-              indexs.forEach(item => {
-                this.$refs.checkBox[item].disabled = false;
-              });
+            this.tableData = res.data.miners;
+            // 设置排名
+            this.tableData.forEach((item, index) => {
+              this.$set(item, "index", this.ONE_PAGE_NUM * p + index);
             });
           }
         })
-        .catch(err => {
-          console.log(err);
+        .catch(e => {
+          console.log(e);
         });
+    },
+    calcTime(t) {
+      let h = Math.floor(t / 3600);
+      let m = Math.floor((t - h * 3600) / 60);
+      return h === 0 ? m + "min" : h + "h " + m + "min";
+    },
+    vote() {
+      this.showPop = true;
+      Bus.$emit("showMask", true);
+    },
+    renderDiff(p) {
+      this.getMiners(p);
+    },
+    hidePopout() {
+      this.showPop = false;
+      Bus.$emit("showMask", false);
     },
     submitVoter() {
       this.showPop = false;
       Bus.$emit("showMask", false);
-      // 是否需要二级密码
       if (this.$store.state.needsSecondSecret) {
         this.showSecondSecretPop = true;
       } else {
@@ -224,18 +180,21 @@ export default {
       }
     },
     _submitVoter() {
+      this.checkSecondSecret();
       this.$http
-        .put("/api/accounts/delegates", {
+        .put("/api/miner", {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
-          delegates: this.delegate,
-          secondSecret: this.secondSecret
+          secondSecret: this.secondSecret,
+          miners: this.miners
         })
         .then(res => {
+          console.log(res);
           // 投票后自动关闭弹框
           Bus.$emit("showMask", false);
           this.showPop = false;
+
           if (res.data.success) {
             this.voteType = "成功";
             this.submitVote = true;
@@ -249,45 +208,53 @@ export default {
               this.submitVote = false;
             }, 2000);
           }
+        })
+        .catch(e => {
+          console.log(e);
         });
     },
-    vote() {
-      this.showPop = true;
-      Bus.$emit("showMask", true);
+    checkSecondSecret() {
+      // 如果未设置二级密码，那么不用传secondSecret
+      if (!this.$store.needsSecondSecret) {
+        this.$http.interceptors.request.use(
+          config => {
+            delete config.data.secondSecret;
+            return config;
+          },
+          e => {
+            return Promise.reject(error);
+          }
+        );
+      }
     },
-    hidePopout() {
-      this.showPop = false;
-      Bus.$emit("showMask", false);
+    goToDetail(item) {
+      this.$router.push({
+        path: `/select-miners/${item.minerNo}`
+      })
     },
-    renderDiff(p) {
-      this._getTotalDelegates(p);
-    },
-    hidePop(data) {
-      this.showSecondSecretPop = data;
-    },
-    inputSSecret(data) {
-      this.secondSecret = data;
-      this._submitVoter();
+    setMinerDetail(data) {
+      this.minerDetail = data
     }
   },
   watch: {
-    selectDelegates(newV, oldV) {
-      // 选择受托人投票列表
-      this.delegate = [];
-      newV.forEach(item => {
-        this.delegate.push("+" + item.publicKey);
+    selectMiners(newVal, oldVal) {
+      this.miners = [];
+      newVal.forEach(item => {
+        this.miners.push({
+          minerNo: item.minerNo,
+          vote: item.vote
+        });
       });
-      if (!this.delegate.length) {
+      if (!this.miners.length) {
         this.$refs.voteBtn.disabled = true;
       } else {
         this.$refs.voteBtn.disabled = false;
       }
     },
-    haveVoted(newVal) {
-      // 获取投票记录列表后再去请求全部受托人列表
-      if (newVal.length) {
-        this._getTotalD();
-      }
+    '$route': function () {
+        this.minerDetail = this.$route.params.id
+        sessionStorage.setItem('minerDetail', this.minerDetail)
+        console.log(this.childRouter)
     }
   }
 };
@@ -296,6 +263,12 @@ export default {
 <style scoped>
 .gre {
   color: #1890ff;
+  cursor: pointer;
+}
+.w {
+  width: 96%;
+  margin: 0 2%;
+  background: #fff;
 }
 .head {
   height: 60px;
@@ -391,9 +364,9 @@ export default {
   width: 160px;
   height: 80px;
   position: absolute;
-  top: 0;
-  left: 40%;
-  margin: 0 auto;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
   box-shadow: 0 0 20px rgb(200, 200, 200);
   text-align: center;
@@ -408,3 +381,5 @@ export default {
   background: #ee4000;
 }
 </style>
+
+
