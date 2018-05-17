@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="main-content">
-      <ul class="nav-left">
+      <ul class="nav-left" v-show="!minerDetail">
         <router-link to="formal-miners" tag="li">正式矿工</router-link>
         <router-link to="candidate-miners" tag="li">候补矿工</router-link>
         <router-link to="remaining-miners" tag="li">剩余矿工</router-link>
       </ul>
       <div class="nav-content">
         <keep-alive>
-          <router-view></router-view>
+          <router-view @setMinerDetail="setMinerDetail"></router-view>
         </keep-alive>
       </div>
     </div>
@@ -17,8 +17,24 @@
 
 <script>
 export default {
+  data () {
+    return {
+      minerDetail: ''
+    }
+  },
   activated () {
     this.$store.commit('changeTitle', 'SCV旷工列表')
+  },
+  methods: {
+    setMinerDetail(data) {
+      this.minerDetail = data
+    }
+  },
+  watch: {
+    '$route'(newVal) {
+        this.minerDetail = this.$route.params.id
+        sessionStorage.setItem('minerDetail', this.minerDetail)
+      }
   }
 }
 </script>

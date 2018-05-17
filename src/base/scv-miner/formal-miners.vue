@@ -1,8 +1,10 @@
 <template>
-  <div>
+<div>
+  <div class="w">
     <filter-btn></filter-btn>
     <scv-table></scv-table>
   </div>
+</div>
 </template>
 
 <script>

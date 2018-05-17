@@ -61,7 +61,7 @@
     <div class="tip" v-show="submitVote" :class="yesOrNo">
 		  投票{{voteType}}！
 	  </div>
-    
+    <s-secret v-show="showSecondSecretPop" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
   </div>
   <router-view @setMinerDetail="setMinerDetail"></router-view>
 </div>
@@ -70,10 +70,12 @@
 <script>
 import Page from "../base/page";
 import NoData from "../base/nodata";
+import SSecret from "../base/second-secret";
 export default {
   components: {
     Page,
-    NoData
+    NoData,
+    SSecret
   },
   data() {
     return {
@@ -190,7 +192,6 @@ export default {
           miners: this.miners
         })
         .then(res => {
-          console.log(res);
           // 投票后自动关闭弹框
           Bus.$emit("showMask", false);
           this.showPop = false;
@@ -231,10 +232,18 @@ export default {
       this.$router.push({
         path: `/select-miners/${item.minerNo}`
       })
+      sessionStorage.setItem('detailInfo', JSON.stringify(item))
     },
     setMinerDetail(data) {
       this.minerDetail = data
-    }
+    },
+    hidePop(data) {
+      this.showSecondSecretPop = data;
+    },
+    inputSSecret(data) {
+      this.secondSecret = data;
+      this._submitVoter();
+    },
   },
   watch: {
     selectMiners(newVal, oldVal) {
@@ -251,10 +260,9 @@ export default {
         this.$refs.voteBtn.disabled = false;
       }
     },
-    '$route': function () {
+    '$route'(newVal) {
         this.minerDetail = this.$route.params.id
         sessionStorage.setItem('minerDetail', this.minerDetail)
-        console.log(this.childRouter)
     }
   }
 };

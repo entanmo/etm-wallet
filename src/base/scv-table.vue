@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="w">
       <div class="event" >
       <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
           <thead class="table_th">
@@ -14,7 +15,7 @@
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
                   <td>{{item.index + 1}}</td>
-                  <td class="gre">{{item.minerName}}</td>
+                  <td class="gre" @click="goToDetail(item)">{{item.minerName}}</td>
                   <td>{{item.vote}}</td>
                   <td>{{item.cheat}}</td>
                   <td>{{(item.productivity * 100).toFixed(2)}}%</td>
@@ -25,9 +26,11 @@
       </table>
       <!-- <loading v-show="!beforeConfirm.length && !cannotfind"></loading> -->
       <no-data v-show="!tableData.length"></no-data>
+      </div>
+      <!-- 分页 -->
+      <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
     </div>
-    <!-- 分页 -->
-    <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
+    
   </div>
 </template>
 <script>
@@ -43,7 +46,7 @@ export default {
       tableData: [],
       PageTotal: 1,
       status: '',
-      ONE_PAGE_NUM: 10      
+      ONE_PAGE_NUM: 10
     };
   },
   computed: {
@@ -123,7 +126,14 @@ export default {
     },
     renderDiff(p) {
       this.getSCVMiners(p);
-    }
+    },
+    goToDetail(item) {
+      this.$router.push({
+        path: `/miners-list/${item.minerNo}`
+      })
+      sessionStorage.setItem('detailInfo', JSON.stringify(item))
+    },
+    
   },
   watch: {
       sortAs() {

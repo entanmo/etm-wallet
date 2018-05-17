@@ -5,7 +5,6 @@ import Vue from 'vue'
 import App from './App'
 import Login from './components/login'
 import router from './router'
-import axios from 'axios'
 import store from './store'
 
 // qrcode
@@ -17,6 +16,10 @@ import './assets/css/public.css'
 import './assets/css/iconfont.css'
 import '../static/browserify-entanmo-min'
 
+import echarts from  'echarts'
+Vue.prototype.$echarts = echarts
+
+import axios from 'axios'
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false

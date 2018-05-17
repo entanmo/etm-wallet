@@ -142,6 +142,7 @@ export default {
       }
     },
     _setDelegates() {
+      this.checkSecondSecret()
       this.$http
         .put("/api/delegates", {
           secret:
@@ -220,7 +221,21 @@ export default {
     inputSSecret(data) {
       this.secondSecret = data;
       this._setDelegates();
-    }
+    },
+    checkSecondSecret() {
+      // 如果未设置二级密码，那么不用传secondSecret
+      if (!this.$store.needsSecondSecret) {
+        this.$http.interceptors.request.use(
+          config => {
+            delete config.data.secondSecret;
+            return config;
+          },
+          e => {
+            return Promise.reject(error);
+          }
+        );
+      }
+    },
   },
   watch: {
     // 关闭弹窗后清空输入框

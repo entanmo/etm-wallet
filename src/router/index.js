@@ -126,7 +126,7 @@ Vue.use(Router)
 
 const router = new Router({
   linkActiveClass: 'in',
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
@@ -218,7 +218,8 @@ const router = new Router({
       children: [
         {
           path: ':id',
-          component: minerDetail
+          component: minerDetail,
+          name: 'minerDetail'
         }
       ]
     },
@@ -241,13 +242,25 @@ const router = new Router({
           path: 'remaining-miners',
           component: remainingMiners,
           name: 'remainingMiners'          
-        }
+        },
+        {
+          path: ':id',
+          component: minerDetail,
+          name: 'minerDetail'
+        },
       ]
 
     },
     {
       path: '/selected-miners',
-      component: selectedMiners
+      component: selectedMiners,
+      children: [
+        {
+          path: ':id',
+          component: minerDetail,
+          name: 'minerDetail'
+        }
+      ]
     }
   ]
 })
