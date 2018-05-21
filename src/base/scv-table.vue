@@ -88,7 +88,7 @@ export default {
   methods: {
       getSCVMinersNum() {
       this.$http
-        .get("/api/miner/scv", {
+        .get("http://118.24.135.98:4096/api/miner/scv", {
           params: {
             status: this.status
           }
@@ -101,7 +101,7 @@ export default {
     },
     getSCVMiners(p) {
       this.$http
-        .get("/api/miner/scv", {
+        .get("http://118.24.135.98:4096/api/miner/scv", {
           params: {
             status: this.status,
             offset: this.ONE_PAGE_NUM * p,

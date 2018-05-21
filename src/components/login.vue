@@ -55,7 +55,7 @@ export default {
 			this.address = entanmoJs.crypto.getNewAddress(this.publicKey)
 			
 			// 登录
-			this.$http.post('/api/accounts/open2/', {
+			this.$http.post('http://118.24.135.98:4096/api/accounts/open2/', {
 					publicKey: this.publicKey
 				}).then(res => {
 				if(res.data.success) {

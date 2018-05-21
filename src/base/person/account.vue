@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     _getAccounts(address) {
-      this.$http.get('/api/accounts', {
+      this.$http.get('http://118.24.135.98:4096/api/accounts', {
         params: {
           address
         }

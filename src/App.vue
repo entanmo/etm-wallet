@@ -59,14 +59,14 @@
             </router-link>
           </li>
         </ul>
-        <ul class="main-menu">
+        <!-- <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/vote">
               <i class="icon icon-holiday"></i>
               <span class="title">投票</span>
             </router-link>
           </li>
-        </ul>
+        </ul> -->
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/transfer">
@@ -168,7 +168,7 @@ export default {
     // 全局，判断该账户是否设置了二级密码
     _getAccounts(address) {
       this.$http
-        .get("/api/accounts", {
+        .get("http://118.24.135.98:4096/api/accounts", {
           params: {
             address
           }

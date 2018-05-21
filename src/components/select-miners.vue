@@ -123,7 +123,7 @@ export default {
     
     getMinersNum() {
       this.$http
-        .get("/api/miner")
+        .get("http://118.24.135.98:4096/api/miner")
         .then(res => {
           if (res.data.success) {
             this.totalMinersNum = res.data.totalCount;
@@ -136,7 +136,7 @@ export default {
     },
     getMiners(p) {
       this.$http
-        .get("/api/miner", {
+        .get("http://118.24.135.98:4096/api/miner", {
           params: {
             orderBy: "productivity:desc",
             offset: this.ONE_PAGE_NUM * p,
@@ -184,7 +184,7 @@ export default {
     _submitVoter() {
       this.checkSecondSecret();
       this.$http
-        .put("/api/miner", {
+        .put("http://118.24.135.98:4096/api/miner", {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),

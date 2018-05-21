@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     _getAccounts(address) {
-      this.$http.get('/api/accounts', {
+      this.$http.get('http://118.24.135.98:4096/api/accounts', {
         params: {
           address
         }
@@ -98,7 +98,7 @@ export default {
       })
     },
     _getTransaction(p) {
-      this.$http.get('/api/transactions', {
+      this.$http.get('http://118.24.135.98:4096/api/transactions', {
         params: {
           senderId: this.address,
           orderBy: 't_timestamp:desc',

@@ -75,7 +75,7 @@ export default {
     _transfer() {
       this.checkSecondSecret()
       this.$http
-        .put("/api/transactions", {
+        .put("http://118.24.135.98:4096/api/transactions", {
           secret: this.secret,
           amount: Number(this.amount),
           // recipientId: "17484924273970460319",

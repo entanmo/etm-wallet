@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     _getPeers(p) {
-      this.$http.get('/api/peers', {
+      this.$http.get('http://118.24.135.98:4096/api/peers', {
         params: {
           limit: this.ONE_PAGE_NUM,
           offset: this.ONE_PAGE_NUM * p

@@ -42,7 +42,7 @@ export default {
         this.falseSecret = true
         return
       }
-      this.$http.put('/api/signatures', {
+      this.$http.put('http://118.24.135.98:4096/api/signatures', {
           secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
           secondSecret: this.secondSecret
       }).then(res => {

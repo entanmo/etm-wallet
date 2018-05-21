@@ -10,7 +10,7 @@
           <span>{{detailInfo.minerName}}</span>
           <img src="../assets/images/icon-1.png" v-show="showV">
         </div>
-        <p>官方网址：?</p>
+        <p>官方网址：www.entanmo.com</p>
         <p>公钥地址：{{detailInfo.publicKey}}</p>
       </div>
     </div>
@@ -83,7 +83,7 @@ export default {
     },
     getMinerProp() {
       this.$http
-        .get("/api/miner/prop", {
+        .get("http://118.24.135.98:4096/api/miner/prop", {
           params: {
             minerNo: sessionStorage.getItem("minerDetail")
           }
@@ -105,7 +105,7 @@ export default {
         });
     },
     getPowers() {
-      this.$http.get('/api/miner/powers', {
+      this.$http.get('http://118.24.135.98:4096/api/miner/powers', {
         params: {
           minerNo: sessionStorage.getItem("minerDetail")
         }
