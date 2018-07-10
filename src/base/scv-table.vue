@@ -36,6 +36,7 @@
 <script>
 import NoData from "./nodata";
 import Page from "./page";
+const HOST = require('../../config/ip')
 export default {
   components: {
     NoData,
@@ -88,7 +89,7 @@ export default {
   methods: {
       getSCVMinersNum() {
       this.$http
-        .get("http://118.24.135.98:4096/api/miner/scv", {
+        .get(HOST+"/api/miner/scv", {
           params: {
             status: this.status
           }
@@ -101,7 +102,7 @@ export default {
     },
     getSCVMiners(p) {
       this.$http
-        .get("http://118.24.135.98:4096/api/miner/scv", {
+        .get(HOST+"/api/miner/scv", {
           params: {
             status: this.status,
             offset: this.ONE_PAGE_NUM * p,

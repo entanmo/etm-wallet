@@ -19,6 +19,7 @@
 </template>
 
 <script>
+const HOST = require('../../../config/ip')
 export default {
   components: {
   },
@@ -42,7 +43,7 @@ export default {
         this.falseSecret = true
         return
       }
-      this.$http.put('http://118.24.135.98:4096/api/signatures', {
+      this.$http.put(HOST+'/api/signatures', {
           secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
           secondSecret: this.secondSecret
       }).then(res => {

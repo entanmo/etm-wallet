@@ -56,6 +56,7 @@
 <script>
 import NoData from '../base/nodata'
 import SSecret from "../base/second-secret";
+const HOST = require('../../config/ip')
 export default {
   components: {
     NoData,
@@ -111,7 +112,7 @@ export default {
     },
     getSelectedMiners() {
       this.checkSecondSecret_delParams()
-      this.$http.get('http://118.24.135.98:4096/api/miner/vote', {
+      this.$http.get(HOST+'/api/miner/vote', {
         params: {
           secret: localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
@@ -198,7 +199,7 @@ export default {
     _submitDelete() {
       this.checkSecondSecret_delData()
       // 删除
-      this.$http.put('http://118.24.135.98:4096/api/miner/del', {
+      this.$http.put(HOST+'/api/miner/del', {
         secret: localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
         secondSecret: this.secondSecret,

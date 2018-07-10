@@ -71,6 +71,7 @@
 import Page from "../base/page";
 import NoData from "../base/nodata";
 import SSecret from "../base/second-secret";
+const HOST = require('../../config/ip')
 export default {
   components: {
     Page,
@@ -123,7 +124,7 @@ export default {
     
     getMinersNum() {
       this.$http
-        .get("http://118.24.135.98:4096/api/miner")
+        .get(HOST+"/api/miner")
         .then(res => {
           if (res.data.success) {
             this.totalMinersNum = res.data.totalCount;
@@ -136,7 +137,7 @@ export default {
     },
     getMiners(p) {
       this.$http
-        .get("http://118.24.135.98:4096/api/miner", {
+        .get(HOST+"/api/miner", {
           params: {
             orderBy: "productivity:desc",
             offset: this.ONE_PAGE_NUM * p,
@@ -184,7 +185,7 @@ export default {
     _submitVoter() {
       this.checkSecondSecret();
       this.$http
-        .put("http://118.24.135.98:4096/api/miner", {
+        .put(HOST+"/api/miner", {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),

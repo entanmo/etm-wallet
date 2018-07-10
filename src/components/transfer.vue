@@ -34,6 +34,7 @@
 <script>
 import { genAddress } from "../assets/js/gen";
 import SSecret from "../base/second-secret";
+const HOST = require('../../config/ip')
 export default {
   components: {
     SSecret
@@ -75,7 +76,7 @@ export default {
     _transfer() {
       this.checkSecondSecret()
       this.$http
-        .put("http://118.24.135.98:4096/api/transactions", {
+        .put(HOST+"/api/transactions", {
           secret: this.secret,
           amount: Number(this.amount),
           // recipientId: "17484924273970460319",

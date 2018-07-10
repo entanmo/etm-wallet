@@ -28,6 +28,7 @@
 <script>
 import Page from '../base/page'
 import NoData from '../base/nodata'
+const HOST = require('../../config/ip')
 export default {
   components: {
     Page,NoData
@@ -47,7 +48,7 @@ export default {
   },
   methods: {
     _getPeers(p) {
-      this.$http.get('http://118.24.135.98:4096/api/peers', {
+      this.$http.get(HOST+'/api/peers', {
         params: {
           limit: this.ONE_PAGE_NUM,
           offset: this.ONE_PAGE_NUM * p

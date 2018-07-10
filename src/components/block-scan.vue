@@ -99,6 +99,7 @@
 import Page from '../base/page'
 import NoData from '../base/nodata'
 import {timestampToTime} from '../assets/js/utils'
+const HOST = require('../../config/ip')
 export default {
   components: {
     Page,NoData
@@ -128,7 +129,7 @@ export default {
   },
   methods: {
     search() {
-      this.$http.get('http://118.24.135.98:4096/api/blocks/get', {
+      this.$http.get(HOST+'/api/blocks/get', {
         params: {
           height: this.searchBlock         
         }
@@ -139,7 +140,7 @@ export default {
       }).catch(e => {console.log(e)})
     },
     _getBlocks(p) {
-      this.$http.get('http://118.24.135.98:4096/api/blocks', {
+      this.$http.get(HOST+'/api/blocks', {
         params: {
           limit: this.ONE_PAGE_NUM,
           offset: this.ONE_PAGE_NUM * p,
@@ -154,7 +155,7 @@ export default {
       this.height = height
       this.showPop = true
       Bus.$emit('showMask', true)
-      this.$http.get('http://118.24.135.98:4096/api/blocks/get', {
+      this.$http.get(HOST+'/api/blocks/get', {
         params: {
           height: height
         }
@@ -178,7 +179,7 @@ export default {
       this.showDetail(this.height)
     },
     nextBlock() {
-      this.$http.get('http://118.24.135.98:4096/api/blocks/getHeight').then(res => {
+      this.$http.get(HOST+'/api/blocks/getHeight').then(res => {
         if(res.data.success) {
           this.blockHeight = res.data.height
           if(this.height === this.blockHeight) return

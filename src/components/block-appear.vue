@@ -79,6 +79,7 @@ import Page from "../base/page";
 import NoData from "../base/nodata";
 import SSecret from "../base/second-secret";
 import { genPublicKey } from "../assets/js/gen";
+const HOST = require('../../config/ip')
 export default {
   components: {
     Page,
@@ -144,7 +145,7 @@ export default {
     _setDelegates() {
       this.checkSecondSecret()
       this.$http
-        .put("http://118.24.135.98:4096/api/delegates", {
+        .put(HOST+"/api/delegates", {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
@@ -176,7 +177,7 @@ export default {
     // 获取该受托人信息
     _getDelegateDetail(key) {
       this.$http
-        .get("http://118.24.135.98:4096/api/delegates/get/", {
+        .get(HOST+"/api/delegates/get/", {
           params: {
             publicKey: key
           }
@@ -196,7 +197,7 @@ export default {
     // 获取受托人生产的区块
     _getBlocks(key, p) {
       this.$http
-        .get("http://118.24.135.98:4096/api/blocks", {
+        .get(HOST+"/api/blocks", {
           params: {
             generatorPublicKey: key,
             offset: this.ONE_PAGE_NUM * p,

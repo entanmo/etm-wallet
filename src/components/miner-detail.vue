@@ -45,6 +45,7 @@
 </template>
 
 <script>
+const HOST = require('../../config/ip')
 export default {
   data() {
     return {
@@ -83,7 +84,7 @@ export default {
     },
     getMinerProp() {
       this.$http
-        .get("http://118.24.135.98:4096/api/miner/prop", {
+        .get(HOST+"/api/miner/prop", {
           params: {
             minerNo: sessionStorage.getItem("minerDetail")
           }
@@ -105,7 +106,7 @@ export default {
         });
     },
     getPowers() {
-      this.$http.get('http://118.24.135.98:4096/api/miner/powers', {
+      this.$http.get(HOST+'/api/miner/powers', {
         params: {
           minerNo: sessionStorage.getItem("minerDetail")
         }

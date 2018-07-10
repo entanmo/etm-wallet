@@ -64,6 +64,7 @@ import Page from '../base/page'
 import NoData from '../base/nodata'
 import {genPublicKey, genAddress} from '../assets/js/gen'
 import {timestampToTime} from '../assets/js/utils'
+const HOST = require('../../config/ip')
 export default {
   components: {
     Page,NoData
@@ -87,7 +88,7 @@ export default {
   },
   methods: {
     _getAccounts(address) {
-      this.$http.get('http://118.24.135.98:4096/api/accounts', {
+      this.$http.get(HOST+'/api/accounts', {
         params: {
           address
         }
@@ -98,7 +99,7 @@ export default {
       })
     },
     _getTransaction(p) {
-      this.$http.get('http://118.24.135.98:4096/api/transactions', {
+      this.$http.get(HOST+'/api/transactions', {
         params: {
           senderId: this.address,
           orderBy: 't_timestamp:desc',

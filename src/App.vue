@@ -122,6 +122,7 @@
 
 <script>
 import { genAddress } from "./assets/js/gen";
+const HOST = require('../config/ip')
 
 export default {
   data() {
@@ -168,7 +169,7 @@ export default {
     // 全局，判断该账户是否设置了二级密码
     _getAccounts(address) {
       this.$http
-        .get("http://118.24.135.98:4096/api/accounts", {
+        .get( HOST + "/api/accounts", {
           params: {
             address
           }
