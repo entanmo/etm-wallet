@@ -40,13 +40,14 @@
           </thead>
           <tbody class="table_tb">
               <tr v-for="(item, index) in tableData" :key="index">
+                  <td style="color: #399dff;">{{item.height}}</td>
+                  <td>{{convertTime(item.timestamp)}}</td>
                   <td style="color: #399dff;">{{item.id}}</td>
-                  <td>{{item.type}}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <!-- <td style="color: #399dff;">{{item.generatorId}}</td> -->
+                  <td>{{item.numberOfTransactions}}</td>
+                  <td>{{item.totalAmount}}</td>
+                  <td>{{item.totalFee}}</td>
+                  <td>{{item.reward}}</td>
               </tr>
           </tbody>
       </table>
@@ -78,6 +79,7 @@
 import Page from "../base/page";
 import NoData from "../base/nodata";
 import SSecret from "../base/second-secret";
+import {timestampToTime} from '../assets/js/utils'
 import { genPublicKey } from "../assets/js/gen";
 const HOST = require('../../config/ip')
 export default {
@@ -95,7 +97,7 @@ export default {
       delegateInfo: {},
       tableData: [],
       publickey: "",
-      ONE_PAGE_NUM: 10,
+      ONE_PAGE_NUM: 7,
       submitVote: false,
       voteType: "",
       showPop1: false,
@@ -141,6 +143,10 @@ export default {
       } else {
         this._setDelegates();
       }
+    },
+    convertTime(time) {
+      let stampTime = entanmoJs.transaction.getTime(time)
+      return timestampToTime(stampTime)
     },
     _setDelegates() {
       this.checkSecondSecret()
@@ -208,7 +214,7 @@ export default {
           if (res.data.success) {
             this.tableData = res.data.blocks;
             this.PageTotal = Math.ceil(
-              res.data.blocks.length / this.ONE_PAGE_NUM
+              res.data.count / this.ONE_PAGE_NUM
             );
           }
         });

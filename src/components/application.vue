@@ -27,7 +27,7 @@ export default {
 .nav-content {
     background: #fff;
     position: relative;
-    min-height: 800px;
+    min-height: 600px;
 }
 .main-content {
     width: 97.34%;
