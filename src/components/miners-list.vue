@@ -22,9 +22,9 @@ export default {
       minerDetail: ''
     }
   },
-  activated () {
-    this.$store.commit('changeTitle', 'SCV旷工列表')
-  },
+  // activated () {
+  //   this.$store.commit('changeTitle', 'SCV旷工列表')
+  // },
   methods: {
     setMinerDetail(data) {
       this.minerDetail = data

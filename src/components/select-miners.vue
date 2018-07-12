@@ -99,9 +99,9 @@ export default {
       return this.voteType === "成功" ? "success-tip" : "fail-tip";
     }
   },
-  activated() {
-    this.$store.commit("changeTitle", "选择旷工");
-  },
+  // activated() {
+  //   this.$store.commit("changeTitle", "选择旷工");
+  // },
   created() {
     this.getMinersNum();
     this.getMiners(0);
@@ -217,7 +217,7 @@ export default {
     },
     checkSecondSecret() {
       // 如果未设置二级密码，那么不用传secondSecret
-      if (!this.$store.needsSecondSecret) {
+      if (!this.$store.state.needsSecondSecret) {
         this.$http.interceptors.request.use(
           config => {
             delete config.data.secondSecret;
@@ -278,6 +278,8 @@ export default {
   width: 96%;
   margin: 0 2%;
   background: #fff;
+  padding-bottom: 24px;
+
 }
 .head {
   height: 60px;

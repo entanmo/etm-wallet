@@ -112,9 +112,9 @@
       <p class="main-title">
         {{title}}
       </p>
-      <keep-alive>
+      <!-- <keep-alive> -->
         <router-view></router-view>
-      </keep-alive>
+      <!-- </keep-alive> -->
     </div>
     <div class="mask" v-show="showPop" @click="hidePop"></div>
   </div>
@@ -136,7 +136,7 @@ export default {
     Bus.$on("showMask", data => {
       this.showPop = data;
     });
-    this.title = this.$store.state.title;
+    // this.title = this.$store.state.title;
   },
   created() {
     let address = genAddress(
@@ -184,7 +184,11 @@ export default {
         });
     }
   },
-  watch: {}
+  watch: {
+    '$route'(to, from) {
+      this.title = to.meta.title
+    }
+  }
 };
 </script>
 <style scoped>

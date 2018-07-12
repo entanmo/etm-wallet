@@ -74,9 +74,9 @@ export default {
     this._getAccounts(this.address)
     this._getTransaction(0)
   },
-  activated () {
-    this.$store.commit('changeTitle', '首页')
-  },
+  // activated () {
+  //   this.$store.commit('changeTitle', '首页')
+  // },
   data () {
     return {
       PageTotal: 1,
@@ -148,7 +148,8 @@ export default {
     renderDiff(p) {
       this._getTransaction(p)
     }
-  }
+  },
+  
 }
 </script>
 

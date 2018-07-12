@@ -20,9 +20,9 @@ export default {
   components: {
     
   },
-  activated () {
-    this.$store.commit('changeTitle', '投票')
-  }
+  // activated () {
+  //   this.$store.commit('changeTitle', '投票')
+  // }
 }
 </script>
 

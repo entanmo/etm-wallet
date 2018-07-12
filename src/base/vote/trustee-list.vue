@@ -120,7 +120,7 @@ export default {
   },
   created () {
     // 如果未设置二级密码，那么不用传secondSecret
-    if (this.$store.needsSecondSecret) {
+    if (this.$store.state.needsSecondSecret) {
       this.showSecondSecretPop = true;
     } else {
       // this.$http.interceptors.request.use(

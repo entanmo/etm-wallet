@@ -51,9 +51,9 @@ export default {
       showPop: false
     };
   },
-  activated() {
-    this.$store.commit("changeTitle", "转账");
-  },
+  // activated() {
+  //   this.$store.commit("changeTitle", "转账");
+  // },
   created() {
     this.secret =
       localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret");
@@ -84,6 +84,7 @@ export default {
           secondSecret: this.secondSecret
         })
         .then(res => {
+          console.log(res)
           // 根据交易是否成功来显示tip框颜色
           if (res.data.success) {
             this.transferType = "成功";
@@ -112,7 +113,8 @@ export default {
     },
     checkSecondSecret() {
       // 如果未设置二级密码，那么不用传secondSecret
-      if (!this.$store.needsSecondSecret) {
+      if (!this.$store.state.needsSecondSecret) {
+        
         this.$http.interceptors.request.use(
           config => {
             delete config.data.secondSecret;

@@ -53,7 +53,7 @@ export default {
 					  setTimeout(() => {
 						  this.submitVote = false
 					  }, 2000);
-          this.$router.push('/person/account')
+          // this.$router.push('/person/account')
         }else {
           this.voteType = '失败'
 					  this.submitVote = true

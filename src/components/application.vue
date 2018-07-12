@@ -17,9 +17,9 @@ export default {
   components: {
     
   },
-  activated () {
-    this.$store.commit('changeTitle', '应用中心')
-  }
+  // activated () {
+  //   this.$store.commit('changeTitle', '应用中心')
+  // }
 }
 </script>
 

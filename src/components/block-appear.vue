@@ -112,9 +112,9 @@ export default {
       this.showPop = false;
     });
   },
-  activated() {
-    this.$store.commit("changeTitle", "区块生产");
-  },
+  // activated() {
+  //   this.$store.commit("changeTitle", "区块生产");
+  // },
   created() {
     this.publickey = genPublicKey(
       localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret")
@@ -225,7 +225,7 @@ export default {
     },
     checkSecondSecret() {
       // 如果未设置二级密码，那么不用传secondSecret
-      if (!this.$store.needsSecondSecret) {
+      if (!this.$store.state.needsSecondSecret) {
         this.$http.interceptors.request.use(
           config => {
             delete config.data.secondSecret;

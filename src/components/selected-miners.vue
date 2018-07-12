@@ -48,6 +48,8 @@
 		  删除{{delType}}！
 	  </div>
     <s-secret v-show="showSecondSecretPop" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
+    <!-- 分页 -->
+    <page v-show="PageTotal > 1" :PageTotal="PageTotal" @renderDiff="renderDiff"></page>
   </div>
   <router-view @setMinerDetail="setMinerDetail"></router-view>
 </div>
@@ -56,10 +58,12 @@
 <script>
 import NoData from '../base/nodata'
 import SSecret from "../base/second-secret";
+import Page from "../base/page";
 const HOST = require('../../config/ip')
 export default {
   components: {
     NoData,
+    Page,
     SSecret
   },
   data () {
@@ -74,7 +78,9 @@ export default {
       delMinerNo: [],
       secondSecret: '',
       showSecondSecretPop: false,
-      mapColor: ''
+      mapColor: '',
+      PageTotal: 1,
+      ONE_PAGE_NUM: 10
     }
   },
   computed: {
@@ -82,16 +88,17 @@ export default {
       return this.delType === "成功" ? "success-tip" : "fail-tip";
     },
   },
-  activated() {
-    this.$store.commit("changeTitle", "已选旷工");
-  },
+  // activated() {
+  //   this.$store.commit("changeTitle", "已选旷工");
+  // },
   updated() {
     Bus.$on("hideQrcode", data => {
       this.showPop = false;
     });
   },
   created () {
-    this.getSelectedMiners()
+    this.getSelectedMinersNum()
+    this.getSelectedMiners(0)
   },
   methods: {
     mapStatus(status) {
@@ -110,17 +117,32 @@ export default {
           break;
       }
     },
-    getSelectedMiners() {
+    getSelectedMinersNum() {
+      this.$http.get(HOST+'/api/miner/vote', {
+        params: {
+          secret: localStorage.getItem("etmsecret") ||
+            sessionStorage.getItem("etmsecret")
+        }
+      }).then(res => {
+        if(res.data.success) {
+          this.totalMinersNum = res.data.miners.length
+          this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM);
+        }
+      })
+    },
+    getSelectedMiners(p) {
       this.checkSecondSecret_delParams()
       this.$http.get(HOST+'/api/miner/vote', {
         params: {
           secret: localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
-          secondSecret: this.secondSecret
+          offset: this.ONE_PAGE_NUM * p,
+          limit: this.ONE_PAGE_NUM,
+          // orderBy: 'approval:desc'
         }
       }).then(res => {
         if(res.data.success) {
-          this.totalMinersNum = res.data.miners.length
+          // this.totalMinersNum = res.data.miners.length
           this.tableData = res.data.miners
         }
       }).catch(e => {
@@ -129,7 +151,7 @@ export default {
     },
     checkSecondSecret_delParams() {
       // 如果未设置二级密码，那么不用传secondSecret
-      if (!this.$store.needsSecondSecret) {
+      if (!this.$store.state.needsSecondSecret) {
         this.$http.interceptors.request.use(
           config => {
             if(config.params) {
@@ -145,7 +167,7 @@ export default {
     },
     checkSecondSecret_delData() {
       // 如果未设置二级密码，那么不用传secondSecret
-      if (!this.$store.needsSecondSecret) {
+      if (!this.$store.state.needsSecondSecret) {
         this.$http.interceptors.request.use(
           config => {
             delete config.data.secondSecret
@@ -233,6 +255,9 @@ export default {
       this.secondSecret = data;
       this._submitDelete();
     },
+    renderDiff(p) {
+      this.getSelectedMiners(p)
+    }
   },
   watch: {
     '$route'(newVal) {
@@ -251,7 +276,9 @@ export default {
 .w {
   width: 96%;
   margin: 0 2%;
+  padding-bottom: 24px;
   background: #fff;
+  min-height: 600px;
 }
 .head {
   height: 60px;

@@ -138,7 +138,10 @@ const router = new Router({
     },
     {
       path: '/first-view',
-      component: firstView
+      component: firstView,
+      meta: {
+        'title': '首页'
+      }
     },
     {
       path: '/person',
@@ -147,15 +150,24 @@ const router = new Router({
       children: [
         {
           path: 'account',
-          component: account
+          component: account,
+          meta: {
+            'title': '个人中心'
+          }
         },
         {
           path: 'second-password',
-          component: secondpassword
+          component: secondpassword,
+          meta: {
+            'title': '个人中心'
+          }
         },
         {
           path: 'lock-up',
-          component: lockup
+          component: lockup,
+          meta: {
+            'title': '个人中心'
+          }
         }
       ]
     },
@@ -166,21 +178,33 @@ const router = new Router({
       children: [
         {
           path: 'applist',
-          component: applist
+          component: applist,
+          meta: {
+            'title': '应用中心'
+          }
         },
         {
           path: 'download',
-          component: download
+          component: download,
+          meta: {
+            'title': '应用中心'
+          }
         }
       ]
     },
     {
       path: '/block-appear',
-      component: blockAppear
+      component: blockAppear,
+      meta: {
+            'title': '区块生产'
+          }
     },
     {
       path: '/block-scan',
-      component: blockScan
+      component: blockScan,
+      meta: {
+            'title': '区块浏览'
+          }
     },
     {
       path: '/vote',
@@ -195,18 +219,23 @@ const router = new Router({
         {
           path: 'record',
           component: record,
-          name: 'record'
+          name: 'record',
+          
         },
         {
           path: 'vote-for-me',
           component: voteforme,
-          name: 'voteforme'
+          name: 'voteforme',
+          
         }
       ]
     },
     {
       path: '/transfer',
-      component: transfer
+      component: transfer,
+      meta: {
+            'title': '转账'
+          }
     },
     {
       path: '/node',
@@ -219,9 +248,13 @@ const router = new Router({
         {
           path: ':id',
           component: minerDetail,
-          name: 'minerDetail'
+          name: 'minerDetail',
+          
         }
-      ]
+      ],
+      meta: {
+            'title': '选择旷工'
+          }
     },
     {
       path: '/miners-list',
@@ -231,22 +264,34 @@ const router = new Router({
         {
           path: 'formal-miners',
           component: formalMiners,
-          name: 'formalMiners'
+          name: 'formalMiners',
+          meta: {
+            'title': 'SCV旷工列表'
+          }
         },
         {
           path: 'candidate-miners',
           component: candidateMiners,
-          name: 'candidateMiners'   
+          name: 'candidateMiners',
+          meta: {
+            'title': 'SCV旷工列表'
+          }  
         },
         {
           path: 'remaining-miners',
           component: remainingMiners,
-          name: 'remainingMiners'          
+          name: 'remainingMiners',
+          meta: {
+            'title': 'SCV旷工列表'
+          }         
         },
         {
           path: ':id',
           component: minerDetail,
-          name: 'minerDetail'
+          name: 'minerDetail',
+          meta: {
+            'title': 'SCV旷工列表'
+          }
         },
       ]
 
@@ -260,7 +305,10 @@ const router = new Router({
           component: minerDetail,
           name: 'minerDetail'
         }
-      ]
+      ],
+      meta: {
+            'title': '已选矿工'
+          }
     }
   ]
 })

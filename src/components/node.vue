@@ -40,9 +40,9 @@ export default {
       tableData: []
     }
   },
-  activated () {
-    this.$store.commit('changeTitle', '节点')
-  },
+  // activated () {
+  //   this.$store.commit('changeTitle', '节点')
+  // },
   created () {
     this._getPeers(0)
   },

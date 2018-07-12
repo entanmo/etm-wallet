@@ -124,9 +124,9 @@ export default {
       this.showPop = false
     })
   },
-  activated () {
-    this.$store.commit('changeTitle', '区块浏览')
-  },
+  // activated () {
+  //   this.$store.commit('changeTitle', '区块浏览')
+  // },
   methods: {
     search() {
       this.$http.get(HOST+'/api/blocks/get', {
@@ -203,7 +203,10 @@ export default {
 
 <style scoped>
 .w {
-  padding: 0 24px;
+  width: 96%;
+  margin: 0 2%;
+  padding-bottom:24px;
+  background: #fff;
 }
 .h {
   background: #fff;
@@ -234,8 +237,8 @@ export default {
 }
 /*弹框*/
 .popout {
-  width: 800px;
-  height: 460px;
+  width: 860px;
+  height: 560px;
   position: fixed;
   left: 0;
   right: 0;
@@ -263,8 +266,8 @@ export default {
 }
 .input {
   font-size: 16px;
-  height: 30px;
-  line-height: 30px;
+  height: 36px;
+  line-height: 36px;
 }
 .input label {
   display: inline-block;
@@ -280,6 +283,11 @@ td:hover {
   margin-top: 10px;
 }
 .selectBlock a {
-  color: #399dff;
+  display: inline-block;
+  background: #399dff;
+  width: 60px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 3px;
 }
 </style>
