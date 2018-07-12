@@ -83,7 +83,7 @@ export default {
       accountInfo: {},
       tableData: [],
       address: '',
-      ONE_PAGE_NUM: 10
+      ONE_PAGE_NUM: 7
     }
   },
   methods: {

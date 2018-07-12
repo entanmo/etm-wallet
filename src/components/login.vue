@@ -2,7 +2,7 @@
   <div class="w">
     <div class="login_main">
 		<div class="head_img">
-			<img src="../assets/images/icon-15.png" />
+			<img src="../assets/images/logo-black.png" />
 		</div>
 		<form class="login_form">
 			<div style="position:relative;">

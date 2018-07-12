@@ -6,7 +6,7 @@
         <!-- Site header  -->
         <header class="site-header">
           <div class="site-logo">
-            <a href="javascript:;"><img src="./assets/images/logo.png"></a>
+            <a href="javascript:;"><img src="./assets/images/logo-white.png"></a>
           </div>
         </header>
         <!-- /site header -->
@@ -220,7 +220,7 @@ body {
 }
 .site-header {
   padding: 15px 7%;
-  height: 60px;
+  /* height: 60px; */
   box-sizing: border-box;
 }
 
@@ -230,7 +230,10 @@ body {
 }
 
 .site-logo img {
-  width: 100%;
+  /* width: 100%; */
+  
+  display: block;
+  margin: auto;
 }
 
 .main-menu > li > a {
@@ -257,49 +260,75 @@ body {
 }
 .icon-department::before {
   background: url(./assets/images/1.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-post::before {
   background: url(./assets/images/2.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-employee::before {
   background: url(./assets/images/3.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-probation::before {
   background: url(./assets/images/4.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-promote::before {
   background: url(./assets/images/icon-2.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-transfer::before {
   background: url(./assets/images/6.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-holiday::before {
   background: url(./assets/images/7.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 .icon-zhuanzhang::before {
   background: url(./assets/images/8.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 .icon-dismiss::before {
   background: url(./assets/images/9.png) 0px 2px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 .icon-service::before {
   background: url(./assets/images/5.png) 0px 5px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 .icon-arrow::before {
   background: url(./assets/images/11.png) 0px 1px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 .icon-menu::before {
   background: url(./assets/images/12.png) 0px 1px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 .icon-loginout::before {
   background: url(./assets/images/13.png) 0px 1px no-repeat;
+  background-position: center;
+  margin: 0 10px;
 }
 
 /*导航侧边框*/

@@ -13,7 +13,7 @@
         <label>金额：</label><input type="number"  v-model="amount"/>
         </div>
         <div>
-        <label>费用：</label><input type="text" class="moeny" />
+        <label>费用：</label><input type="text" class="moeny" disabled="disabled" value="0.1"/>
         </div>
         <div>
         <label>备注：</label><input type="text" />
@@ -139,7 +139,7 @@ export default {
 }
 .user_content > div {
   /* width: 100%; */
-  min-height: 700px;
+  min-height: 636px;
   background: #fff;
 }
 footer > p {
