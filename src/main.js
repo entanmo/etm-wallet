@@ -33,6 +33,7 @@ new Vue({
   store,
   components: { App, Login },
   // template: '<App/>',
+  // 根据密码状态来渲染登录页或者是首页
   render(h) {
     return h(this.etmsecret ? 'app' : 'login')
   },
