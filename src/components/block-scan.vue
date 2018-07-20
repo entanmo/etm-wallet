@@ -203,10 +203,11 @@ export default {
 
 <style scoped>
 .w {
-  width: 96%;
+  /* width: 96%;
   margin: 0 2%;
   padding-bottom:24px;
-  background: #fff;
+  background: #fff; */
+  padding: 0 24px;
 }
 .h {
   background: #fff;

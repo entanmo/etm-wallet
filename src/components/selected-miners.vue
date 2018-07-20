@@ -274,16 +274,18 @@ export default {
   cursor: pointer;
 }
 .w {
-  width: 96%;
+  /* width: 96%;
   margin: 0 2%;
   padding-bottom: 24px;
   background: #fff;
-  min-height: 600px;
+  min-height: 600px; */
+  padding: 0 24px;
 }
 .head {
   height: 60px;
   padding: 0 16px;
   border-bottom: 1px solid #e5e5e5;
+  background: #fff;
 }
 .head p {
   font-size: 18px;

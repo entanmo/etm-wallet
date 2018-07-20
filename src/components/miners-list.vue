@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .nav-content {
-    background: #fff;
+    /* background: #fff; */
     position: relative;
     min-height: 600px;
 }

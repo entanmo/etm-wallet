@@ -85,6 +85,7 @@ export default {
   height: 60px;
   padding: 0 16px;
   border-bottom: 1px solid #e5e5e5;
+  background: #fff;
 }
 .filter-btn button {
   height: 38px;
