@@ -51,7 +51,7 @@
           <p class="tips">投票需支付0.01Mole</p>
       </div>
     </div>
-    <s-secret v-show="showPop1" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
+    <s-secret v-show="showSecondSecretPop" @hidePop="hidePop" @inputSSecret="inputSSecret"></s-secret>
 
     <div class="tip" v-show="submitVote" :class="yesOrNo">
 			删除{{voteType}}！
@@ -64,7 +64,7 @@ import Page from "../page";
 import NoData from "../nodata";
 import SSecret from "../second-secret";
 import { genAddress } from "../../assets/js/gen";
-
+const HOST = require('../../../config/ip')
 export default {
   components: {
     Page,
@@ -75,22 +75,33 @@ export default {
     return {
       selectRecord: [],
       PageTotal: 1,
+      Page:1,
       routeName: "",
-      showPop: false,
-      tableData: [],
+      showPop: false, //投票弹框
+      tableData: [],  //表格数据
       totalVoters: 0,
       ONE_PAGE_NUM: 10,
       cancelVote: [],
       voteType: "",
-      submitVote: false,
+      submitVote: false, //提示弹框
       secondSecret: "",
-      showPop1: false
+      showSecondSecretPop: false  //二级密码弹框
+
     };
   },
   computed: {
     yesOrNo() {
       return this.voteType === "成功" ? "success-tip" : "fail-tip";
     }
+  },
+  updated() {
+    Bus.$on("hideQrcode", data => {
+      this.showPop = false;
+      this.showSecondSecretPop = false;
+    });
+  },
+  created(){
+    this._getRecord(0)
   },
   mounted() {
     this._getRecord(0);
@@ -101,9 +112,9 @@ export default {
     }
   },
   methods: {
-    _getRecord(p) {
+    _getRecord(p) {    //获取数据
       this.$http
-        .get("/api/accounts/delegates", {
+        .get(HOST+"/api/accounts/delegates", {
           params: {
             address: genAddress(
               localStorage.getItem("etmsecret") ||
@@ -118,6 +129,7 @@ export default {
               this.ONE_PAGE_NUM * p,
               this.ONE_PAGE_NUM * p + 10
             );
+            this.Page = p;
             // 设置排名
             // this.tableData.forEach((item,index) => {
             //   this.$set(item, 'index', this.ONE_PAGE_NUM * p + index)
@@ -133,23 +145,26 @@ export default {
     },
     submitVoter() {
       this.showPop = false;
-      Bus.$emit("showMask", false);
       // 是否需要二级密码
       if (this.$store.state.needsSecondSecret) {
-        this.showPop1 = true;
+        this.showSecondSecretPop = true;
       } else {
+        Bus.$emit("showMask", false);
         this._submitVoter();
       }
     },
     _submitVoter() {
-      this.$http
-        .put("/api/accounts/delegates", {
+      let params = {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
-          delegates: this.cancelVote,
-          secondSecret: this.secondSecret
-        })
+          delegates: this.cancelVote
+        }
+        if(this.secondSecret){
+          params.secondSecret = this.secondSecret
+        }
+      this.$http
+        .put(HOST+"/api/accounts/delegates",params )
         .then(res => {
           // 投票后自动关闭弹框
           Bus.$emit("showMask", false);
@@ -160,6 +175,10 @@ export default {
             setTimeout(() => {
               this.submitVote = false;
             }, 2000);
+            setTimeout(() => {
+              this._getRecord(this.Page);
+              this.selectRecord = [];
+            }, 4000);
           } else {
             this.voteType = "失败";
             this.submitVote = true;
@@ -167,9 +186,11 @@ export default {
               this.submitVote = false;
             }, 2000);
           }
+        }).catch((err) => {
+          console.log(err)
         });
     },
-    deleteVote() {
+    deleteVote() {   //删除事件
       this.showPop = true;
       Bus.$emit("showMask", true);
     },
@@ -177,11 +198,11 @@ export default {
       this.showPop = false;
       Bus.$emit("showMask", false);
     },
-    renderDiff(p) {
+    renderDiff(p) {  //分页事件
       this._getRecord(p);
     },
     hidePop(data) {
-      this.showPop1 = data;
+      this.showSecondSecretPop = data;
     },
     inputSSecret(data) {
       this.secondSecret = data;

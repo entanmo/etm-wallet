@@ -32,6 +32,9 @@ export default {
       voteType: ''
     }
   },
+  created(){
+
+  },
   computed: {
 		yesOrNo() {
 			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
@@ -48,7 +51,9 @@ export default {
           secondSecret: this.secondSecret
       }).then(res => {
         if(res.data.success) {
+          console.log(res.data)
           this.voteType = '成功'
+          this.$store.commit("changeNeedsSecondSecret", true);
 					  this.submitVote = true
 					  setTimeout(() => {
 						  this.submitVote = false

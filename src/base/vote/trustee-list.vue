@@ -1,7 +1,7 @@
 <template>
   <div class="w">
     <div class="head flex">
-        <p>共{{totalVoters}}人</p>
+        <p>共{{filterDisabled.length}}人</p>
         <button @click="vote" ref="voteBtn">投票</button>
     </div>
     <div class="event" >
@@ -19,9 +19,8 @@
               <tr v-for="(item, index) in tableData" :key="index">
                   <td>
                     <input type="checkbox"
-                     :value="item" 
+                     :value="item"
                      v-model="selectDelegates"
-                     disabled
                      ref="checkBox">
                   </td>
                   <td>{{item.rate}}</td>
@@ -71,6 +70,7 @@ import SSecret from "../second-secret";
 import { genAddress } from "../../assets/js/gen";
 import { compareArrObj, compareEqualArrObj } from "../../assets/js/utils";
 import axios from "axios";
+const HOST = require('../../../config/ip')
 export default {
   components: {
     Page,
@@ -83,6 +83,7 @@ export default {
       selectDelegates: [],
       delegate: [],
       PageTotal: 1,
+      Page:1,
       showPop: false,
       tableData: [],
       haveVoted: [],
@@ -99,51 +100,27 @@ export default {
       return this.voteType === "成功" ? "success-tip" : "fail-tip";
     }
   },
-  mounted() {
-    // 获取受托人（分页）
-    // this._getTotalDelegates(0)
-    // 获取投票记录
-    // this._getRecord()
-    // 获取受托人（全部）
-    // this._getTotalD()
-    axios
-      .all([this._getTotalDelegates(0), this._getRecord()])
-      .then(axios.spread(() => {}));
-
-    if (!this.delegate.length) {
-      this.$refs.voteBtn.disabled = true;
-    } else {
-      this.$refs.voteBtn.disabled = false;
-    }
-
-    
+  mounted(){
+      if (!this.delegate.length) {
+        this.$refs.voteBtn.disabled = true;
+      } else {
+        this.$refs.voteBtn.disabled = false;
+      }
   },
   created () {
-    // 如果未设置二级密码，那么不用传secondSecret
-    if (this.$store.state.needsSecondSecret) {
-      this.showSecondSecretPop = true;
-    } else {
-      // this.$http.interceptors.request.use(
-      //   config => {
-      //     delete config.data.secondSecret;
-      //     return config;
-      //   },
-      //   e => {
-      //     return Promise.reject(error);
-      //   }
-      // );
-    }
+    this._getRecord(0)
   },
   updated() {
     Bus.$on("hideQrcode", data => {
       this.showPop = false;
+      this.showSecondSecretPop = false;
     });
   },
   methods: {
     // 投票列表
-    _getRecord() {
+    _getRecord(p) {
       this.$http
-        .get("/api/accounts/delegates", {
+        .get(HOST+"/api/accounts/delegates", {
           params: {
             address: genAddress(
               localStorage.getItem("etmsecret") ||
@@ -154,6 +131,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.haveVoted = res.data.delegates;
+            this._getTotalD(p)
           }
         })
         .catch(e => {
@@ -161,9 +139,9 @@ export default {
         });
     },
     // 受托人列表（全部）
-    _getTotalD() {
+    _getTotalD(p) {
       this.$http
-        .get("/api/delegates/", {
+        .get(HOST+"/api/delegates/", {
           params: {
             orderby: "approval:desc"
           }
@@ -174,12 +152,21 @@ export default {
             this.haveVoted,
             res.data.delegates
           ).result;
+            this.tableData = this.filterDisabled.slice(
+              this.ONE_PAGE_NUM * p,
+              this.ONE_PAGE_NUM * p + 10
+            );
+            this.totalVoters = this.filterDisabled.length;
+            this.PageTotal = Math.ceil(this.filterDisabled.length / this.ONE_PAGE_NUM);
+            this.Page = p;
+        }).catch((err) => {
+          console.log(err)
         });
     },
     // 受托人列表及总数（分页）
     _getTotalDelegates(p) {
       this.$http
-        .get("/api/delegates/", {
+        .get(HOST+"/api/delegates/", {
           params: {
             orderby: "approval:desc",
             offset: this.ONE_PAGE_NUM * p,
@@ -189,49 +176,54 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.tableData = res.data.delegates;
-
             this.totalVoters = res.data.totalCount;
             this.PageTotal = Math.ceil(res.data.totalCount / this.ONE_PAGE_NUM);
 
-            let arr = compareEqualArrObj(this.filterDisabled, this.tableData)
-              .result;
-            let indexs = compareEqualArrObj(this.filterDisabled, this.tableData)
-              .indexs;
+            // let arr = compareEqualArrObj(this.filterDisabled, this.tableData)
+            //   .result;
+            //   console.log(this.filterDisabled)
+            //   console.log(arr,'-----------------------')
+            // let indexs = compareEqualArrObj(this.filterDisabled, this.tableData)
+            //   .indexs;
 
-            this.$nextTick(() => {
-              for (let i = 0; i < this.$refs.checkBox.length; i++) {
-                let element = this.$refs.checkBox[i];
-                element.disabled = true;
-              }
-              indexs.forEach(item => {
-                this.$refs.checkBox[item].disabled = false;
-              });
-            });
+            // this.$nextTick(() => {
+            //   for (let i = 0; i < this.$refs.checkBox.length; i++) {
+            //     let element = this.$refs.checkBox[i];
+            //     element.disabled = true;
+            //   }
+            //   indexs.forEach(item => {
+            //     this.$refs.checkBox[item].disabled = false;
+            //   });
+            // });
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
-    submitVoter() {
-      this.showPop = false;
-      Bus.$emit("showMask", false);
+    submitVoter() {  //提交判断
       // 是否需要二级密码
       if (this.$store.state.needsSecondSecret) {
+        this.showPop = false;
         this.showSecondSecretPop = true;
       } else {
+      this.showPop = false;
+      Bus.$emit("showMask", false);
         this._submitVoter();
       }
     },
     _submitVoter() {
-      this.$http
-        .put("/api/accounts/delegates", {
+      let params = {
           secret:
             localStorage.getItem("etmsecret") ||
             sessionStorage.getItem("etmsecret"),
           delegates: this.delegate,
-          secondSecret: this.secondSecret
-        })
+        }
+        if (this.secondSecret && this.secondSecret != "") {
+          params.secondSecret = this.secondSecret
+        }
+      this.$http
+        .put(HOST+"/api/accounts/delegates", params)
         .then(res => {
           // 投票后自动关闭弹框
           Bus.$emit("showMask", false);
@@ -242,6 +234,10 @@ export default {
             setTimeout(() => {
               this.submitVote = false;
             }, 2000);
+            setTimeout(() => {
+              this._getRecord(this.Page);
+              this.selectDelegates = [];
+            }, 4000);
           } else {
             this.voteType = "失败";
             this.submitVote = true;
@@ -260,7 +256,7 @@ export default {
       Bus.$emit("showMask", false);
     },
     renderDiff(p) {
-      this._getTotalDelegates(p);
+      this._getTotalD(p);
     },
     hidePop(data) {
       this.showSecondSecretPop = data;
@@ -282,13 +278,16 @@ export default {
       } else {
         this.$refs.voteBtn.disabled = false;
       }
-    },
-    haveVoted(newVal) {
-      // 获取投票记录列表后再去请求全部受托人列表
-      if (newVal.length) {
-        this._getTotalD();
-      }
     }
+    // haveVoted(newVal) {
+    //   // 获取投票记录列表后再去请求全部受托人列表
+    //   console.log(2)
+    //   console.log(newVal)
+    //   if (newVal.length) {
+    //     console.log(1)
+    //     this._getTotalD();
+    //   }
+    // }
   }
 };
 </script>

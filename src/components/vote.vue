@@ -7,9 +7,7 @@
         <router-link to="vote-for-me" tag="li">谁投了我</router-link>
       </ul>
       <div class="nav-content">
-        <keep-alive>
           <router-view></router-view>
-        </keep-alive>
       </div>
     </div>
   </div>
@@ -18,7 +16,7 @@
 <script>
 export default {
   components: {
-    
+
   },
   // activated () {
   //   this.$store.commit('changeTitle', '投票')

@@ -129,15 +129,15 @@ const router = new Router({
   // mode: 'history',
   routes: [
     {
-      path: '/',
-      redirect: '/first-view'
+      path: '/404',
+      component: () => import('@/components/404')
     },
     {
       path: '/login',
       component: login
     },
     {
-      path: '/first-view',
+      path: '/',
       component: firstView,
       meta: {
         'title': '首页'
@@ -220,13 +220,13 @@ const router = new Router({
           path: 'record',
           component: record,
           name: 'record',
-          
+
         },
         {
           path: 'vote-for-me',
           component: voteforme,
           name: 'voteforme',
-          
+
         }
       ]
     },
@@ -249,7 +249,7 @@ const router = new Router({
           path: ':id',
           component: minerDetail,
           name: 'minerDetail',
-          
+
         }
       ],
       meta: {
@@ -275,7 +275,7 @@ const router = new Router({
           name: 'candidateMiners',
           meta: {
             'title': 'SCV旷工列表'
-          }  
+          }
         },
         {
           path: 'remaining-miners',
@@ -283,7 +283,7 @@ const router = new Router({
           name: 'remainingMiners',
           meta: {
             'title': 'SCV旷工列表'
-          }         
+          }
         },
         {
           path: ':id',
@@ -292,7 +292,7 @@ const router = new Router({
           meta: {
             'title': 'SCV旷工列表'
           }
-        },
+        }
       ]
 
     },
@@ -309,23 +309,33 @@ const router = new Router({
       meta: {
             'title': '已选矿工'
           }
+    },
+    {
+      path:'*',
+      redirect:'/404'
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('etmsecret') || 
+  if (localStorage.getItem('etmsecret') ||
       sessionStorage.getItem('etmsecret')
     ) {
-      next()
+      if(to.path ==='/login'){
+        console.log(1)
+        next({path:'/'})
+      }else{
+        next()
+      }
     }else {
+      console.log(2)
       if(to.path === '/login') {
         next()
       }else {
         next({ path: '/login' })
       }
     }
-  
+
 })
 
 export default router

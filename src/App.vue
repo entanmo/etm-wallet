@@ -6,15 +6,15 @@
         <!-- Site header  -->
         <header class="site-header">
           <div class="site-logo">
-            <a href="javascript:;"><img src="./assets/images/logo-white.png"></a>
+            <a href="javascript:;"><img src="./assets/images/logo2-black.png"></a>
           </div>
         </header>
         <!-- /site header -->
         <!-- Main navigation -->
         <ul class="main-menu">
           <li class="has-sub">
-            <router-link to="/first-view">
-              <i class="icon icon-department"></i>
+            <router-link exact to="/">
+              <i class="iconfont icon-home"></i>
               <span class="title">首页</span>
             </router-link>
           </li>
@@ -30,7 +30,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/person">
-              <i class="icon icon-employee"></i>
+              <i class="iconfont icon-user"></i>
               <span class="title">个人中心</span>
             </router-link>
           </li>
@@ -38,7 +38,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/application">
-              <i class="icon icon-probation"></i>
+              <i class="iconfont icon-appstore"></i>
               <span class="title">应用中心</span>
             </router-link>
           </li>
@@ -46,7 +46,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/block-appear">
-              <i class="icon icon-promote"></i>
+              <i class="iconfont icon-block"></i>
               <span class="title">区块生产</span>
             </router-link>
           </li>
@@ -54,23 +54,23 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/block-scan">
-              <i class="icon icon-transfer"></i>
+              <i class="iconfont icon-compass"></i>
               <span class="title">区块浏览</span>
             </router-link>
           </li>
         </ul>
-        <!-- <ul class="main-menu">
+        <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/vote">
-              <i class="icon icon-holiday"></i>
+              <i class="iconfont icon-like"></i>
               <span class="title">投票</span>
             </router-link>
           </li>
-        </ul> -->
+        </ul>
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/transfer">
-              <i class="icon icon-zhuanzhang"></i>
+              <i class="iconfont icon-transaction"></i>
               <span class="title">转账</span>
             </router-link>
           </li>
@@ -79,7 +79,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/select-miners">
-              <i class="icon icon-holiday"></i>
+              <i class="iconfont icon-star"></i>
               <span class="title">选择矿工</span>
             </router-link>
           </li>
@@ -88,7 +88,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/miners-list">
-              <i class="icon icon-dismiss"></i>
+              <i class="iconfont icon-barchart"></i>
               <span class="title">SCV矿工列表</span>
             </router-link>
           </li>
@@ -96,7 +96,7 @@
         <ul class="main-menu">
           <li class="has-sub">
             <router-link to="/selected-miners">
-              <i class="icon icon-service"></i>
+              <i class="iconfont icon-check-circle"></i>
               <span class="title">已选矿工</span>
             </router-link>
           </li>
@@ -107,13 +107,15 @@
     <div class="main-container fr" ref="r">
       <div class="main-top flex">
         <i class="icon icon-menu" @click="toggleMenu"></i>
-        <i class="icon icon-loginout" @click="loginout" title="退出登录"></i>
+        <i class="iconfont icon-logout" @click="loginout" title="退出登录"></i>
       </div>
       <p class="main-title">
         {{title}}
       </p>
       <!-- <keep-alive> -->
+      <transition name="fade" mode="out-in">
         <router-view></router-view>
+      </transition>
       <!-- </keep-alive> -->
     </div>
     <div class="mask" v-show="showPop" @click="hidePop"></div>
@@ -142,6 +144,7 @@ export default {
     let address = genAddress(
       localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret")
     );
+    console.log(address)
     this._getAccounts(address);
   },
   methods: {
@@ -176,6 +179,7 @@ export default {
         })
         .then(res => {
           if (res.data.success) {
+            console.log(res.data)
             // 如果设置了二级密码，那么以后要根据这个状态来决定交易时是否弹出二级密码框
             if (res.data.account.secondSignature) {
               this.$store.commit("changeNeedsSecondSecret", true);
@@ -207,7 +211,7 @@ body {
 .page-sidebar {
   width: 14.6%;
   height: 100%;
-  background-color: #00284d;
+  background-color: #fff;
   position: fixed;
   top: 0;
   left: 0;
@@ -231,7 +235,7 @@ body {
 
 .site-logo img {
   /* width: 100%; */
-  
+
   display: block;
   margin: auto;
 }
@@ -239,16 +243,17 @@ body {
 .main-menu > li > a {
   display: block;
   padding: 14px 8.2%;
-  color: #a2aab2;
+  color: #515a6e;
   transition: all 0.2s;
 }
 .main-menu > li > a:hover {
-  color: #fff;
-  background: #001529;
+  color: #2d8cf0;
+  background: #f0faff;
 }
 .in {
-  background-color: #001529;
-  color: #fff !important;
+  background-color: #f0faff;
+  color: #2d8cf0 !important;
+  border-right: 2px solid #2d8cf0;
 }
 .icon::before {
   content: " ";
@@ -258,78 +263,12 @@ body {
   width: 25px;
   cursor: pointer;
 }
-.icon-department::before {
-  background: url(./assets/images/1.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
 
-.icon-post::before {
-  background: url(./assets/images/2.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-employee::before {
-  background: url(./assets/images/3.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-probation::before {
-  background: url(./assets/images/4.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-promote::before {
-  background: url(./assets/images/icon-2.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-transfer::before {
-  background: url(./assets/images/6.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-holiday::before {
-  background: url(./assets/images/7.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-.icon-zhuanzhang::before {
-  background: url(./assets/images/8.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-.icon-dismiss::before {
-  background: url(./assets/images/9.png) 0px 2px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-
-.icon-service::before {
-  background: url(./assets/images/5.png) 0px 5px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-.icon-arrow::before {
-  background: url(./assets/images/11.png) 0px 1px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-.icon-menu::before {
-  background: url(./assets/images/12.png) 0px 1px no-repeat;
-  background-position: center;
-  margin: 0 10px;
-}
-.icon-loginout::before {
+/* .icon-loginout::before {
   background: url(./assets/images/13.png) 0px 1px no-repeat;
   background-position: center;
   margin: 0 10px;
-}
+} */
 
 /*导航侧边框*/
 

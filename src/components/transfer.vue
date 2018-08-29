@@ -42,9 +42,9 @@ export default {
   data() {
     return {
       secret: "",
-      address: "",
-      recipientId: "",
-      amount: null,
+      address: "",  //地址
+      recipientId: "",  //接收者id
+      amount: null,  //金额
       submitTransfer: false,
       transferType: "",
       secondSecret: "",
@@ -105,6 +105,7 @@ export default {
         });
     },
     hidePop(data) {
+      console.log(data)
       this.showPop = data;
     },
     inputSSecret(data) {
@@ -114,7 +115,7 @@ export default {
     checkSecondSecret() {
       // 如果未设置二级密码，那么不用传secondSecret
       if (!this.$store.state.needsSecondSecret) {
-        
+
         this.$http.interceptors.request.use(
           config => {
             delete config.data.secondSecret;

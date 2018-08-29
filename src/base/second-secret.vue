@@ -14,22 +14,21 @@ export default {
           secondSecret: ''
       }
   },
-  // updated () {
-  //   Bus.$on('clearSSecret', (d) => {
-  //     this.secondSecret = d
-  //   })
-  // },
   methods: {
       confirmIt() {
         this.$emit('inputSSecret', this.secondSecret)
-        this.$emit('hidePop', false)
+        this.$emit('hidePop',false)
+        Bus.$emit("showMask", false);
+        this.secondSecret = ''
       },
       hidePop() {
-        this.$emit('hidePop', false)
+        this.$emit('hidePop',false)
+        Bus.$emit("showMask", false);
+        this.secondSecret = ''
       }
   },
   watch: {
-    
+
   }
 }
 </script>

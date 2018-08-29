@@ -13,7 +13,7 @@ Vue.component('qrcode', VueQrcode)
 
 import './assets/css/reset.css'
 import './assets/css/public.css'
-import './assets/css/iconfont.css'
+import './assets/iconfont/iconfont.css'
 import '../static/browserify-entanmo-min'
 
 import echarts from  'echarts'

@@ -1,7 +1,7 @@
 <template>
   <div class="w">
     <div class="head flex">
-        <p>共{{voters}}人</p>
+        <p>共{{allNum}}人</p>
     </div>
     <div class="event" >
       <table width=100% border="0" cellspacing="0" cellpresumeing="0" v-show="tableData.length">
@@ -30,6 +30,7 @@
 import Page from '../page'
 import NoData from '../nodata'
 import {genPublicKey} from '../../assets/js/gen'
+const HOST = require('../../../config/ip')
 export default {
   components: {
     Page,NoData
@@ -40,25 +41,32 @@ export default {
         routeName: '',
         showPop: false,
         tableData: [],
-        voters: 0
+        ONE_PAGE_NUM:10, //每页数量
+        allNum: 0
       }
     },
+    created(){
+      this._getWhoVoteForMe(0)
+    },
     mounted () {
-      this._getWhoVoteForMe()
     },
   methods: {
-    _getWhoVoteForMe() {
-      this.$http.get('/api/delegates/voters', {
+    _getWhoVoteForMe(p) {
+      this.$http.get(HOST+'/api/delegates/voters', {
         params: {
-          publicKey: genPublicKey(localStorage.getItem('etmsecret'))
+          publicKey: genPublicKey(localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'))
         }
       }).then(res => {
-        this.tableData = res.data.accounts
-        this.voters = res.data.accounts.length
+        this.tableData = res.data.accounts.slice(
+          this.ONE_PAGE_NUM * p,
+          this.ONE_PAGE_NUM * p + 10
+        );
+        this.allNum = res.data.accounts.length;
+        this.PageTotal = Math.ceil(this.allNum / this.ONE_PAGE_NUM);
       }).catch(e => {console.log(e)})
     },
     renderDiff(p) {
-
+      this._getWhoVoteForMe(p)
     }
   }
 }
