@@ -32,39 +32,39 @@ export default {
       voteType: ''
     }
   },
-  created(){
+  created () {
 
   },
   computed: {
-		yesOrNo() {
-			return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
-		}
-	},
+    yesOrNo () {
+      return this.voteType === '成功' ? 'success-tip' : 'fail-tip'
+    }
+  },
   methods: {
-    setSecret() {
-      if(this.secondSecret != this.confirmSecondSecret) {
+    setSecret () {
+      if (this.secondSecret != this.confirmSecondSecret) {
         this.falseSecret = true
         return
       }
-      this.$http.put(HOST+'/api/signatures', {
-          secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
-          secondSecret: this.secondSecret
+      this.$http.put(HOST + '/api/signatures', {
+        secret: localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret'),
+        secondSecret: this.secondSecret
       }).then(res => {
-        if(res.data.success) {
-          console.log(res.data)
+        if (res.data.success) {
+          // console.log(res.data)
           this.voteType = '成功'
-          this.$store.commit("changeNeedsSecondSecret", true);
+          this.$store.commit('changeNeedsSecondSecret', true)
 					  this.submitVote = true
 					  setTimeout(() => {
 						  this.submitVote = false
-					  }, 2000);
+					  }, 2000)
           // this.$router.push('/person/account')
-        }else {
+        } else {
           this.voteType = '失败'
 					  this.submitVote = true
 					  setTimeout(() => {
 						  this.submitVote = false
-					  }, 2000);
+					  }, 2000)
         }
       })
     }

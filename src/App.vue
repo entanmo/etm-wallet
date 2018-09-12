@@ -6,7 +6,7 @@
         <!-- Site header  -->
         <header class="site-header">
           <div class="site-logo">
-            <a href="javascript:;"><img src="./assets/images/logo2-black.png"></a>
+            <a href="javascript:;"><img src="./assets/images/logo-white.png"></a>
           </div>
         </header>
         <!-- /site header -->
@@ -123,77 +123,77 @@
 </template>
 
 <script>
-import { genAddress } from "./assets/js/gen";
+import { genAddress } from './assets/js/gen'
 const HOST = require('../config/ip')
 
 export default {
-  data() {
+  data () {
     return {
-      title: "",
+      title: '',
       flag: true,
       showPop: false
-    };
+    }
   },
-  updated() {
-    Bus.$on("showMask", data => {
-      this.showPop = data;
-    });
+  updated () {
+    window.Bus.$on('showMask', data => {
+      this.showPop = data
+    })
     // this.title = this.$store.state.title;
   },
-  created() {
+  created () {
     let address = genAddress(
-      localStorage.getItem("etmsecret") || sessionStorage.getItem("etmsecret")
-    );
-    console.log(address)
-    this._getAccounts(address);
+      localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')
+    )
+    // console.log(address)
+    this._getAccounts(address)
   },
   methods: {
-    changeTitle(title) {
-      this.title = title;
+    changeTitle (title) {
+      this.title = title
     },
-    toggleMenu() {
+    toggleMenu () {
       if (this.flag) {
-        this.$refs.r.style.width = "100%";
-        this.flag = false;
+        this.$refs.r.style.width = '100%'
+        this.flag = false
       } else {
-        this.$refs.r.style.width = "85.4%";
-        this.flag = true;
+        this.$refs.r.style.width = '85.4%'
+        this.flag = true
       }
     },
-    loginout() {
-      localStorage.removeItem("etmsecret") ||
-        sessionStorage.removeItem("etmsecret");
-      window.location.reload();
+    loginout () {
+      localStorage.removeItem('etmsecret') ||
+        sessionStorage.removeItem('etmsecret')
+      window.location.reload()
     },
-    hidePop() {
-      this.showPop = false;
-      Bus.$emit("hideQrcode", true);
+    hidePop () {
+      this.showPop = false
+      window.Bus.$emit('hideQrcode', true)
     },
     // 全局，判断该账户是否设置了二级密码
-    _getAccounts(address) {
+    _getAccounts (address) {
       this.$http
-        .get( HOST + "/api/accounts", {
+        .get(HOST + '/api/accounts', {
           params: {
             address
           }
         })
         .then(res => {
           if (res.data.success) {
-            console.log(res.data)
+            // console.log(res.data)
             // 如果设置了二级密码，那么以后要根据这个状态来决定交易时是否弹出二级密码框
             if (res.data.account.secondSignature) {
-              this.$store.commit("changeNeedsSecondSecret", true);
+              this.$store.commit('changeNeedsSecondSecret', true)
             }
           }
-        });
+        })
     }
   },
   watch: {
-    '$route'(to, from) {
+    '$route' (to, from) {
       this.title = to.meta.title
     }
   }
-};
+}
 </script>
 <style scoped>
 html,
@@ -211,7 +211,7 @@ body {
 .page-sidebar {
   width: 14.6%;
   height: 100%;
-  background-color: #fff;
+  background-color:#00284d;
   position: fixed;
   top: 0;
   left: 0;
@@ -243,17 +243,16 @@ body {
 .main-menu > li > a {
   display: block;
   padding: 14px 8.2%;
-  color: #515a6e;
+  color: #a2aab2;
   transition: all 0.2s;
 }
 .main-menu > li > a:hover {
-  color: #2d8cf0;
-  background: #f0faff;
+  color: #fff;
+  background: #001529;
 }
 .in {
-  background-color: #f0faff;
-  color: #2d8cf0 !important;
-  border-right: 2px solid #2d8cf0;
+  background-color: #001529;
+  color: #fff !important;
 }
 .icon::before {
   content: " ";
@@ -263,7 +262,11 @@ body {
   width: 25px;
   cursor: pointer;
 }
-
+.icon-menu::before {
+  background: url(./assets/images/12.png) 0px 1px no-repeat;
+  background-position: center;
+  margin: 0 10px;
+}
 /* .icon-loginout::before {
   background: url(./assets/images/13.png) 0px 1px no-repeat;
   background-position: center;

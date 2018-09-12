@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-  data(){
+  data () {
     return {
 
     }
@@ -32,29 +32,29 @@ export default {
   margin-left: 122px;
 }
 .noFound .title{
-	letter-spacing: -3px;
-	color: rgba(75, 80, 93, 1);
-	font-size: 100px;
-	line-height: 150%;
-	text-align: left;
-	font-weight: bold;
+  letter-spacing: -3px;
+  color: rgba(75, 80, 93, 1);
+  font-size: 100px;
+  line-height: 150%;
+  text-align: left;
+  font-weight: bold;
 }
 .noFound .des {
- 	color: rgba(0, 0, 0, 0.45);
-	font-size: 20px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 20px;
 }
 .noFound .btn{
-  	width: 88px;
-    height: 32px;
-    left: 747px;
-    top: 621px;
-    color: rgba(255, 255, 255, 1);
-    background-color: rgba(24, 144, 255, 1);
-    border-radius: 4px;
-    font-size: 14px;
-    line-height: 32px;
-    text-align: center;
-    cursor: pointer;
-    margin-top: 16px;
+  width: 88px;
+  height: 32px;
+  left: 747px;
+  top: 621px;
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(24, 144, 255, 1);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 16px;
 }
 </style>
