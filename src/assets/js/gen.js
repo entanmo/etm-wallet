@@ -1,3 +1,4 @@
+import entanmoJs from '../static/browserify-entanmo-min.js'
 // 生成公钥
 export function genPublicKey (secret) {
   return entanmoJs.crypto.getKeys(secret).publicKey
@@ -11,5 +12,5 @@ export function genPrivateKey (secret) {
 // 生成地址
 export function genAddress (secret) {
   let publicKey = entanmoJs.crypto.getKeys(secret).publicKey
-  return entanmoJs.crypto.getNewAddress(publicKey)
+  return entanmoJs.crypto.getAddress(publicKey)
 }

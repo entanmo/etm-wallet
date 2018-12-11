@@ -32,3 +32,24 @@ html,body,.page-container{
   width: 100%;
   height: 100%;
 }
+#app{
+    width: 100%;
+  height: 100%;
+}
+
+/* 页面切换动画 */
+.page-toggle-enter-active{
+  transition: all 0.2s ease-in 0.25s;
+}
+.page-toggle-leave-active{
+  transition: all 0.2s ease-out 0s;
+}
+.page-toggle-enter, .page-toggle-leave-to{
+  opacity: 0;
+  padding: 0px;
+}
+
+.ant-layout.ant-layout-has-sider > .ant-layout,
+.ant-layout.ant-layout-has-sider > .ant-layout-content {
+  overflow: hidden;
+}

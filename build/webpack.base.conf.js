@@ -22,7 +22,7 @@ const createLintingRule = () => ({
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app:['babel-polyfill','./src/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -47,7 +47,15 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
-        test: /\.jsx?$/,
+        test: /\.less$/,
+        use: [ 'style-loader',{
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1
+        }},'less-loader']},
+
+      {
+        test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
