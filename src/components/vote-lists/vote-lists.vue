@@ -155,9 +155,12 @@ export default {
         if (result.data.success) {
           this.resultData = result.data.delegates
           if (result.data.totalCount > 101) {
-            const resultMore = await getVoteLists({orderby: 'approval:desc', offset: 101})
-            if (resultMore.data.success) {
-              this.resultData = [...this.resultData, ...resultMore.data.delegates]
+            const length = Math.ceil(result.data.totalCount / 101)
+            for (let i = 1; i < length; i++) {
+              const resultMore = await getVoteLists({orderby: 'approval:desc', offset: 101 * i})
+              if (resultMore.data.success) {
+                this.resultData = [...this.resultData, ...resultMore.data.delegates]
+              }
             }
           }
           this.filterDisabled = compareArrObj(this.haveVoted, this.resultData).result

@@ -1,7 +1,6 @@
 <template>
   <div class="block-appear">
     <!-- info -->
-    <!-- <a-button type="primary" @click="add">按钮</a-button> -->
     <div v-show="show"  style="position:absolute;top:-100px;left:0;width:100%;height:1000px;overflow:hidden">
         <animated-coin  :ref="'coin'+index" class="item-box" :key="index" v-for="(item,index) in coins"></animated-coin>
     </div>
@@ -45,6 +44,9 @@
           :dataSource="data" >
           <template slot="time" slot-scope="text, record">
             {{convertTime(record.timestamp)}}
+          </template>
+          <template slot="totalAmount" slot-scope="text,record">
+            {{unit(record.totalAmount)}}
           </template>
           <template slot="totalFee" slot-scope="text,record">
               {{unit(record.totalFee)}}
@@ -100,7 +102,6 @@ import { convertTime } from '@/utils/gen'
 import {mapState} from 'vuex'
 import {unit} from '@/utils/utils'
 import AnimatedCoin from '@/components/animated-coin/animated-coin'
-import { setTimeout } from 'timers'
 
 const columns = [{
   title: i18n.t('block_production.columns.th01'),
@@ -167,33 +168,33 @@ export default {
       delegates: true, // 注册按钮显示
       amount: 48,
       show: false,
-      height1: null
+      height1: null,
+      timer1: null, // 定时器id
+      timer2: null
     }
   },
   created () {
     this._getDelegateDetail()
-    let self = this
-    setTimeout(function nextGetDelegateDetail () {
-      self._getDelegateDetail()
-        .then(value => {
-          setTimeout(nextGetDelegateDetail, 1000 * 303)
-        })
-        .catch(error => {
-          void (error)
-          setTimeout(nextGetDelegateDetail, 1000 * 303)
-        })
+    this.timer1 = setInterval(() => {
+      this._getDelegateDetail()
     }, 1000 * 303)
+  },
+  mounted () {
+    let self = this
     setTimeout(function getBlock () {
       self._myBlock()
         .then(req => {
-          setTimeout(getBlock, 3000)
+          self.timer2 = setTimeout(getBlock, 3000)
         })
         .catch(err => {
           void (err)
-          console.log(44)
-          setTimeout(getBlock, 3000)
+          self.timer2 = setTimeout(getBlock, 3000)
         })
     }, 3000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timer1)
+    clearTimeout(this.timer2)
   },
   computed: {
     ...mapState({
@@ -287,7 +288,6 @@ export default {
       try {
         const result = await blocks(params)
         if (result.data.success) {
-          // console.log(this.height1)
           const myPublicKey = result.data.blocks[0].generatorPublicKey
           if (this.height1 === result.data.blocks[0].height) {
             return

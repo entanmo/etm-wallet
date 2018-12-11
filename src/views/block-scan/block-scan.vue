@@ -72,7 +72,7 @@
         </div>
         <div class="input">
           <label>{{$t('block_scan.numberOfTransactions')}}：</label>
-          <span>{{unit(blockDetail.numberOfTransactions)}} ETM</span>
+          <span>{{blockDetail.numberOfTransactions}}</span>
         </div>
         <div class="input">
           <label>{{$t('block_scan.totalAmount')}}：</label>
@@ -86,11 +86,11 @@
           <label>{{$t('block_scan.summary')}}：</label>
           <span></span>
         </div>
-        <div class="input">
+        <div class="input generatorId">
           <label>{{$t('block_scan.generatorId')}}：</label>
           <span>{{blockDetail.generatorId}}</span>
         </div>
-        <div class="input phone-input">
+        <div class="input phone-input ">
           <label>{{$t('block_scan.generatorPublicKey')}}：</label>
           <span class="long">{{blockDetail.generatorPublicKey}}</span>
         </div>
@@ -290,6 +290,9 @@ export default {
     .previousBlock  label{
       width: 150px!important;
     }
+    .generatorId{
+      height: 82px;
+    }
     .input{
       display: block;
         label {
@@ -297,7 +300,7 @@ export default {
           width: 100px;
         }
         .long{
-          width: 340px;
+          width: 333px;
         }
         span{
           display: inline-block;
