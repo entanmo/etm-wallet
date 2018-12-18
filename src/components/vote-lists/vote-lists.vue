@@ -10,7 +10,7 @@
     <div class="table">
       <div>
         <a-table :rowSelection="{type:'radio',selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-          :rowKey="record => record.publicKey"
+          :rowKey="record => record.address"
           :columns="columns"
           :dataSource="data"
           :pagination="pagination"

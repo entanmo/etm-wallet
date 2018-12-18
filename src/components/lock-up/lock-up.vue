@@ -53,14 +53,17 @@
       cancelText="取消"
       @cancel="cancelModal"
     >
-    <a-form :autoFormCreate="(form)=>{this.form = form}">
+    <a-form :form="form">
       <a-form-item
       :label="$t('lock_up.lockedModel.label')"
       :labelCol="{ span: 6 }"
-      :wrapperCol="{ span: 16 }"
-      :fieldDecoratorId="$t('lock_up.lockedModel.label')"
-      :fieldDecoratorOptions="{rules: [{ required: true, message: $t('lock_up.lockedModel.msg') }]}">
-      <a-input type="number" v-model="amount" :placeholder="$t('lock_up.lockedModel.msg')" addonAfter="ETM" />
+      :wrapperCol="{ span: 16 }">
+      <a-input type="number"
+       v-decorator="[
+       'amount',
+       {rules: [{ required: true, message: $t('lock_up.lockedModel.msg') }]}
+       ]"
+       :placeholder="$t('lock_up.lockedModel.msg')" addonAfter="ETM" />
       </a-form-item>
       <a-form-item style="text-align: justify; margin-bottom:0;"
        :labelCol="{ span: 6 }"
@@ -106,6 +109,9 @@ const columns = [{
   scopedSlots: { customRender: 'action' }
 }]
 export default {
+  beforeCreate () {
+    this.form = this.$form.createForm(this)
+  },
   data () {
     return {
       columns,
@@ -191,12 +197,14 @@ export default {
     },
     addLock () {
       this.form.validateFields(
-        (err) => {
+        (err, values) => {
           if (!err) {
             if (this.secondSignature) {
+              this.amount = values.amount
               this.visible = false
               this.modal2Visible = true
             } else {
+              this.amount = values.amount
               this._lockVote()
             }
           }

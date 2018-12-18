@@ -5,15 +5,18 @@
   v-model="visible"
   @cancel="handleCancel"
 >
-    <a-form :autoFormCreate="(form)=>{this.form = form}">
+    <a-form :form="form">
       <a-form-item
       :label="$t('pop_password.secondSecret.label')"
       :labelCol="{ span: 6 }"
       :wrapperCol="{ span: 16 }"
-      :fieldDecoratorId="$t('pop_password.secondSecret.label')"
-      :fieldDecoratorOptions="{rules: [{ required: true, message: $t('pop_password.secondSecret.msg') }]}"
       >
-        <a-input type="password" v-model="secondSecret" :placeholder="$t('pop_password.secondSecret.placeholder')" />
+        <a-input type="password"
+        v-decorator="[
+          'secondSecret',
+          {rules: [{ required: true, message: $t('pop_password.secondSecret.msg') }]}
+        ]"
+        :placeholder="$t('pop_password.secondSecret.placeholder')" />
       </a-form-item>
     </a-form>
   <template slot="footer">
@@ -28,6 +31,9 @@
 
 <script>
 export default {
+  beforeCreate () {
+    this.form = this.$form.createForm(this)
+  },
   props: {
     modal2Visible: {
       type: Boolean,
@@ -36,7 +42,6 @@ export default {
   },
   data () {
     return {
-      secondSecret: '',
       visible: this.modal2Visible
     }
   },
@@ -51,9 +56,9 @@ export default {
   methods: {
     handleSecondOk () {
       this.form.validateFields(
-        (err) => {
+        (err, values) => {
           if (!err) {
-            this.$emit('secondSubmit', this.secondSecret)
+            this.$emit('secondSubmit', values.secondSecret)
           }
         }
       )

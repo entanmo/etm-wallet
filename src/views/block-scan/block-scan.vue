@@ -138,6 +138,11 @@ const columns = [{
   scopedSlots: { customRender: 'action' }
 }]
 export default {
+  // sockets: {
+  //   'blocks/change': function (data) {
+  //     this._getTableLists()
+  //   }
+  // },
   data () {
     return {
       data: [],

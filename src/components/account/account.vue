@@ -27,6 +27,11 @@
 import {unit} from '@/utils/utils'
 export default {
   name: 'Account',
+  // sockets: {
+  //   'blocks/change': function (data) {
+  //     this.$store.dispatch('_getBalance')
+  //   }
+  // },
   data () {
     return {
       accountInfo: {},

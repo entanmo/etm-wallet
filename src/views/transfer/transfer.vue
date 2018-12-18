@@ -1,6 +1,6 @@
 <template>
   <div class="transfer">
-    <a-form :autoFormCreate="(form)=>{this.form = form}">
+    <a-form :form="form">
       <a-form-item
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
@@ -10,18 +10,24 @@
       <a-form-item
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
-      :label="$t('transfer.reciped.label')"
-      :fieldDecoratorId="$t('transfer.reciped.label')"
-      :fieldDecoratorOptions="{rules: [{ required: true, message: $t('transfer.reciped.msg') }]}">
-      <a-input type="text"  v-model="recipientId" :placeholder="$t('transfer.reciped.msg')"  />
+      :label="$t('transfer.reciped.label')">
+      <a-input type="text"
+         v-decorator="[
+          'recipientId',
+          {rules: [{ required: true, message: $t('transfer.reciped.msg') }]}
+        ]"
+       :placeholder="$t('transfer.reciped.msg')"  />
       </a-form-item>
       <a-form-item
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
-      :label="$t('transfer.amount.label')"
-      :fieldDecoratorId="$t('transfer.amount.label')"
-      :fieldDecoratorOptions="{rules: [{ required: true, message: $t('transfer.amount.msg') }]}">
-      <a-input type="number" v-model="amount" :placeholder="$t('transfer.amount.msg')" addonAfter="ETM" />
+      :label="$t('transfer.amount.label')">
+      <a-input type="number"
+         v-decorator="[
+          'amount',
+         {rules: [{ required: true, message: $t('transfer.amount.msg') }]}
+        ]"
+       :placeholder="$t('transfer.amount.msg')" addonAfter="ETM" />
       </a-form-item>
       <a-form-item
       :labelCol="labelCol"
@@ -45,7 +51,7 @@
       </a-form-item>
       <a-form-item
       :wrapperCol="{ span: 12, offset: 2 }">
-      <a-button @click="check" type='primary' htmlType='submit'>
+      <a-button @click="check" type='primary' >
         {{$t('transfer.submitBtn')}}
       </a-button>
 
@@ -60,6 +66,14 @@ import {mapState} from 'vuex'
 import {transactions} from '@/api/block'
 import popPassword from '@/components/pop-password/pop-password'
 export default {
+  // sockets: {
+  //   'blocks/change': function (data) {
+  //     this.$store.dispatch('_getBalance')
+  //   }
+  // },
+  beforeCreate () {
+    this.form = this.$form.createForm(this)
+  },
   data () {
     return {
       labelCol: {
@@ -95,7 +109,7 @@ export default {
   methods: {
     check () {
       this.form.validateFields(
-        (err) => {
+        (err, values) => {
           if (!err) {
             if (this.balance < 0.1) {
               this.$notification.info({
@@ -103,8 +117,12 @@ export default {
                 description: i18n.t('tip.balance_enough')
               })
             } else if (this.secondSignature) {
+              this.recipientId = values.recipientId
+              this.amount = values.amount
               this.modal2Visible = true
             } else {
+              this.recipientId = values.recipientId
+              this.amount = values.amount
               this._transactions()
             }
           }

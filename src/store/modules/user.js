@@ -1,4 +1,4 @@
-import {login, getAccount} from '@/api/account'
+import {login, getAccount, getBalance} from '@/api/account'
 import {genPublicKey} from '@/utils/gen'
 
 const user = {
@@ -20,6 +20,12 @@ const user = {
     },
     SET_SECONDSECRET: (state, secondSecret) => {
       state.accountInfo.secondSignature = secondSecret
+    },
+    SET_BALANCE: (state, balance) => {
+      state.accountInfo.balance = balance
+    },
+    SET_HEIGHT: (state, height) => {
+      state.accountInfo.height = height
     },
     LOGIN_OUT: (state) => {
       state.accountInfo = {}
@@ -55,6 +61,35 @@ const user = {
         commit('SET_SECRET', secret)
       }
       return result
+    },
+    async _getInfo ({commit}) {
+      try {
+        const informations = sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')
+        const address = JSON.parse(informations).account.address
+        const result = await getAccount(address)
+        if (result.data.success) {
+          const balance = result.data.account.balance
+          const height = result.data.latestBlock.height
+          commit('SET_BALANCE', balance)
+          commit('SET_HEIGHT', height)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async _getBalance ({commit}) {
+      try {
+        console.log(this.state.user.accountInfo)
+        const params = {address: this.state.user.accountInfo.address}
+        const result = await getBalance(params)
+        console.log(result)
+        if (result.data.success) {
+          const balance = result.data.balance
+          commit('SET_BALANCE', balance)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

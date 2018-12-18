@@ -181,6 +181,14 @@ for (let i = 0; i < 10; i++) {
   })
 }
 export default {
+  sockets: {
+    'blocks/change': function (data) {
+      this.$store.dispatch('_getInfo')
+    },
+    'rounds/change': function (data) {
+      this._getTransaction()
+    }
+  },
   data () {
     return {
       data: [],

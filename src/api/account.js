@@ -106,3 +106,11 @@ export const effectAccount = (params) => {
     params
   })
 }
+
+export const getBalance = (params) => {
+  return http({
+    url: '/api/accounts/getBalance',
+    method: 'get',
+    params
+  })
+}

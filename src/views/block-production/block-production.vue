@@ -61,19 +61,21 @@
     </div>
     <a-modal
       :title="$t('block_production.pop_title')"
-      v-model="modal1Visible"
-    >
+      v-model="modal1Visible">
       <div>
-        <a-form :autoFormCreate="(form)=>{this.form = form}">
+        <a-form :form="form">
           <a-form-item
            :label="$t('block_production.name.label')"
           :labelCol="{ span: 5 }"
           :wrapperCol="{ span: 16 }"
-          :fieldDecoratorId="$t('block_production.name.label')"
-          destroyOnClose
-          :fieldDecoratorOptions="{rules: [{ required: true, message: $t('block_production.name.msg') }]}"
+          destroyOnClose=true
           >
-            <a-input type="text" v-model="delegateName" :placeholder="$t('block_production.name.required')" />
+            <a-input type="text"
+              v-decorator="[
+              'delegateName',
+              {rules: [{ required: true, message: $t('block_production.name.msg') }]}
+              ]"
+             :placeholder="$t('block_production.name.required')" />
           </a-form-item>
           <a-form-item
            :label="$t('block_production.note.label')"
@@ -133,18 +135,18 @@ const columns = [{
   scopedSlots: {customRender: 'reward'}
 }]
 export default {
-  // sockets: {
-  //   'blocks/change': function (data) {
-  //     // console.log(data)
-  //     this._myBlock()
-  //   },
-  //   connect: function () {
-  //     this.id = this.$socket.id
-  //   },
-  //   customEmit: function (val) {
-  //     console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-  //   }
-  // },
+  beforeCreate () {
+    this.form = this.$form.createForm(this)
+  },
+  sockets: {
+    'blocks/change': function (data) {
+      console.log(data)
+      this._myBlock()
+    },
+    'rounds/change': function (data) {
+      this._getDelegateDetail()
+    }
+  },
   data () {
     return {
       onOff: i18n.t('block_production.status.not_register'),
@@ -168,33 +170,17 @@ export default {
       delegates: true, // 注册按钮显示
       amount: 48,
       show: false,
-      height1: null,
-      timer1: null, // 定时器id
-      timer2: null
+      height1: null
     }
   },
   created () {
     this._getDelegateDetail()
-    this.timer1 = setInterval(() => {
-      this._getDelegateDetail()
-    }, 1000 * 303)
   },
   mounted () {
-    let self = this
-    setTimeout(function getBlock () {
-      self._myBlock()
-        .then(req => {
-          self.timer2 = setTimeout(getBlock, 3000)
-        })
-        .catch(err => {
-          void (err)
-          self.timer2 = setTimeout(getBlock, 3000)
-        })
-    }, 3000)
+
   },
   beforeDestroy () {
-    clearInterval(this.timer1)
-    clearTimeout(this.timer2)
+
   },
   computed: {
     ...mapState({
@@ -222,7 +208,7 @@ export default {
     },
     handleOk () {
       this.form.validateFields(
-        (err) => {
+        (err, values) => {
           if (!err) {
             if (unit(this.balance) < 100) {
               this.$notification.info({
@@ -230,9 +216,11 @@ export default {
                 description: i18n.t('tip.balance_enough')
               })
             } else if (this.secondSignature) {
+              this.delegateName = values.delegateName
               this.modal1Visible = false
               this.modal2Visible = true
             } else {
+              this.delegateName = values.delegateName
               this._setDelegate()
             }
           }
