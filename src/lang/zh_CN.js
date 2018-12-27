@@ -15,7 +15,9 @@ export default {
     'empty_hight': '高度不能为空',
     'lock_success': '锁仓成功',
     'unlock_success': '解锁成功',
-    'unlock_error': '请选择锁仓项'
+    'unlock_error': '请选择锁仓项',
+    'copy_success': '复制成功',
+    'copy_error': '该浏览器不支持自动复制'
   },
   'login': {
     'placeholder': '输入主密码',
@@ -53,7 +55,8 @@ export default {
   },
   'first-view': {
     'information': '我的余额 | 最后出块高度 | 版本信息 ',
-    'transaction': '交易记录',
+    'transaction': '交易记录 | 收益记录',
+    'transaction_type': '发送记录 | 接受记录',
     'table_columns': {
       'th01': 'ID',
       'th02': '类型',

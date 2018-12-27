@@ -158,6 +158,9 @@ export default {
       this.total = ''
     },
     refresh () {
+      this.selectedRowKeys = []
+      this.selectedRows = []
+      this.total = ''
       this._effectAccount()
     },
     showConfirm (lockId) {
@@ -250,8 +253,9 @@ export default {
           this.modal2Visible = false
           this.amount = null
           setTimeout(() => {
+            this.$store.dispatch('GetInfo')
             this._allLock()
-          }, 4000)
+          }, 5000)
         } else {
           this.visible = false
           this.modal2Visible = false
@@ -275,8 +279,9 @@ export default {
           this.modal2Visible = false
 
           setTimeout(() => {
+            this.$store.dispatch('GetInfo')
             this._allLock()
-          }, 4000)
+          }, 5000)
         } else {
           this.modal2Visible = false
         }

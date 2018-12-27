@@ -1,7 +1,7 @@
 <template>
   <div class="vote-lists">
     <a-row type="flex" justify="space-between" align="middle">
-        <a-col class="count" >{{$tc("vote_lists.total",1)}}  {{filterDisabled.length}}   {{$tc("vote_lists.total",0)}} </a-col>
+        <a-col class="count" >{{$tc("vote_lists.total",1)}}  {{totalCount}}   {{$tc("vote_lists.total",0)}} </a-col>
         <a-col >
           <a-button class="refresh" type="primary" @click="refresh">{{$t("vote_lists.refresh")}}</a-button>
           <a-button type="primary" @click="vote" >{{$t("vote_lists.vote")}}</a-button>
@@ -9,7 +9,7 @@
     </a-row>
     <div class="table">
       <div>
-        <a-table :rowSelection="{type:'radio',selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        <a-table :rowSelection="rowSelection"
           :rowKey="record => record.address"
           :columns="columns"
           :dataSource="data"
@@ -23,7 +23,7 @@
           </template>
           </a-table>
       </div>
-        <no-data v-show="nodata"  ></no-data>
+        <no-data v-show="nodata"></no-data>
     </div>
     <pop-voted :type="type" :modal1Visible.sync="modal1Visible" :selectedRows="selectedRows"  @handleOk="handleOk"></pop-voted>
     <pop-password :modal2Visible.sync="modal2Visible" @secondSubmit="secondSubmit"></pop-password>
@@ -34,7 +34,7 @@ import {getRecord, getVoteLists, submitVoter} from '@/api/account'
 import {mapState} from 'vuex'
 import PopPassword from '@/components/pop-password/pop-password'
 import PopVoted from '@/components/pop-voted/pop-voted'
-import {compareArrObj, unit} from '@/utils/utils'
+import {unit} from '@/utils/utils'
 import noData from '@/components/nodata/nodata'
 
 const columns = [{
@@ -64,15 +64,16 @@ export default {
   data () {
     return {
       data: [],
-      resultData: [],
+      totalCount: 0,
       haveVoted: [], // 以投票数组
-      filterDisabled: [],
       columns,
       selectedRowKeys: [],
       selectedRows: [], // 选择的行
       totalVoters: 0,
       pagination: {
-        defaultPageSize: 10 // 每页个数
+        defaultPageSize: 10, // 每页个数
+        current: 1,
+        pageSize: 10
       },
       selectRecord: [],
       loading: false,
@@ -83,7 +84,7 @@ export default {
     }
   },
   created () {
-    this._getRecord(0)
+    this._getRecord()
   },
   computed: {
     ...mapState({
@@ -102,6 +103,31 @@ export default {
         votedList.push('+' + item.publicKey)
       })
       return votedList
+    },
+    haveVotedAddress () {
+      if (this.haveVoted.length > 0) {
+        return this.haveVoted[0].address
+      } else {
+        return ''
+      }
+    },
+    rowSelection () {
+      const selectedRowKeys = this.selectedRowKeys
+      let self = this
+      return {
+        selectedRowKeys,
+        type: 'radio',
+        onChange: (selectedRowKeys, selectedRows) => {
+          self.selectedRowKeys = selectedRowKeys
+          self.selectedRows = selectedRows
+        },
+        getCheckboxProps: record => ({
+          props: {
+            disabled: record.address === this.haveVotedAddress, // Column configuration not to be checked
+            name: record.address
+          }
+        })
+      }
     }
   },
   methods: {
@@ -110,7 +136,7 @@ export default {
       this.nodata = false
       this.selectedRowKeys = []
       this.selectedRows = []
-      this._getRecord(this.pagination.page)
+      this._getRecord()
     },
     // 投票
     vote () {
@@ -147,34 +173,19 @@ export default {
       this.selectedRows = selectedRows
     },
     // 获取列表
-    async _getVoteLists (p) {
+    async _getVoteLists (params = {orderby: 'approval:desc', limit: '10', offset: this.pagination.pageSize * (this.pagination.current - 1)}) {
       this.loading = true
       try {
-        const params = {orderby: 'approval:desc'}
         const result = await getVoteLists(params)
         if (result.data.success) {
-          this.resultData = result.data.delegates
-          if (result.data.totalCount > 101) {
-            const length = Math.ceil(result.data.totalCount / 101)
-            for (let i = 1; i < length; i++) {
-              const resultMore = await getVoteLists({orderby: 'approval:desc', offset: 101 * i})
-              if (resultMore.data.success) {
-                this.resultData = [...this.resultData, ...resultMore.data.delegates]
-              }
-            }
-          }
-          this.filterDisabled = compareArrObj(this.haveVoted, this.resultData).result
-          this.data = this.filterDisabled.slice(
-            this.pagination.defaultPageSize * p,
-            this.pagination.defaultPageSize * p + 10
-          )
+          this.totalCount = result.data.totalCount
+          this.data = result.data.delegates
           if (result.data.delegates.length === 0) {
             this.nodata = true
           }
           this.loading = false
           const pagination = { ...this.pagination }
-          pagination.total = this.filterDisabled.length
-          pagination.page = p
+          pagination.total = result.data.totalCount
           this.pagination = pagination
         }
       } catch (err) {
@@ -182,7 +193,7 @@ export default {
       }
     },
     // 获取记录列表
-    async _getRecord (p) {
+    async _getRecord () {
       try {
         const params = {address: this.address}
         this.loading = true
@@ -190,10 +201,10 @@ export default {
         if (result.data.success) {
           this.totalVoters = result.data.delegates.length
           this.haveVoted = result.data.delegates
-          this._getVoteLists(p)
+          this._getVoteLists()
         } else {
           this.haveVoted = []
-          this._getVoteLists(p)
+          this._getVoteLists()
         }
       } catch (err) {
         console.log(err)
@@ -201,9 +212,16 @@ export default {
     },
     // 分页
     handleTableChange (pagination) {
-      this._getVoteLists(pagination.current - 1)
+      const pager = {...this.pagination}
+      pager.current = pagination.current
+      this.pagination = pager
       this.selectedRowKeys = []
       this.selectedRows = []
+      this._getVoteLists({
+        limit: pagination.pageSize,
+        offset: pagination.pageSize * (pagination.current - 1),
+        orderby: 'approval:desc'
+      })
     },
     // 提交投票接口
     async _submitVoter (params = {secret: this.secret, delegates: this.voted}) {
@@ -219,8 +237,8 @@ export default {
         this.selectedRows = []
         setTimeout(() => {
           this.$store.dispatch('GetInfo')
-          this._getVoteLists(this.pagination.page)
-        }, 4000)
+          this._getRecord()
+        }, 5000)
       } else {
         this.modal1Visible = false
         this.modal2Visible = false

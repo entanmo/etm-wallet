@@ -1,6 +1,6 @@
 <template>
   <div class="person">
-    <a-tabs defaultActiveKey="1" >
+    <a-tabs defaultActiveKey="1" @tabClick = "update" >
       <a-tab-pane :tab="$tc('person.tab',0)" key="1">
         <account></account>
       </a-tab-pane>
@@ -19,7 +19,9 @@ export default {
     return {}
   },
   methods: {
-
+    update () {
+      this.$store.dispatch('_getBalance')
+    }
   },
   components: {
     Account,

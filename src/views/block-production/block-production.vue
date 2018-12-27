@@ -8,7 +8,7 @@
       <a-col :xs="10" :sm="8" :md="8" :lg="5" :xl="4">{{$t("block_production.info")}}</a-col>
       <a-col :xs="6" :sm="6" :md="6" :lg="3" :xl="3"> <div>{{onOff}}</div></a-col>
       <a-col :xs="8" :sm="6" :md="6" :lg="3" :xl="2">
-         <a-button v-if="delegates" class="btn" size="large" @click="() => modal1Visible = true" type="primary">{{$t("block_production.registerBtn")}}</a-button>
+         <a-button v-if="!delegates" class="btn" size="large" @click="() => modal1Visible = true" type="primary">{{$t("block_production.registerBtn")}}</a-button>
       </a-col>
     </a-row>
     <div class="info">
@@ -140,8 +140,9 @@ export default {
   },
   sockets: {
     'blocks/change': function (data) {
-      console.log(data)
-      this._myBlock()
+      if (this.delegates) {
+        this._myBlock()
+      }
     },
     'rounds/change': function (data) {
       this._getDelegateDetail()
@@ -167,7 +168,7 @@ export default {
       delegateName: '',
       secondSecret: '', // 二级密码
       unit: unit,
-      delegates: true, // 注册按钮显示
+      delegates: false, // 是否为受托人
       amount: 48,
       show: false,
       height1: null
@@ -175,12 +176,6 @@ export default {
   },
   created () {
     this._getDelegateDetail()
-  },
-  mounted () {
-
-  },
-  beforeDestroy () {
-
   },
   computed: {
     ...mapState({
@@ -231,6 +226,7 @@ export default {
       this.secondSecret = secondSecret
       this._setDelegate()
     },
+
     async _setDelegate () {
       try {
         const params = {
@@ -261,10 +257,10 @@ export default {
         if (result.data.success) {
           this.onOff = i18n.t('block_production.status.has_register')
           this.delegateInfo = result.data.delegate
-          this.delegates = false
+          this.delegates = true
           this._getTableLists()
         } else {
-          this.delegates = true
+          this.delegates = false
           this.onOff = i18n.t('block_production.status.not_register')
           this.nodata = true
         }

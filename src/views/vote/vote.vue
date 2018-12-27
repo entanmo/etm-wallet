@@ -1,6 +1,6 @@
 <template>
   <div class="vote">
-    <a-tabs defaultActiveKey="0" >
+    <a-tabs defaultActiveKey="0" @tabClick = "update">
       <a-tab-pane :tab="$tc('vote.tab',0)" key="0">
         <vote-lists></vote-lists>
       </a-tab-pane>
@@ -25,6 +25,11 @@ import voteForMe from '@/components/vote-for-me/vote-for-me'
 export default {
   data () {
     return {}
+  },
+  methods: {
+    update () {
+      this.$store.dispatch('_getBalance')
+    }
   },
   components: {
     'vote-lists': voteLists,

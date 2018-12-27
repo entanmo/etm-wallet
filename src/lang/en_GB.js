@@ -53,7 +53,8 @@ export default {
   },
   'first-view': {
     'information': 'Balance | Latest Block Height | Version ',
-    'transaction': 'Transfer Record',
+    'transaction': 'Transfer Record | Income Record',
+    'transaction_type': 'Send Record | Accept Record',
     'table_columns': {
       'th01': 'ID',
       'th02': 'Type',

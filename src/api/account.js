@@ -1,5 +1,8 @@
 import http from '../utils/axios'
-
+/**
+ * 登录
+ * @param {公钥} key
+ */
 export const login = (key) => {
   const data = {publicKey: key}
   return http({
@@ -8,7 +11,10 @@ export const login = (key) => {
     data: data
   })
 }
-
+/**
+ *获取用户信息
+ * @param {地址} address
+ */
 export const getAccount = (address) => {
   return http({
     url: '/api/accounts',
@@ -16,7 +22,10 @@ export const getAccount = (address) => {
     params: {address}
   })
 }
-// 受托人列表
+/**
+ * 受托人列表
+ * @param {*} params
+ */
 export const getVoteLists = (params) => {
   return http({
     url: '/api/delegates',
@@ -24,7 +33,10 @@ export const getVoteLists = (params) => {
     params
   })
 }
-// 根据地址获取其投票列表
+/**
+ * 根据地址获取其投票列表
+ * @param {*} params
+ */
 export const getRecord = (params) => {
   return http({
     url: '/api/accounts/delegates',
@@ -32,7 +44,10 @@ export const getRecord = (params) => {
     params
   })
 }
-// 投票
+/**
+ * 投票
+ * @param {*} params
+ */
 export const submitVoter = (params) => {
   return http({
     url: '/api/accounts/delegates',
@@ -40,6 +55,10 @@ export const submitVoter = (params) => {
     data: params
   })
 }
+/**
+ * 谁投给了我
+ * @param {*} params
+ */
 export const voteForMe = (params) => {
   return http({
     url: '/api/delegates/voters',
@@ -47,6 +66,10 @@ export const voteForMe = (params) => {
     params
   })
 }
+/**
+ * 获取交易列表
+ * @param {*} params
+ */
 export const getTransaction = (params) => {
   return http({
     url: '/api/transactions',
@@ -54,7 +77,11 @@ export const getTransaction = (params) => {
     params
   })
 }
-
+/**
+ * 设置二级密码
+ * @param {助计词} secret
+ * @param {*二级密码} secondSecret
+ */
 export const setSecondSecret = (secret, secondSecret) => {
   const data = {secret: secret, secondSecret: secondSecret}
   return http({
@@ -106,10 +133,25 @@ export const effectAccount = (params) => {
     params
   })
 }
-
+/**
+ * 获取余额
+ * @param {*} params
+ */
 export const getBalance = (params) => {
   return http({
     url: '/api/accounts/getBalance',
+    method: 'get',
+    params
+  })
+}
+// export const getIncome = (par)
+/**
+ *获取延迟到账账单信息
+ * @param {*} params
+ */
+export const delayOrders = (params) => {
+  return http({
+    url: '/api/accounts/delayOrders',
     method: 'get',
     params
   })

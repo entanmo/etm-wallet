@@ -27,7 +27,8 @@
       <div>
         <h2>{{$t("register.title")}}</h2>
         <div class="register-in">
-           <a-textarea v-model="newPassword"  :autosize="{ minRows: 2, maxRows: 6 }" />
+           <a-textarea v-model="newPassword" id="key" style="padding-right:23px;"  :autosize="{ minRows: 2, maxRows: 6 }" />
+           <a-icon title="复制"  type="copy" class="copy"  data-clipboard-target="#key" @click="copy" ></a-icon>
         </div>
         <div class="register-in">
            <a-textarea v-model="confirmPassword" :placeholder="$t('register.placeholder')" :autosize="{ minRows: 2, maxRows: 6 }" />
@@ -58,6 +59,8 @@
 import bip39 from 'bip39'
 import {mapActions} from 'vuex'
 import {setup} from '@/lang'
+import Clipboard from 'clipboard'
+
 export default {
   data () {
     return {
@@ -85,6 +88,24 @@ export default {
     ...mapActions([
       'login'
     ]),
+    copy () {
+      const clipboard = new Clipboard('.copy')
+      clipboard.on('success', e => {
+        this.$notification.info({
+          message: i18n.t('tip.title'),
+          description: i18n.t('tip.copy_success')
+        })
+        e.clearSelection()
+        clipboard.destroy()
+      })
+      clipboard.on('error', e => {
+        this.$notification.info({
+          message: i18n.t('tip.title'),
+          description: i18n.t('tip.copy_error')
+        })
+        clipboard.destroy()
+      })
+    },
     async handleSubmit () {
       try {
         if (!bip39.validateMnemonic(this.password)) {
@@ -112,6 +133,8 @@ export default {
     register () {
       this.loginStatus = false
       this.newPassword = bip39.generateMnemonic()
+      this.confirmPassword = ''
+      this.checkitem01 = this.checkitem02 = this.checkitem03 = false
     },
     returnLogin () {
       this.loginStatus = true
@@ -221,8 +244,15 @@ export default {
 .register .register-in {
   text-align: center;
   margin-bottom: 15px;
+  position: relative;
 }
-
+.register-in .copy{
+ position: absolute;
+ font-size: 20px;
+ top: 14px;
+ cursor: pointer;
+ right: 10px;
+}
 .register .items {
   margin-bottom: 10px;
 }

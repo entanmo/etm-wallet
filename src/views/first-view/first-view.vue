@@ -104,42 +104,23 @@
       </a-row>
     </div> -->
     <!-- 表格 -->
-    <div class="transaction">
-      <p class="title">{{$t("first-view.transaction")}}</p>
-      <div class="lists" >
-        <div>
-          <a-table :columns="columns"
-          :rowKey="record => record.id"
-          :dataSource="data"
-          :pagination="pagination"
-          :loading="loading"
-            :scroll="{ x: 1300 }"
-          @change="handleTableChange"
-            >
-            <template slot="typeIN" slot-scope="text, record">
-              {{mapType(record.type)}}
-            </template>
-            <template slot="time" slot-scope="text, record">
-              {{convertTime(record.timestamp)}}
-            </template>
-            <template slot="amount" slot-scope="text, record">
-              {{unit(record.amount)}}
-            </template>
-          <template slot="footer" slot-scope="currentPageData">
-            {{$t("first-view.all")}}:      {{totalAmount().toFixed(2)}} ETM
-          </template>
-          </a-table>
-        </div>
-        <no-data v-show="nodata"></no-data>
-      </div>
+  <div class="transaction">
+    <a-tabs defaultActiveKey="1" @change="changePane">
+      <a-tab-pane :tab="$tc('first-view.transaction',1)" key="1">
+        <transfer-record ref="transfer" ></transfer-record>
+      </a-tab-pane>
+      <a-tab-pane :tab="$tc('first-view.transaction',2)" key="2" forceRender >
+        <income-record ref="income"></income-record>
+      </a-tab-pane>
+    </a-tabs>
+
     </div>
   </div>
 </template>
 <script>
-import { getTransaction } from '@/api/account'
-import { convertTime } from '@/utils/gen'
 import {unit} from '@/utils/utils'
-import noData from '@/components/nodata/nodata'
+import TransferRecord from '@/components/transfer-record/transfer-record'
+import IncomeRecord from '@/components/income-record/income-record'
 // import ChartCard from '@/components/card/card'
 // import MiniArea from '@/components/chart/miniArea'
 // import MiniBar from '@/components/chart/miniBar'
@@ -147,30 +128,7 @@ import noData from '@/components/nodata/nodata'
 // import Trend from '@/components/chart/trend'
 import AnimatedInteger from '@/components/animated-integer/animated-integer'
 // import RankingList from '@/components/chart/rankingList'
-// 表头
-const columns = [{
-  title: i18n.t('first-view.table_columns.th02'),
-  scopedSlots: { customRender: 'typeIN' },
-  dataIndex: 'type'
-}, {
-  title: i18n.t('first-view.table_columns.th03'),
-  dataIndex: 'senderId'
-}, {
-  title: i18n.t('first-view.table_columns.th04'),
-  dataIndex: 'recipientId'
-}, {
-  title: i18n.t('first-view.table_columns.th05'),
-  dataIndex: 'timestamp',
-  scopedSlots: {customRender: 'time'}
-}, {
-  title: i18n.t('first-view.table_columns.th06'),
-  dataIndex: 'message'
-}, {
-  title: i18n.t('first-view.table_columns.th07'),
-  dataIndex: 'amount',
-  scopedSlots: {customRender: 'amount'}
 
-}]
 // 排名
 const rankList = []
 
@@ -183,25 +141,16 @@ for (let i = 0; i < 10; i++) {
 export default {
   sockets: {
     'blocks/change': function (data) {
-      this.$store.dispatch('_getInfo')
+      this.accounts.height = data.height
     },
     'rounds/change': function (data) {
-      this._getTransaction()
+      this.$store.dispatch('_getBalance')
     }
   },
   data () {
     return {
-      data: [],
-      columns,
-      pagination: {
-        defaultPageSize: 10 // 每页个数
-      },
-      loading: false,
-      nodata: false,
-      unit: unit,
-      convertTime: convertTime, // 方法
       rankList // 排名
-
+      // forceRender: true
     }
   },
   computed: {
@@ -216,7 +165,8 @@ export default {
     }
   },
   components: {
-    'no-data': noData,
+    TransferRecord,
+    IncomeRecord,
     // 'chart-card': ChartCard,
     // 'mini-area': MiniArea,
     // 'mini-bar': MiniBar,
@@ -227,65 +177,13 @@ export default {
   },
   created () {
     this.$store.dispatch('GetInfo')
-    this._getTransaction()
   },
   methods: {
-    async _getTransaction (params = {senderId: this.address, orderBy: 't_timestamp:desc', limit: 10}) {
-      this.loading = true
-      const result = await getTransaction(params)
-      if (result.data.success) {
-        if (result.data.count === 0) {
-          this.nodata = true
-        }
-        this.data = result.data.transactions
-        const pagination = {...this.pagination}
-        pagination.total = result.data.count
-        this.pagination = pagination
-        this.loading = false
-      }
-    },
-    handleTableChange (pagination) {
-      const pager = {...this.pagination}
-      pager.current = pagination.current
-      this.pagination = pager
-      this._getTransaction({
-        senderId: this.address,
-        limit: pagination.pageSize,
-        offset: pagination.pageSize * (pagination.current - 1),
-        orderBy: 't_timestamp:desc'
-      })
-    },
-    totalAmount () {
-      if (!this.data.length) {
-        return 0
-      }
-      const amount = this.data.map(item => unit(item.amount))
-      return amount.reduce((prev, next) => {
-        return prev + next
-      })
-    },
-    mapType (type) {
-      switch (type) {
-        case 0:
-          return i18n.t('first-view.transfer')
-        case 1:
-          return i18n.t('first-view.set')
-        case 2:
-          return i18n.t('first-view.register_voter')
-        case 3:
-          return i18n.t('first-view.vote')
-        case 4:
-          return i18n.t('first-view.multi_signature')
-        case 5:
-          return 'DAPP'
-        case 6:
-          return 'IN_TRANSFER'
-        case 7:
-          return 'OUT_TRANSFER'
-        case 101:
-          return i18n.t('first-view.lock')
-        case 201:
-          return i18n.t('first-view.unlock')
+    changePane (key) {
+      if (key === '1') {
+        this.$refs.transfer._getTransaction()
+      } else if (key === '2') {
+        this.$refs.income.getIncome()
       }
     }
   }
@@ -345,19 +243,11 @@ export default {
   }
 }
 .transaction {
-  margin: 20px 0 0 0;
-  .title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  .lists{
-  position: relative;
-  background: #fff;
-  border-radius: 2px;
-  padding:10px;
-  min-height: 500px;
-  }
+    background: #fff;
+    padding: 10px;
+    min-height: 600px;
+    margin-top: 37px;
+
 }
 @media (max-width: 768px){
   .information .etm-info .etm-info-li p:last-child{

@@ -16,8 +16,9 @@ import store from '@/store'
 import './permission'
 Vue.use(new VueSocketIO({
   debug: true,
-  // connection: 'wss://www.xxi124.xyz/socket.io',
-  connection: process.env.BASE_API,
+  // connection: process.env.BASE_API,
+  connection: 'http://47.107.148.76:4096',
+  // connection: 'http://192.168.2.58:64096',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
@@ -27,7 +28,6 @@ Vue.use(new VueSocketIO({
 Vue.component(VueQrcode.name, VueQrcode)
 Vue.use(Viser)
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

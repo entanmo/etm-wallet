@@ -55,6 +55,7 @@ const user = {
       const publicKey = genPublicKey(secret)
       const result = await getAccount(address)
       if (result.data.success) {
+        console.log(result)
         let info = {...result.data.account, ...result.data.latestBlock, ...result.data.version}
         info.publicKey = publicKey
         commit('SET_INFO', info)
@@ -77,12 +78,13 @@ const user = {
         console.log(error)
       }
     },
+    /**
+     * 获取余额
+     */
     async _getBalance ({commit}) {
       try {
-        console.log(this.state.user.accountInfo)
         const params = {address: this.state.user.accountInfo.address}
         const result = await getBalance(params)
-        console.log(result)
         if (result.data.success) {
           const balance = result.data.balance
           commit('SET_BALANCE', balance)
