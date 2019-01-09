@@ -15,10 +15,10 @@ import VueQrcode from '@xkeshi/vue-qrcode'
 import store from '@/store'
 import './permission'
 Vue.use(new VueSocketIO({
-  debug: true,
+  debug: false,
   // connection: process.env.BASE_API,
-  connection: 'http://47.107.148.76:4096',
-  // connection: 'http://192.168.2.58:64096',
+  // connection: 'http://47.107.148.76:4096',
+  connection: 'http://192.168.2.58:64096',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',

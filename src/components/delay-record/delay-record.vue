@@ -3,15 +3,14 @@
     <div class="income-table">
       <div >
         <a-table :columns="columns"
-                 :rowKey="record => record.id"
+                 :rowKey="record => record.transactionId"
                  :dataSource="data"
                 :pagination="pagination"
                 :loading="loading"
                   :scroll="{ x: 1300 }"
-                @change="handleTableChange"
         >
-          <template slot="time" slot-scope="text, record">
-            {{convertTime(record.timestamp)}}
+          <template slot="expired" slot-scope="text, record">
+            {{computedTime(record.expired)}}
           </template>
           <template slot="amount" slot-scope="text, record">
             {{unit(record.amount)}}
@@ -25,25 +24,28 @@
 
 <script>
 import noData from '@/components/nodata/nodata'
-import { getTransaction } from '@/api/account'
+import { delayOrders } from '@/api/account'
 import { convertTime } from '@/utils/gen'
-import {unit} from '@/utils/utils'
+import {unit, timestampToLocalTime} from '@/utils/utils'
 const columns = [{
-  title: i18n.t('first-view.table_columns.th03'),
+  title: i18n.t('delay_record.table_columns.th01'),
   dataIndex: 'senderId'
 }, {
-  title: i18n.t('first-view.table_columns.th05'),
-  dataIndex: 'timestamp',
-  scopedSlots: {customRender: 'time'}
+  title: i18n.t('delay_record.table_columns.th02'),
+  dataIndex: 'expired',
+  scopedSlots: {customRender: 'expired'}
 }, {
-  title: i18n.t('first-view.table_columns.th06'),
-  dataIndex: 'message'
-}, {
-  title: i18n.t('first-view.table_columns.th07'),
+  title: i18n.t('delay_record.table_columns.th03'),
   dataIndex: 'amount',
   scopedSlots: {customRender: 'amount'}
 }]
 export default {
+  props: {
+    delay: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       nodata: false,
@@ -60,38 +62,36 @@ export default {
   computed: {
     address () {
       return this.$store.state.user.accountInfo.address
+    },
+    height () {
+      return this.$store.state.user.accountInfo.height
     }
   },
   created () {
-    this.getIncome()
+    this.delayRecord()
   },
   methods: {
-    async getIncome (params = {senderId: this.address, orderBy: 't_timestamp:desc', limit: 10}) {
+    computedTime (expired) {
+      const diff = expired - this.height
+      const second = diff * 3
+      return timestampToLocalTime((Date.now() / 1000 + second) * 1000)
+    },
+    async delayRecord (params = {address: this.address, mode: 0}) {
       this.loading = true
-      const result = await getTransaction(params)
+      const result = await delayOrders(params)
+      console.log(result)
       if (result && result.data.success) {
-        if (result.data.count === 0) {
+        if (result.data.result.length === 0) {
           this.nodata = true
         } else {
           this.nodata = false
         }
-        this.data = result.data.transactions
+        this.data = result.data.result
         const pagination = {...this.pagination}
-        pagination.total = result.data.count
+        pagination.total = result.data.result.length
         this.pagination = pagination
         this.loading = false
       }
-    },
-    handleTableChange (pagination) {
-      const pager = {...this.pagination}
-      pager.current = pagination.current
-      this.pagination = pager
-      this.getIncome({
-        senderId: this.address,
-        limit: pagination.pageSize,
-        offset: pagination.pageSize * (pagination.current - 1),
-        orderBy: 't_timestamp:desc'
-      })
     }
   },
   components: {

@@ -103,6 +103,7 @@ export default {
       this.loading = true
       const result = await getTransaction(params)
       if (result.data.success) {
+        console.log(result)
         if (result.data.count === 0) {
           this.nodata = true
         } else {
@@ -164,8 +165,12 @@ export default {
           return 'OUT_TRANSFER'
         case 101:
           return i18n.t('first-view.lock')
+        case 110:
+          return i18n.t('first-view.delay')
         case 201:
           return i18n.t('first-view.unlock')
+        case 120:
+          return i18n.t('first-view.unregister_voter')
       }
     }
   },

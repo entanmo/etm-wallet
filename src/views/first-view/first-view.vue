@@ -105,22 +105,21 @@
     </div> -->
     <!-- 表格 -->
   <div class="transaction">
-    <a-tabs defaultActiveKey="1" @change="changePane">
+    <a-tabs defaultActiveKey="1" >
       <a-tab-pane :tab="$tc('first-view.transaction',1)" key="1">
         <transfer-record ref="transfer" ></transfer-record>
       </a-tab-pane>
-      <a-tab-pane :tab="$tc('first-view.transaction',2)" key="2" forceRender >
+      <!-- <a-tab-pane :tab="$tc('first-view.transaction',2)" key="2" forceRender >
         <income-record ref="income"></income-record>
-      </a-tab-pane>
+      </a-tab-pane> -->
     </a-tabs>
-
     </div>
   </div>
 </template>
 <script>
 import {unit} from '@/utils/utils'
 import TransferRecord from '@/components/transfer-record/transfer-record'
-import IncomeRecord from '@/components/income-record/income-record'
+// import IncomeRecord from '@/components/income-record/income-record'
 // import ChartCard from '@/components/card/card'
 // import MiniArea from '@/components/chart/miniArea'
 // import MiniBar from '@/components/chart/miniBar'
@@ -166,7 +165,7 @@ export default {
   },
   components: {
     TransferRecord,
-    IncomeRecord,
+    // IncomeRecord,
     // 'chart-card': ChartCard,
     // 'mini-area': MiniArea,
     // 'mini-bar': MiniBar,
@@ -179,13 +178,13 @@ export default {
     this.$store.dispatch('GetInfo')
   },
   methods: {
-    changePane (key) {
-      if (key === '1') {
-        this.$refs.transfer._getTransaction()
-      } else if (key === '2') {
-        this.$refs.income.getIncome()
-      }
-    }
+    // changePane (key) {
+    //   if (key === '1') {
+    //     this.$refs.transfer._getTransaction()
+    //   } else if (key === '2') {
+    //     this.$refs.income.getIncome()
+    //   }
+    // }
   }
 }
 </script>

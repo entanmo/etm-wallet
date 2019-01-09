@@ -7,7 +7,8 @@ export default {
     'transfer_success': 'Transfer Success',
     'vote_success': 'Vote Success',
     'delete_success': 'Delete Success',
-    'register_success': 'Register Success',
+    'register_success': 'register Success',
+    'unregister_success': 'Unregister Success',
     'choose_vote': 'Select a delegate',
     'delete_vote': 'Select a delete to record',
     'hightest': 'Maximum height reached',
@@ -67,14 +68,17 @@ export default {
     'transfer': 'Ordinary transfer',
     'set': 'Set secondary password',
     'register_voter': 'Registered trustee',
+    'unregister_voter': 'UnRegistered trustee',
     'vote': 'vote',
     'multi_signature': 'Multi signature',
     'all': 'Total',
-    'lock': 'lock',
-    'unlock': 'unlock'
+    'lock': 'Lock',
+    'unlock': 'Unlock',
+    'delay': 'Freeze transaction'
   },
   'person': {
-    'tab': 'Account Detail | Second Secret | Lock Setting'
+    'tab': 'Account Detail | Second Secret | Lock Setting',
+    'delay': 'Freeze Bill'
   },
   'account': {
     'title': 'Account Detail',
@@ -110,6 +114,13 @@ export default {
     'note': 'Notice',
     'p': 'Please confirm that you have safely saved the second secret. Once lost, your property in the ETM system will not be retrieved. Setting the second secret requires 5 ETM fee.',
     'submitBtn': 'Submit'
+  },
+  'delay_record': {
+    'table_columns': {
+      'th01': 'sender',
+      'th02': 'Unlock Time',
+      'th03': 'Delay Amount (ETM)'
+    }
   },
   'lock_up': {
     'lockedModel': {
@@ -159,6 +170,8 @@ export default {
     },
     'info': 'Delegate Information',
     'registerBtn': 'Register',
+    'unregisterBtn': 'Cancel',
+    'registeringBtn': 'unregistering',
     'rewards': 'Rewards',
     'rate': 'Ranking',
     'productivity': 'Productivity',
@@ -175,13 +188,19 @@ export default {
     },
     'pop_title': 'Register as Delegate',
     'name': {
-      'label': 'Delegate Name',
+      'label': 'Name',
       'msg': 'Username can not be empty',
       'required': 'Username can only contain letters, numbers, characters other than @$&_'
     },
     'note': {
       'label': 'Notice',
-      'msg': 'Registration requires 100 ETM fee'
+      'msg': 'Registration requires 1000 ETM fee'
+    },
+    'tip': {
+      'title': 'Confirm cancellation of trustee?',
+      'content': 'Please be patient, the cancellation will be completed at the end of each round. The mortgage is reviewed by the Foundation and it is confirmed that you will be refunded within 5-10 business days after you have acted as a trustee without cheating. (logout fee 0.1 ETM)',
+      'btn_ok': 'ok',
+      'btn_cancel': 'cancel'
     },
     'submitBtn': 'Submit'
   },

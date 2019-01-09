@@ -42,17 +42,6 @@ export const getDelegate = (params) => {
   })
 }
 /**
- * 获取受托人列表
- * @param {*} params
- */
-export const setDelegate = (params) => {
-  return http({
-    url: '/api/delegates',
-    method: 'put',
-    data: params
-  })
-}
-/**
  * 创建交易
  * @param {*} params
  */

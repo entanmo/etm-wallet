@@ -144,7 +144,7 @@ export const getBalance = (params) => {
     params
   })
 }
-// export const getIncome = (par)
+
 /**
  *获取延迟到账账单信息
  * @param {*} params
@@ -154,5 +154,24 @@ export const delayOrders = (params) => {
     url: '/api/accounts/delayOrders',
     method: 'get',
     params
+  })
+}
+/**
+ * 注册受托人
+ * @param {*} params
+ */
+export const setDelegate = (params) => {
+  return http({
+    url: '/api/delegates',
+    method: 'put',
+    data: params
+  })
+}
+
+export const cancelDelegate = (params) => {
+  return http({
+    url: '/api/delegates/undelegate',
+    method: 'put',
+    data: params
   })
 }

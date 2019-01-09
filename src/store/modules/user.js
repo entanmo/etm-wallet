@@ -55,7 +55,6 @@ const user = {
       const publicKey = genPublicKey(secret)
       const result = await getAccount(address)
       if (result.data.success) {
-        console.log(result)
         let info = {...result.data.account, ...result.data.latestBlock, ...result.data.version}
         info.publicKey = publicKey
         commit('SET_INFO', info)

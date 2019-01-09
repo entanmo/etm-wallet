@@ -8,7 +8,9 @@
       <a-col :xs="10" :sm="8" :md="8" :lg="5" :xl="4">{{$t("block_production.info")}}</a-col>
       <a-col :xs="6" :sm="6" :md="6" :lg="3" :xl="3"> <div>{{onOff}}</div></a-col>
       <a-col :xs="8" :sm="6" :md="6" :lg="3" :xl="2">
-         <a-button v-if="!delegates" class="btn" size="large" @click="() => modal1Visible = true" type="primary">{{$t("block_production.registerBtn")}}</a-button>
+         <a-button v-if="isDelegate === 0" class="btn"  @click="() => modal1Visible = true" type="primary">{{$t("block_production.registerBtn")}}</a-button>
+         <a-button v-else-if="isDelegate === 1" class="btn" @click="handleCancelDelegate" type="primary" >{{$t("block_production.unregisterBtn")}}</a-button>
+         <a-button v-else-if="isDelegate === 2" class="btn" type="primary" disabled >{{$t("block_production.registeringBtn")}}</a-button>
       </a-col>
     </a-row>
     <div class="info">
@@ -42,16 +44,16 @@
           @change="handleTableChange"
           :scroll="{ x: 1300 }"
           :dataSource="data" >
-          <template slot="time" slot-scope="text, record">
+          <template slot="time" slot-scope="record">
             {{convertTime(record.timestamp)}}
           </template>
-          <template slot="totalAmount" slot-scope="text,record">
+          <template slot="totalAmount" slot-scope="record">
             {{unit(record.totalAmount)}}
           </template>
-          <template slot="totalFee" slot-scope="text,record">
+          <template slot="totalFee" slot-scope="record">
               {{unit(record.totalFee)}}
           </template>
-          <template slot="reward" slot-scope="text,record">
+          <template slot="reward" slot-scope="record">
               {{unit(record.reward)}}
           </template>
           </a-table>
@@ -99,11 +101,13 @@
 <script>
 import noData from '@/components/nodata/nodata'
 import popPassword from '@/components/pop-password/pop-password'
-import { getDelegate, setDelegate, blocks } from '@/api/block'
+import { getDelegate, blocks } from '@/api/block'
+import {setDelegate, cancelDelegate} from '@/api/account'
 import { convertTime } from '@/utils/gen'
 import {mapState} from 'vuex'
 import {unit} from '@/utils/utils'
 import AnimatedCoin from '@/components/animated-coin/animated-coin'
+import { setTimeout } from 'timers'
 
 const columns = [{
   title: i18n.t('block_production.columns.th01'),
@@ -169,6 +173,7 @@ export default {
       secondSecret: '', // 二级密码
       unit: unit,
       delegates: false, // 是否为受托人
+      isDelegate: 0, // 受托人状态
       amount: 48,
       show: false,
       height1: null
@@ -205,7 +210,7 @@ export default {
       this.form.validateFields(
         (err, values) => {
           if (!err) {
-            if (unit(this.balance) < 100) {
+            if (unit(this.balance) < 1000) {
               this.$notification.info({
                 message: i18n.t('tip.title'),
                 description: i18n.t('tip.balance_enough')
@@ -224,10 +229,51 @@ export default {
     },
     handleSecondOk (secondSecret) { // 二级密码
       this.secondSecret = secondSecret
-      this._setDelegate()
+      if (this.delegates) {
+        this.cancelDelegate()
+      } else {
+        this._setDelegate()
+      }
+      this.secondSecret = ''
     },
-
-    async _setDelegate () {
+    handleCancelDelegate () {
+      let self = this
+      this.$confirm({
+        title: i18n.t('block_production.tip.title'),
+        content: i18n.t('block_production.tip.content'),
+        okText: i18n.t('block_production.tip.btn_ok'),
+        cancelText: i18n.t('block_production.tip.btn_cancel'),
+        onOk () {
+          if (self.secondSignature) {
+            self.modal2Visible = true
+          } else {
+            self.cancelDelegate()
+          }
+        }
+      })
+    },
+    async cancelDelegate () { // 注销受托人
+      try {
+        const params = {secret: this.secret}
+        if (this.secondSignature) {
+          params.secondSecret = this.secondSecret
+        }
+        const result = await cancelDelegate(params)
+        if (result && result.data.success) {
+          this.modal2Visible = false
+          this.$notification.info({
+            message: i18n.t('tip.title'),
+            description: i18n.t('tip.unregister_success')
+          })
+          setTimeout(() => {
+            this._getDelegateDetail()
+          }, 4000)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async _setDelegate () { // 注册受托人
       try {
         const params = {
           secret: this.secret,
@@ -245,30 +291,34 @@ export default {
             message: i18n.t('tip.title'),
             description: i18n.t('tip.register_success')
           })
+          setTimeout(() => {
+            this._getDelegateDetail()
+          }, 4000)
         }
       } catch (err) {
         console.log(err)
       }
     },
-    async _getDelegateDetail (params = {publicKey: this.publicKey}) {
-      this.loading = true
+    async _getDelegateDetail (params = {publicKey: this.publicKey}) { // 获取受托人详情
       try {
         const result = await getDelegate(params)
         if (result.data.success) {
           this.onOff = i18n.t('block_production.status.has_register')
           this.delegateInfo = result.data.delegate
+          this.isDelegate = result.data.delegate.isDelegate
           this.delegates = true
           this._getTableLists()
         } else {
           this.delegates = false
           this.onOff = i18n.t('block_production.status.not_register')
           this.nodata = true
+          this.isDelegate = 0
         }
       } catch (err) {
         console.log(err)
       }
     },
-    async _myBlock (params = {limit: 1, orderBy: 'height:desc'}) {
+    async _myBlock (params = {limit: 1, orderBy: 'height:desc'}) { // 监听块
       try {
         const result = await blocks(params)
         if (result.data.success) {
@@ -285,7 +335,7 @@ export default {
         console.log(error)
       }
     },
-    async _getTableLists (params = {generatorPublicKey: this.publicKey, limit: 10, orderBy: 'height:desc'}) {
+    async _getTableLists (params = {generatorPublicKey: this.publicKey, limit: 10, orderBy: 'height:desc'}) { // 所托人详情列表
       this.loading = true
       const result = await blocks(params)
       if (result.data.success) {

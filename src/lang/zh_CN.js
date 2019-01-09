@@ -8,6 +8,7 @@ export default {
     'vote_success': '投票成功',
     'delete_success': '删除成功',
     'register_success': '注册成功',
+    'unregister_success': '注销成功',
     'choose_vote': '请选择受托人',
     'delete_vote': '请选择删除记录',
     'hightest': '已达到最高高度',
@@ -69,14 +70,18 @@ export default {
     'transfer': '普通转账',
     'set': '设置二级密码',
     'register_voter': '注册受托人',
+    'unregister_voter': '注销受托人',
     'vote': '投票',
     'multi_signature': '多重签名',
     'all': '总计',
     'lock': '锁仓',
-    'unlock': '解锁仓'
+    'unlock': '解锁仓',
+    'delay': '冻结交易'
   },
   'person': {
-    'tab': '账户信息 | 二级密码 | 锁仓'
+    'tab': '账户信息 | 二级密码 | 锁仓',
+    'delay': '冻结账单'
+
   },
   'account': {
     'title': '账号信息',
@@ -112,6 +117,13 @@ export default {
     'note': '注意',
     'p': '请确认您已经安全保存了二级密码，一旦丢失，您在 ETM 系统中的财产将无法找回，设置二级密码需要 5ETM 手续费',
     'submitBtn': '提交'
+  },
+  'delay_record': {
+    'table_columns': {
+      'th01': '发送者',
+      'th02': '解锁时间',
+      'th03': '延迟金额 (ETM)'
+    }
   },
   'lock_up': {
     'lockedModel': {
@@ -161,6 +173,8 @@ export default {
     },
     'info': '受托人基本信息',
     'registerBtn': '注册受托人',
+    'unregisterBtn': '注销受托人',
+    'registeringBtn': '注销中',
     'rewards': '总收益',
     'rate': '排名',
     'productivity': '生产率',
@@ -183,7 +197,13 @@ export default {
     },
     'note': {
       'label': '注意',
-      'msg': '注册需支付100 ETM'
+      'msg': '注册需支付1000 ETM'
+    },
+    'tip': {
+      'title': '确认注销受托人?',
+      'content': '请耐心等待，注销将在每一轮出块结束时完成。抵押金由基金会审核，确认您在担任受托人期间，无作弊现象后，5-10 个工作日内退还原账户。（注销手续费 0.1 ETM）',
+      'btn_ok': '确认',
+      'btn_cancel': '取消'
     },
     'submitBtn': '提交'
   },
