@@ -5,15 +5,15 @@
     <ul class="list">
       <li :key="index" v-for="(item, index) in first">
         <span :class="index < 3 ? 'active' : null">{{index + 1}}</span>
-        <span >{{item.username}}</span>
-        <span >{{unit(item.reward)}} ETM</span>
+        <span >{{item.name}}</span>
+        <span >{{item.total}}</span>
       </li>
     </ul>
     <ul class="list" style="float:right">
       <li :key="index" v-for="(item, index) in second">
         <span >{{index + 6}}</span>
-        <span >{{item.username}}</span>
-        <span >{{unit(item.reward)}} ETM</span>
+        <span >{{item.name}}</span>
+        <span >{{item.total}} </span>
       </li>
     </ul>
   </div>

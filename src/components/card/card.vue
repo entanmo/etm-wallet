@@ -3,11 +3,11 @@
     <div class="chart-card-header">
       <div class="meta">
         <span class="chart-card-title">{{title}}</span>
-        <span class="chart-card-action">
+        <!-- <span class="chart-card-action">
         <slot name="action"></slot>
-      </span>
+      </span> -->
       </div>
-      <div class="total"><animated-integer :value='total'></animated-integer></div>
+      <div class="total"><animated-integer  :point='point' :value='total'></animated-integer></div>
     </div>
     <div class="chart-card-content">
       <div class="content-fix">
@@ -25,7 +25,7 @@ import AnimatedInteger from '@/components/animated-integer/animated-integer'
 
 export default {
   name: 'ChartCard',
-  props: ['title', 'total'],
+  props: ['title', 'point', 'total'],
   components: {
     'animated-integer': AnimatedInteger
   }

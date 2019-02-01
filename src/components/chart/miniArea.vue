@@ -3,7 +3,7 @@
     <div class="chart-content" :style="{width:'100%',height: 46}">
       <v-chart :force-fit="true"   :height="height" :data="data" :padding="[36, 5, 18, 5]">
         <v-tooltip />
-        <v-smooth-area position="x*y" />
+        <v-smooth-area position="x*出块数" />
       </v-chart>
     </div>
   </div>
@@ -14,26 +14,24 @@ import {format} from 'date-fns'
 import { setTimeout } from 'timers'
 
 const data = []
-const beginDay = new Date().getTime()
+const beginDay = new Date().getTime() - 1000 * 60 * 60 * 24 * 14
 
-const fakeY = [7, 5, 4, 2, 4, 7, 5, 6, 5, 9, 6, 3, 1, 5, 3, 6, 5]
+const fakeY = [20, 5, 4, 2, 4, 20, 5, 6, 5, 9, 6, 3, 10, 5, 3]
 setTimeout(() => {
   for (let i = 0; i < fakeY.length; i += 1) {
     data.push({
       x: format(new Date(beginDay + 1000 * 60 * 60 * 24 * i), 'YYYY-MM-DD'),
-      y: fakeY[i]
+      '出块数': fakeY[i]
     })
   }
 }, 1000)
-
 const tooltip = [
   'x*y',
-  (x, y) => ({
+  (x, yy) => ({
     name: x,
-    value: y
+    value: 'y'
   })
 ]
-
 const scale = [{
   dataKey: 'x',
   min: 2

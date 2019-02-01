@@ -3,7 +3,7 @@
     <div class="chart-content" :style="{height: 46}">
       <v-chart :force-fit="true" :height="height" :data="data" :padding="[36, 5, 18, 5]">
         <v-tooltip />
-        <v-bar position="x*y" />
+        <v-bar position="x*得票量" />
       </v-chart>
     </div>
   </div>
@@ -16,12 +16,12 @@ import { setTimeout } from 'timers'
 const data = []
 const beginDay = new Date().getTime()
 
-const fakeY = [7, 5, 4, 2, 4, 7, 5, 6, 5, 9, 6, 3, 1, 5, 3, 6, 5]
+const fakeY = [20, 5, 4, 2, 4, 7, 5, 6, 5, 9, 6, 3, 1, 5, 3, 6, 5]
 setTimeout(() => {
   for (let i = 0; i < fakeY.length; i += 1) {
     data.push({
       x: format(new Date(beginDay + 1000 * 60 * 60 * 24 * i), 'YYYY-MM-DD'),
-      y: fakeY[i]
+      '得票量': fakeY[i]
     })
   }
 }, 1000)

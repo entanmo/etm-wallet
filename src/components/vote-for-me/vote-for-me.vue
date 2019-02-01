@@ -13,11 +13,11 @@
                 :dataSource="data"
                 :pagination="pagination"
                 :loading="loading"
-                :scroll="{ x: 1300 }"
+                :scroll="{ x: 800 }"
                 @change="handleTableChange"
         >
-        <template slot="weight" slot-scope="text,record">
-          {{record.weight.toFixed(2) === '0.00' ? 0 : record.weight.toFixed(2)}}
+        <template slot="weight" slot-scope="weight">
+          {{weight.toFixed(2) === '0.00' ? 0 : weight.toFixed(2)}}
         </template>
         </a-table>
       </div>

@@ -18,10 +18,10 @@
       </a-row>
     </div>
     <!-- 图表 -->
-    <!-- <div class="charts">
+    <div class="charts">
       <a-row>
       <a-col :sm="24" :md="12" :xl="6" class="part" style="padding: 12px 12px 15px 0;">
-        <chart-card title="昨日收益 (ETM)" total="19,34">
+        <chart-card title="昨日收益 (ETM)"  :point='2' total='12.13'>
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -59,7 +59,7 @@
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <mini-progress target="78" percent="78" color="#13C2C2" height="8px"/>
+            <mini-progress target="21" percent="21" color="#13C2C2" height="8px"/>
           </div>
           <div slot="footer">
             <trend style="margin-right: 16px" term="同周比" :percent="78" :is-increase="true" :scale="0" />
@@ -67,9 +67,9 @@
         </chart-card>
       </a-col>
       </a-row>
-    </div> -->
+    </div>
     <!-- 排名 -->
-    <!-- <div class="rank ">
+    <div class="rank ">
       <a-row>
         <a-col :sm="24" :md="12" :xl="12" class="part-left">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
@@ -82,7 +82,7 @@
             </div>
           </div>
           <a-tab-pane loading="true" tab="收益排名" key="1">
-          <ranking-list title="" :list="rankList"/>
+          <ranking-list1 title="" :list="rankList1"/>
           </a-tab-pane>
           </a-tabs>
         </a-col>
@@ -97,12 +97,12 @@
             </div>
           </div>
           <a-tab-pane loading="true" tab="得票率排名" key="1">
-          <ranking-list title="" :list="rankList"/>
+          <ranking-list1 title="" :list="rankList1"/>
           </a-tab-pane>
           </a-tabs>
         </a-col>
       </a-row>
-    </div> -->
+    </div>
     <!-- 表格 -->
   <div class="transaction">
     <a-tabs defaultActiveKey="1" >
@@ -119,20 +119,22 @@
 <script>
 import {unit} from '@/utils/utils'
 import TransferRecord from '@/components/transfer-record/transfer-record'
-// import IncomeRecord from '@/components/income-record/income-record'
-// import ChartCard from '@/components/card/card'
-// import MiniArea from '@/components/chart/miniArea'
-// import MiniBar from '@/components/chart/miniBar'
-// import MiniProgress from '@/components/chart/miniProgress'
-// import Trend from '@/components/chart/trend'
 import AnimatedInteger from '@/components/animated-integer/animated-integer'
+import IncomeRecord from '@/components/income-record/income-record'
+import ChartCard from '@/components/card/card'
+import MiniArea from '@/components/chart/miniArea'
+import MiniBar from '@/components/chart/miniBar'
+import MiniProgress from '@/components/chart/miniProgress'
+import Trend from '@/components/chart/trend'
 // import RankingList from '@/components/chart/rankingList'
+import RankingList1 from '@/components/chart/rankingList1'
+// import axios from 'axios'
 
 // 排名
-const rankList = []
+const rankList1 = []
 
 for (let i = 0; i < 10; i++) {
-  rankList.push({
+  rankList1.push({
     name: '桃源村' + i + '号店',
     total: 1234 - i * 100
   })
@@ -140,7 +142,7 @@ for (let i = 0; i < 10; i++) {
 export default {
   sockets: {
     'blocks/change': function (data) {
-      this.accounts.height = data.height
+      this.accounts.height = data.height || this.accounts.height
     },
     'rounds/change': function (data) {
       this.$store.dispatch('_getBalance')
@@ -148,7 +150,8 @@ export default {
   },
   data () {
     return {
-      rankList // 排名
+      rankList: [], // 排名
+      rankList1
       // forceRender: true
     }
   },
@@ -160,19 +163,20 @@ export default {
       return this.$store.state.user.accountInfo.address
     },
     balance () {
-      return unit(this.accounts.balance).toFixed(2) * 1
+      return unit(this.accounts.balance).toFixed(2) * 1 || 0
     }
   },
   components: {
     TransferRecord,
-    // IncomeRecord,
-    // 'chart-card': ChartCard,
-    // 'mini-area': MiniArea,
-    // 'mini-bar': MiniBar,
-    // 'mini-progress': MiniProgress,
-    'animated-integer': AnimatedInteger
+    'animated-integer': AnimatedInteger,
+    IncomeRecord,
+    'chart-card': ChartCard,
+    'mini-area': MiniArea,
+    'mini-bar': MiniBar,
+    'mini-progress': MiniProgress,
     // 'ranking-list': RankingList,
-    // Trend
+    'ranking-list1': RankingList1,
+    Trend
   },
   created () {
     this.$store.dispatch('GetInfo')
@@ -183,6 +187,18 @@ export default {
     //     this.$refs.transfer._getTransaction()
     //   } else if (key === '2') {
     //     this.$refs.income.getIncome()
+    //   }
+    // }
+    // async getRank () {
+    //   const result = await axios.get('apia/users/allIncome')
+    //   if (result && result.data.code) {
+    //     this.rankList = result.data.data
+    //   }
+    // },
+    // async getRankWeek () {
+    //   const result = await axios.get('apia/users/allIncomeWeek')
+    //   if (result && result.data.code) {
+    //     this.rankList = result.data.data
     //   }
     // }
   }

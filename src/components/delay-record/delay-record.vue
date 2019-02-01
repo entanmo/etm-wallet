@@ -9,10 +9,10 @@
                 :loading="loading"
                   :scroll="{ x: 1300 }"
         >
-          <template slot="expired" slot-scope="text, record">
+          <template slot="expired" slot-scope="text,record">
             {{computedTime(record.expired)}}
           </template>
-          <template slot="amount" slot-scope="text, record">
+          <template slot="amount"  slot-scope="text,record">
             {{unit(record.amount)}}
           </template>
         </a-table>

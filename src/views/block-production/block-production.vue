@@ -44,16 +44,16 @@
           @change="handleTableChange"
           :scroll="{ x: 1300 }"
           :dataSource="data" >
-          <template slot="time" slot-scope="record">
+          <template slot="time" slot-scope="text,record">
             {{convertTime(record.timestamp)}}
           </template>
-          <template slot="totalAmount" slot-scope="record">
+          <template slot="totalAmount" slot-scope="text,record">
             {{unit(record.totalAmount)}}
           </template>
-          <template slot="totalFee" slot-scope="record">
+          <template slot="totalFee" slot-scope="text,record">
               {{unit(record.totalFee)}}
           </template>
-          <template slot="reward" slot-scope="record">
+          <template slot="reward" slot-scope="text,record">
               {{unit(record.reward)}}
           </template>
           </a-table>
@@ -267,7 +267,7 @@ export default {
           })
           setTimeout(() => {
             this._getDelegateDetail()
-          }, 4000)
+          }, 5000)
         }
       } catch (error) {
         console.log(error)
@@ -293,7 +293,7 @@ export default {
           })
           setTimeout(() => {
             this._getDelegateDetail()
-          }, 4000)
+          }, 5000)
         }
       } catch (err) {
         console.log(err)

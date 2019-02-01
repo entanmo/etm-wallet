@@ -11,16 +11,16 @@
           :scroll="{ x: 1300 }"
         @change="handleTableChange"
           >
-          <template slot="typeIN" slot-scope="text, record">
+          <template slot="typeIN" slot-scope="text,record">
             {{mapType(record.type)}}
           </template>
-          <template slot="time" slot-scope="text, record">
+          <template slot="time" slot-scope="text,record">
             {{convertTime(record.timestamp)}}
           </template>
-          <template slot="amount" slot-scope="text, record">
+          <template slot="amount" slot-scope="text,record">
             {{unit(record.amount)}}
           </template>
-        <template slot="footer" slot-scope="currentPageData">
+        <template slot="footer" slot-scope="text,record">
           {{$t("first-view.all")}}:      {{totalAmount().toFixed(2)}} ETM
         </template>
         </a-table>
@@ -103,7 +103,6 @@ export default {
       this.loading = true
       const result = await getTransaction(params)
       if (result.data.success) {
-        console.log(result)
         if (result.data.count === 0) {
           this.nodata = true
         } else {

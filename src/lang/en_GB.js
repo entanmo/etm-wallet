@@ -125,7 +125,7 @@ export default {
   'lock_up': {
     'lockedModel': {
       'label': 'Lock Amount',
-      'msg': 'Please enter the amount of the lock',
+      'msg': 'Please enter the amount of the lock (At least 1 ETM)',
       'title': 'New Lock',
       'fee': 'Locking the warehouse is subject to payment 0.1 ETM',
       'note': 'The right to vote is obtained by locking the position. The amount of the locked position determines the final voting equity (number of votes). After the time coefficient gain, the convex function is evenly processed, which increases the long-term holdings of the small voter and reduces the weight of the oligarchy. Details'
