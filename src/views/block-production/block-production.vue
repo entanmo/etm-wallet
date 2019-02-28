@@ -172,8 +172,8 @@ export default {
       delegateName: '',
       secondSecret: '', // 二级密码
       unit: unit,
-      delegates: false, // 是否为受托人
-      isDelegate: 0, // 受托人状态
+      delegates: false, // 是否为矿工
+      isDelegate: 0, // 矿工状态
       amount: 48,
       show: false,
       height1: null
@@ -252,7 +252,7 @@ export default {
         }
       })
     },
-    async cancelDelegate () { // 注销受托人
+    async cancelDelegate () { // 注销正式矿工
       try {
         const params = {secret: this.secret}
         if (this.secondSignature) {
@@ -273,7 +273,7 @@ export default {
         console.log(error)
       }
     },
-    async _setDelegate () { // 注册受托人
+    async _setDelegate () { // 注册正式矿工
       try {
         const params = {
           secret: this.secret,
@@ -299,7 +299,7 @@ export default {
         console.log(err)
       }
     },
-    async _getDelegateDetail (params = {publicKey: this.publicKey}) { // 获取受托人详情
+    async _getDelegateDetail (params = {publicKey: this.publicKey}) { // 获取矿工详情
       try {
         const result = await getDelegate(params)
         if (result.data.success) {

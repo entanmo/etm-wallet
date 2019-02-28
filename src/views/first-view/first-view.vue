@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 信息 -->
-    <div class="information" >
+    <div class="information">
       <a-row class="etm-info" type="flex" justify="space-around" align="middle">
           <a-col class="etm-info-li" :span="8">
             <p>{{$tc("first-view.information",0)}} (ETM)</p>
@@ -13,98 +13,75 @@
           </a-col>
           <a-col class="etm-info-li last" :span="8">
             <p>{{$tc("first-view.information",2)}}</p>
-            <p>V{{accounts.version}}</p>
+            <p>V{{accounts.version }}</p>
           </a-col>
       </a-row>
     </div>
     <!-- 图表 -->
     <div class="charts">
       <a-row>
-      <a-col :sm="24" :md="12" :xl="6" class="part" style="padding: 12px 12px 15px 0;">
-        <chart-card title="昨日收益 (ETM)"  :point='2' total='12.13'>
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <trend style="margin-right: 16px" term="同周比" :percent="12" :is-increase="true" :scale="0" />
-          </div>
-          <div slot="footer">累计获得收益<span> 8888 ETM</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" class="part" style="padding: 12px 12px 15px;">
-        <chart-card title="昨日出块数量" total="100">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-area />
-          </div>
-          <div slot="footer">日出块数量<span> 100</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" class="part" style="padding: 12px 12px 15px;">
-        <chart-card title="我的得票率 (%)" total="80">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar />
-          </div>
-          <div slot="footer">平均得票率 <span>60 %</span></div>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" class="part" style="padding: 12px 0 15px 12px;">
-        <chart-card title="我的排名" total="21">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress target="21" percent="21" color="#13C2C2" height="8px"/>
-          </div>
-          <div slot="footer">
-            <trend style="margin-right: 16px" term="同周比" :percent="78" :is-increase="true" :scale="0" />
-          </div>
-        </chart-card>
-      </a-col>
+        <a-col :sm="24" :md="12" :xl="6" class="part part-row-left">
+          <chart-card :title="$t('first-view.chart.income')" :point='2' :total='block.quantity'>
+            <div>
+              <trend style="margin-right: 16px" :term="$t('first-view.chart.rate')" :percent="block.rate" :is-increase="block.increase" :scale="2" />
+            </div>
+            <div slot="footer">{{$t('first-view.chart.allIncome')}}<span> {{unit(block.rewards)}} ETM</span></div>
+          </chart-card>
+        </a-col>
+        <a-col :sm="24" :md="12" :xl="6" class="part part-row-right row01">
+          <chart-card :title="$t('first-view.chart.blockNum')" :total="block.total">
+            <div>
+              <mini-area :effectUser="block.effectUser" :average.sync="block.numAverage" />
+            </div>
+            <div slot="footer">{{$t('first-view.chart.dailyNum')}}<span> {{block.numAverage}}</span></div>
+          </chart-card>
+        </a-col>
+        <a-col :sm="24" :md="12" :xl="6" class="part part-row-left row01" >
+          <chart-card :title="$t('first-view.chart.myPopularity')" :total="block.voteNum">
+            <div>
+              <mini-bar :effectUser="block.effectUser" :average.sync="block.popularAverage" ref="countBar" />
+            </div>
+            <div slot="footer">{{$t('first-view.chart.average')}} <span> {{block.popularAverage}}</span></div>
+          </chart-card>
+        </a-col>
+        <a-col :sm="24" :md="12" :xl="6" class="part part-row-right">
+          <chart-card :title="$t('first-view.chart.myRank')" :total="block.myRank">
+            <div>
+              <mini-progress :target="block.myRank" :percent="block.allDelegates" color="#13C2C2" height="8px"/>
+            </div>
+            <div slot="footer" style="height:21px">
+            </div>
+          </chart-card>
+        </a-col>
       </a-row>
     </div>
     <!-- 排名 -->
-    <div class="rank ">
+    <div class="rank">
       <a-row>
-        <a-col :sm="24" :md="12" :xl="12" class="part-left">
+        <a-col :sm="24" :md="24" :xl="12" class="part-left">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
           <div class="extra-wrap" slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>今日</a>
-              <a>本周</a>
-              <a>本月</a>
-              <a>本年</a>
-            </div>
+            <tab :tabIndex.sync="tabIncomeIndex" :fnName="fnIncomeName" @incomeTimeHandle="incomeTimeHandle"></tab>
           </div>
-          <a-tab-pane loading="true" tab="收益排名" key="1">
-          <ranking-list1 title="" :list="rankList1"/>
+          <a-tab-pane loading="true" :tab="$t('first-view.chart.incomeRank')" key="1">
+          <ranking-list :loading="rankLoading1"  :list="incomeRankList"/>
           </a-tab-pane>
           </a-tabs>
         </a-col>
-        <a-col :sm="24" :md="12" :xl="12" class="part-right">
+        <a-col :sm="24" :md="24" :xl="12" class="part-right">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
           <div class="extra-wrap" slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>今日</a>
-              <a>本周</a>
-              <a>本月</a>
-              <a>本年</a>
+            <tab :tabIndex.sync="tabVotesIndex" :fnName="fnVotesName" @voteTimeHandle="voteTimeHandle"></tab>
             </div>
-          </div>
-          <a-tab-pane loading="true" tab="得票率排名" key="1">
-          <ranking-list1 title="" :list="rankList1"/>
+          <a-tab-pane loading="true" :tab="$t('first-view.chart.votesRank')" key="1">
+            <ranking-list :loading="rankLoading2"  :list="votesRankList"/>
           </a-tab-pane>
           </a-tabs>
         </a-col>
       </a-row>
     </div>
     <!-- 表格 -->
-  <div class="transaction">
+  <div class="transaction" >
     <a-tabs defaultActiveKey="1" >
       <a-tab-pane :tab="$tc('first-view.transaction',1)" key="1">
         <transfer-record ref="transfer" ></transfer-record>
@@ -117,42 +94,60 @@
   </div>
 </template>
 <script>
-import {unit} from '@/utils/utils'
+import {unit, timestampToDay} from '@/utils/utils'
 import TransferRecord from '@/components/transfer-record/transfer-record'
 import AnimatedInteger from '@/components/animated-integer/animated-integer'
-import IncomeRecord from '@/components/income-record/income-record'
 import ChartCard from '@/components/card/card'
 import MiniArea from '@/components/chart/miniArea'
 import MiniBar from '@/components/chart/miniBar'
 import MiniProgress from '@/components/chart/miniProgress'
 import Trend from '@/components/chart/trend'
-// import RankingList from '@/components/chart/rankingList'
-import RankingList1 from '@/components/chart/rankingList1'
-// import axios from 'axios'
+import RankingList from '@/components/chart/rankingList'
+import Tab from '@/components/tab/tab'
+import axios from 'axios'
+import {blocks} from '@/utils/mixins'
+import { getDelegate } from '@/api/block'
+import {numVoteAll} from '@/api/account'
 
-// 排名
-const rankList1 = []
-
-for (let i = 0; i < 10; i++) {
-  rankList1.push({
-    name: '桃源村' + i + '号店',
-    total: 1234 - i * 100
-  })
-}
 export default {
+  mixins: [blocks],
   sockets: {
     'blocks/change': function (data) {
       this.accounts.height = data.height || this.accounts.height
     },
     'rounds/change': function (data) {
       this.$store.dispatch('_getBalance')
+      this.effectUser()
+      this.voteTimeHandle()
+      this.incomeTimeHandle()
     }
   },
   data () {
     return {
       rankList: [], // 排名
-      rankList1
-      // forceRender: true
+      incomeRankList: [],
+      votesRankList: [],
+      rankLoading1: false,
+      rankLoading2: false,
+      active: false,
+      block: {
+        effectUser: false,
+        total: 0,
+        quantity: 0,
+        rewards: 0, // 收益
+        rate: 0,
+        increase: true,
+        voteNum: 0,
+        numAverage: 0,
+        popularAverage: 0,
+        myRank: 0,
+        allDelegates: 0
+      },
+      tabIncomeIndex: 0, // 收益排名index
+      tabVotesIndex: 0,
+      fnIncomeName: 'incomeTimeHandle',
+      fnVotesName: 'voteTimeHandle',
+      unit: unit
     }
   },
   computed: {
@@ -164,22 +159,28 @@ export default {
     },
     balance () {
       return unit(this.accounts.balance).toFixed(2) * 1 || 0
+    },
+    publicKey () {
+      const data = JSON.parse(sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')).account.publicKey
+      return this.$store.state.user.accountInfo.publicKey || data
     }
   },
   components: {
     TransferRecord,
     'animated-integer': AnimatedInteger,
-    IncomeRecord,
     'chart-card': ChartCard,
     'mini-area': MiniArea,
     'mini-bar': MiniBar,
     'mini-progress': MiniProgress,
-    // 'ranking-list': RankingList,
-    'ranking-list1': RankingList1,
-    Trend
+    'ranking-list': RankingList,
+    Trend,
+    Tab
   },
   created () {
     this.$store.dispatch('GetInfo')
+    this.effectUser()
+    this.voteTimeHandle()
+    this.incomeTimeHandle()
   },
   methods: {
     // changePane (key) {
@@ -189,18 +190,209 @@ export default {
     //     this.$refs.income.getIncome()
     //   }
     // }
-    // async getRank () {
-    //   const result = await axios.get('apia/users/allIncome')
-    //   if (result && result.data.code) {
-    //     this.rankList = result.data.data
-    //   }
-    // },
-    // async getRankWeek () {
-    //   const result = await axios.get('apia/users/allIncomeWeek')
-    //   if (result && result.data.code) {
-    //     this.rankList = result.data.data
-    //   }
-    // }
+    async effectUser () {
+      try {
+        const result = await this.$store.dispatch('_effectAccount')
+        const resultDelegate = await getDelegate({publicKey: this.publicKey})
+        if (result && resultDelegate && result.data.success && resultDelegate.data.success) {
+          if (result.data.effectivity) {
+            this.block.effectUser = result.data.effectivity
+            this.blockDay()
+            this.userVoteDay()
+            this.myRank()
+            this.userIncome()
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    voteTimeHandle (key) {
+      const beginTime = timestampToDay(Date.now())
+      const endTime = timestampToDay(Date.now() + 24 * 1000 * 60 * 60)
+      switch (key) {
+        case 0:
+          this.votesRank(beginTime, endTime)
+          break
+        case 1:
+          const week = this.week()
+          this.votesRank(week.beginTime, week.endTime)
+          break
+        case 2:
+          const month = this.month()
+          this.votesRank(month.beginTime, month.endTime)
+          break
+        case 3:
+          const year = this.year()
+          this.votesRank(year.beginTime, year.endTime)
+          break
+        default:
+          this.votesRank(beginTime, endTime)
+      }
+    },
+    incomeTimeHandle (key) {
+      const beginTime = timestampToDay(Date.now())
+      const endTime = timestampToDay(Date.now() + 24 * 1000 * 60 * 60)
+      switch (key) {
+        case 0:
+          this.incomeRank(beginTime, endTime)
+          break
+        case 1:
+          const week = this.week()
+          this.incomeRank(week.beginTime, week.endTime)
+          break
+        case 2:
+          const month = this.month()
+          this.incomeRank(month.beginTime, month.endTime)
+          break
+        case 3:
+          const year = this.year()
+          this.incomeRank(year.beginTime, year.endTime)
+          break
+        default:
+          this.incomeRank(beginTime, endTime)
+      }
+    },
+    async blockDay () {
+      try {
+        const result = await this.blockDayHandle(-1, 0)
+        if (result.data.code === '200' && result.data.data.length > 0) {
+          this.block.total = result.data.data[0].total
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async userVoteDay () {
+      try {
+        const result = await this.votesDayHandle(0, 1)
+        if (result.data.code === '200' && result.data.data.length > 0) {
+          this.block.voteNum = result.data.data[0].votes
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    incomeDayHandle (start, end) {
+      try {
+        let beginTime = timestampToDay(Date.now() + start * 24 * 1000 * 60 * 60)
+        let endTime = timestampToDay(Date.now() + end * 24 * 1000 * 60 * 60)
+        const params = {'address': this.address, 'beginTime': beginTime, 'endTime': endTime}
+        return axios.post('/api/income/sum', params)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async userIncome () {
+      try {
+        const result = await this.incomeDayHandle(-1, 0)
+        if (result.data.code === '200' && result.data.data > 0) {
+          this.block.quantity = result.data.data
+        }
+        const oldResult = await this.incomeDayHandle(-8, -7)
+        if (oldResult.data.code === '200' && oldResult.data.data > 0) {
+          const oldQuantity = oldResult.data.data
+          this.block.rate = this.block.quantity / oldQuantity
+          if (this.block.rate > 1) {
+            this.block.increase = true
+          } else {
+            this.block.increase = false
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async myRank (params = {publicKey: this.publicKey}) {
+      try {
+        const result = await getDelegate(params)
+        if (result && result.data.success) {
+          this.block.myRank = result.data.delegate.rate
+          this.block.rewards = result.data.delegate.rewards
+          const num = await numVoteAll()
+          if (num && num.data.success) {
+            this.block.allDelegates = num.data.count
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async incomeRank (beginTime, endTime) {
+      try {
+        this.rankLoading1 = true
+        const params = {'beginTime': beginTime, 'endTime': endTime}
+        const result = await axios.post('/api/income/count/top', params)
+        if (result.data.code === '200') {
+          this.rankLoading1 = false
+          this.incomeRankList = result.data.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async votesRank (beginTime, endTime) {
+      try {
+        this.rankLoading2 = true
+        const params = {'beginTime': beginTime, 'endTime': endTime}
+        const result = await axios.post('/api/votes/count/top', params)
+        if (result.data.code === '200') {
+          this.rankLoading2 = false
+          this.votesRankList = result.data.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    formatDate (date) {
+      var myyear = date.getFullYear()
+      var mymonth = date.getMonth() + 1
+      var myweekday = date.getDate()
+      if (mymonth < 10) {
+        mymonth = '0' + mymonth
+      }
+      if (myweekday < 10) {
+        myweekday = '0' + myweekday
+      }
+      return (myyear + '-' + mymonth + '-' + myweekday)
+    },
+    week () {
+      const now = new Date()
+      const nowDay = now.getDate()
+      const nowMonth = now.getMonth()
+      let nowYear = now.getYear()
+      nowYear += (nowYear < 2000) ? 1900 : 0
+      const nowDayOfWeek = (now.getDay() + 7 - 1) % 7
+      const weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek)
+      const weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek))
+      return {
+        beginTime: this.formatDate(weekStartDate),
+        endTime: this.formatDate(weekEndDate)
+
+      }
+    },
+    month () {
+      const now = new Date()
+      const nowMonth = now.getMonth()
+      let nowYear = now.getYear()
+      nowYear += (nowYear < 2000) ? 1900 : 0
+      const monthStartDate = new Date(nowYear, nowMonth, 1)
+      const monthLastDate = new Date(nowYear, nowMonth + 1, 1)
+      const days = (monthLastDate - monthStartDate) / (1000 * 60 * 60 * 24)
+      const monthEndDate = new Date(nowYear, nowMonth, days)
+      return {
+        beginTime: this.formatDate(monthStartDate),
+        endTime: this.formatDate(monthEndDate)
+      }
+    },
+    year () {
+      const now = new Date()
+      const year = now.getFullYear()
+      return {
+        beginTime: year + '-01-01',
+        endTime: year + '-12-31'
+      }
+    }
   }
 }
 </script>
@@ -250,12 +442,7 @@ export default {
     background-color: #fff;
 
   }
-  .extra-item{
-    margin-top:10px;
-    a{
-      margin-right: 24px;
-    }
-  }
+
 }
 .transaction {
     background: #fff;
@@ -270,8 +457,8 @@ export default {
   }
   .charts{
     .part{
-      padding: 0!important;
-      padding-bottom: 15px!important;
+      padding: 0;
+      padding-bottom: 15px;
     }
   }
   .rank{
@@ -279,5 +466,43 @@ export default {
       padding: 0 0 15px 0;
     }
   }
+}
+@media (min-width: 768px){
+  .charts{
+    .part-row-left{
+      padding: 12px 12px 15px 0px;
+    }
+    .part-row-right{
+      padding: 12px 0 15px 12px;
+    }
+  }
+  .rank{
+    .part-right,.part-left{
+      padding: 0 0 15px 0;
+    }
+  }
+}
+
+@media (min-width: 1200px){
+    .charts{
+    .part-row-left{
+      padding: 12px 12px 15px 0;
+    }
+    .part-row-right{
+      padding: 12px 0 15px 12px;
+    }
+    .row01{
+      padding: 12px 12px 15px;
+    }
+  }
+  .rank{
+    .part-left{
+    padding:0 12px 0 0
+  }
+  .part-right{
+    padding:0 0 0 12px
+  }
+  }
+
 }
 </style>

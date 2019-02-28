@@ -36,7 +36,7 @@ import PopPassword from '@/components/pop-password/pop-password'
 import PopVoted from '@/components/pop-voted/pop-voted'
 import {unit} from '@/utils/utils'
 import noData from '@/components/nodata/nodata'
-
+import axios from 'axios'
 const columns = [{
   title: i18n.t('vote_lists.columns.th01'),
   dataIndex: 'rate'
@@ -227,6 +227,8 @@ export default {
     async _submitVoter (params = {secret: this.secret, delegates: this.voted}) {
       const result = await submitVoter(params)
       if (result.data.success) {
+        const param = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
+        axios.post('/api/votes/add', param)
         this.$notification.info({
           message: i18n.t('tip.title'),
           description: i18n.t('tip.vote_success')

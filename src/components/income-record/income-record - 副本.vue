@@ -1,3 +1,28 @@
+<template>
+  <div class="income">
+    <div class="income-table">
+      <div >
+        <a-table :columns="columns"
+                 :rowKey="record => record.id"
+                 :dataSource="data"
+                :pagination="pagination"
+                :loading="loading"
+                  :scroll="{ x: 1300 }"
+                @change="handleTableChange"
+        >
+          <template slot="time" slot-scope="text, record">
+            {{convertTime(record.timestamp)}}
+          </template>
+          <template slot="amount" slot-scope="text, record">
+            {{unit(record.amount)}}
+          </template>
+        </a-table>
+        <no-data v-show="nodata"></no-data>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 import noData from '@/components/nodata/nodata'
 import { getTransaction } from '@/api/account'
@@ -31,25 +56,6 @@ export default {
       },
       loading: false
     }
-  },
-  render () {
-    return (<div>
-      <div class="income">
-        <div class="income-table">
-          <div >
-            <a-table columns={this.columns}
-              rowKey={record => record.id}
-              dataSource={this.data}
-              pagination={this.pagination}
-              loading={this.loading}
-              scroll={{ x: 1300 }}
-            >
-            </a-table>
-            <no-data v-show="nodata"></no-data>
-          </div>
-        </div>
-      </div>
-    </div>)
   },
   computed: {
     address () {

@@ -102,6 +102,7 @@ export default {
     async _getTransaction (params = {senderId: this.address, orderBy: 't_timestamp:desc', limit: 10}) {
       this.loading = true
       const result = await getTransaction(params)
+      console.log(result)
       if (result.data.success) {
         if (result.data.count === 0) {
           this.nodata = true
@@ -166,7 +167,7 @@ export default {
           return i18n.t('first-view.lock')
         case 110:
           return i18n.t('first-view.delay')
-        case 201:
+        case 102:
           return i18n.t('first-view.unlock')
         case 120:
           return i18n.t('first-view.unregister_voter')

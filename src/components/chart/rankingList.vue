@@ -1,33 +1,63 @@
 <template>
   <div class="rank clearfix">
-    <h4 class="title">{{title}}</h4>
-
-    <ul class="list">
-      <li :key="index" v-for="(item, index) in first">
-        <span :class="index < 3 ? 'active' : null">{{index + 1}}</span>
-        <span >{{item.username}}</span>
-        <span >{{unit(item.reward)}} ETM</span>
-      </li>
-    </ul>
-    <ul class="list" style="float:right">
-      <li :key="index" v-for="(item, index) in second">
-        <span >{{index + 6}}</span>
-        <span >{{item.username}}</span>
-        <span >{{unit(item.reward)}} ETM</span>
-      </li>
-    </ul>
+    <a-spin  :spinning="loading">
+    <div>
+      <h4 class="title">{{title}}</h4>
+      <ul class="list">
+        <li :key="index" v-for="(item, index) in first">
+          <span :class="index < 3 ? 'active' : null">{{index + 1}}</span>
+          <span >{{item.userName || item.voter | long}}</span>
+          <span v-if="item.quantity" >{{item.quantity}} ETM</span>
+          <span v-else >{{item.votes}}</span>
+        </li>
+      </ul>
+      <ul class="list" style="float:right">
+        <li :key="index" v-for="(item, index) in second">
+          <span >{{index + 6}}</span>
+          <span  title="aaa">{{item.userName || item.voter | long}}</span>
+          <span v-if="item.quantity" >{{item.quantity}} ETM</span>
+          <span v-else >{{item.votes}}</span>
+        </li>
+      </ul>
+    </div>
+       </a-spin>
+      <no-data v-show="nodata"></no-data>
   </div>
 </template>
-
 <script>
 import {unit} from '@/utils/utils'
+import noData from '@/components/nodata/nodata'
 
 export default {
   name: 'RankingList',
-  props: ['title', 'list'],
+  props: {
+    title: {
+      type: String
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    loading: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
-      unit: unit
+      unit: unit,
+      nodata: true
+    }
+  },
+  created () {
+  },
+  watch: {
+    'list': function () {
+      if (this.list.length > 0) {
+        this.nodata = false
+      } else {
+        this.nodata = true
+      }
     }
   },
   computed: {
@@ -37,14 +67,32 @@ export default {
     second () {
       return this.list.slice(5)
     }
+  },
+  filters: {
+    long (value) {
+      if (!value) return ''
+      value = value.toString()
+      if (value.length > 15) {
+        return value.substr(0, 15) + '...'
+      } else {
+        return value
+      }
+    }
+  },
+  components: {
+    noData
   }
 }
 </script>
-
 <style lang="less" scoped>
   .rank{
     padding: 0 8px 16px 16px;
     width: 100%;
+    position: relative;
+    height: 222px;
+    .wrapper{
+      height: 222px;
+    }
     .title{
       // border-bottom: 1px solid rgb(232, 232, 232);
       // line-height: 35px;

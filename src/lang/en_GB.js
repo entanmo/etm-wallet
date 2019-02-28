@@ -9,7 +9,7 @@ export default {
     'delete_success': 'Delete Success',
     'register_success': 'register Success',
     'unregister_success': 'Unregister Success',
-    'choose_vote': 'Select a delegate',
+    'choose_vote': 'Select a miner',
     'delete_vote': 'Select a delete to record',
     'hightest': 'Maximum height reached',
     'lowest': 'Minimum height reached',
@@ -67,14 +67,32 @@ export default {
     },
     'transfer': 'Ordinary transfer',
     'set': 'Set secondary password',
-    'register_voter': 'Registered trustee',
-    'unregister_voter': 'UnRegistered trustee',
+    'register_voter': 'Registered miner',
+    'unregister_voter': 'UnRegistered miner',
     'vote': 'vote',
     'multi_signature': 'Multi signature',
     'all': 'Total',
     'lock': 'Lock',
     'unlock': 'Unlock',
-    'delay': 'Freeze transaction'
+    'delay': 'Freeze transaction',
+    'chart': {
+      'income': 'Yesterday Earnings (ETM)',
+      'rate': 'Same Week',
+      'allIncome': 'Accumulated Gains',
+      'blockNum': 'Blocks Released Yesterday',
+      'dailyNum': 'Average Number of Blocks',
+      'myPopularity': 'My Popularity',
+      'average': 'Average Popularity',
+      'myRank': 'My Ranking',
+      'incomeRank': 'Revenue Ranking',
+      'votesRank': 'Popular Ranking',
+      'timeBtn': {
+        'dailyBtn': 'Today',
+        'weekBtn': 'Week',
+        'monthBtn': 'Month',
+        'yearBtn': 'Year'
+      }
+    }
   },
   'person': {
     'tab': 'Account Detail | Second Secret | Lock Setting',
@@ -168,7 +186,7 @@ export default {
       'has_register': 'Registered',
       'not_register': 'Unregistered'
     },
-    'info': 'Delegate Information',
+    'info': 'Miner Information',
     'registerBtn': 'Register',
     'unregisterBtn': 'Cancel',
     'registeringBtn': 'unregistering',
@@ -186,7 +204,7 @@ export default {
       'th07': 'Fee (ETM)',
       'th08': 'Rewards (ETM)'
     },
-    'pop_title': 'Register as Delegate',
+    'pop_title': 'Register as Miner',
     'name': {
       'label': 'Name',
       'msg': 'Username can not be empty',
@@ -197,7 +215,7 @@ export default {
       'msg': 'Registration requires 1000 ETM fee'
     },
     'tip': {
-      'title': 'Confirm cancellation of trustee?',
+      'title': 'Confirm cancellation of miner?',
       'content': 'Please be patient, the cancellation will be completed at the end of each round. The mortgage is reviewed by the Foundation and it is confirmed that you will be refunded within 5-10 business days after you have acted as a trustee without cheating. (logout fee 0.1 ETM)',
       'btn_ok': 'ok',
       'btn_cancel': 'cancel'
@@ -233,15 +251,15 @@ export default {
     }
   },
   'vote': {
-    'tab': 'Delegate List | Vote Record | My Voters'
+    'tab': 'Miner List | Vote Record | My Voters'
   },
   'vote_lists': {
-    'total': 'A total of | delegate',
+    'total': 'A total of | miner',
     'refresh': 'Refresh',
     'vote': 'Vote',
     'columns': {
       'th01': 'Ranking',
-      'th02': 'Delegate',
+      'th02': 'Miner',
       'th03': 'Address',
       'th04': 'Approval',
       'th05': 'Produced Blocks',
@@ -254,7 +272,7 @@ export default {
     'delete': 'Delete',
     'columns': {
       'th01': 'Ranking',
-      'th02': 'Delegate',
+      'th02': 'Miner',
       'th03': 'Address',
       'th04': 'Approval',
       'th05': 'Produced Blocks',

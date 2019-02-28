@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import i18n from '@/lang'
 import Home from '@/views/home/home'
 
 Vue.use(Router)

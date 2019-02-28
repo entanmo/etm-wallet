@@ -9,7 +9,7 @@ export default {
     'delete_success': '删除成功',
     'register_success': '注册成功',
     'unregister_success': '注销成功',
-    'choose_vote': '请选择受托人',
+    'choose_vote': '请选择矿工',
     'delete_vote': '请选择删除记录',
     'hightest': '已达到最高高度',
     'lowest': '已达到最小高度',
@@ -69,14 +69,32 @@ export default {
     },
     'transfer': '普通转账',
     'set': '设置二级密码',
-    'register_voter': '注册受托人',
-    'unregister_voter': '注销受托人',
+    'register_voter': '注册矿工',
+    'unregister_voter': '注销矿工',
     'vote': '投票',
     'multi_signature': '多重签名',
     'all': '总计',
     'lock': '锁仓',
     'unlock': '解锁仓',
-    'delay': '冻结交易'
+    'delay': '冻结交易',
+    'chart': {
+      'income': '昨日出块收益 (ETM)',
+      'rate': '同周比',
+      'allIncome': '累计出块获得收益',
+      'blockNum': '昨日出块数量',
+      'dailyNum': '平均日出块数量',
+      'myPopularity': '我的人气',
+      'average': '平均人气',
+      'myRank': '我的排名',
+      'incomeRank': '收益排名',
+      'votesRank': '人气排名',
+      'timeBtn': {
+        'dailyBtn': '今日',
+        'weekBtn': '本周',
+        'monthBtn': '本月',
+        'yearBtn': '本年'
+      }
+    }
   },
   'person': {
     'tab': '账户信息 | 二级密码 | 锁仓',
@@ -171,9 +189,9 @@ export default {
       'has_register': '已开启',
       'not_register': '未开启'
     },
-    'info': '受托人基本信息',
-    'registerBtn': '注册受托人',
-    'unregisterBtn': '注销受托人',
+    'info': '矿工基本信息',
+    'registerBtn': '注册矿工',
+    'unregisterBtn': '注销矿工',
     'registeringBtn': '注销中',
     'rewards': '总收益',
     'rate': '排名',
@@ -189,9 +207,9 @@ export default {
       'th07': '费用 (ETM)',
       'th08': '奖励 (ETM)'
     },
-    'pop_title': '注册为受托人',
+    'pop_title': '注册为矿工',
     'name': {
-      'label': '受托人名称',
+      'label': '矿工名称',
       'msg': '用户名不能为空',
       'required': '用户名只能包含除了@$&_的字母、数字、字符'
     },
@@ -200,8 +218,8 @@ export default {
       'msg': '注册需支付1000 ETM'
     },
     'tip': {
-      'title': '确认注销受托人?',
-      'content': '请耐心等待，注销将在每一轮出块结束时完成。抵押金由基金会审核，确认您在担任受托人期间，无作弊现象后，5-10 个工作日内退还原账户。（注销手续费 0.1 ETM）',
+      'title': '确认注销矿工?',
+      'content': '请耐心等待，注销将在每一轮出块结束时完成。抵押金由基金会审核，确认您在担任矿工期间，无作弊现象后，5-10 个工作日内退还原账户。（注销手续费 0.1 ETM）',
       'btn_ok': '确认',
       'btn_cancel': '取消'
     },
@@ -236,7 +254,7 @@ export default {
     }
   },
   'vote': {
-    'tab': '受托人列表 | 投票记录 | 谁投了我'
+    'tab': '矿工列表 | 投票记录 | 谁投了我'
   },
   'vote_lists': {
     'total': '共 | 人',
@@ -244,7 +262,7 @@ export default {
     'vote': '投票',
     'columns': {
       'th01': '排名',
-      'th02': '受托人',
+      'th02': '矿工',
       'th03': '地址',
       'th04': '得票',
       'th05': '生产块数',
@@ -257,7 +275,7 @@ export default {
     'delete': '删除',
     'columns': {
       'th01': '排名',
-      'th02': '受托人',
+      'th02': '矿工',
       'th03': '地址',
       'th04': '得票',
       'th05': '生产块数',

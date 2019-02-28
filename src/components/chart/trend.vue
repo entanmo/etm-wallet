@@ -1,8 +1,8 @@
 <template>
   <div class="chart-trend">
     {{term}}
-    <span>{{rate}}%</span>
-    <span :class="['chart-trend-icon', trend]" style=""><a-icon :type="'caret-' + trend" /></span>
+    <span>{{caulateRate}}%</span>
+    <span :class="['chart-trend-icon', caulateTrend]" style=""><a-icon :type="'caret-' + caulateTrend" /></span>
   </div>
 </template>
 
@@ -46,11 +46,11 @@ export default {
       rate: this.percent
     }
   },
-  created () {
-    this.trend = this.caulateTrend()
-    this.rate = this.caulateRate()
-  },
-  methods: {
+  // created () {
+  //   this.trend = this.caulateTrend()
+  //   this.rate = this.caulateRate()
+  // },
+  computed: {
     caulateRate () {
       return (this.percent === null ? Math.abs(this.value - this.target) * 100 / this.target : this.percent).toFixed(this.scale)
     },

@@ -40,7 +40,7 @@
             <div class="check_div">
             <a-checkbox v-model="checkitem02">{{$tc("register.checkitem",1)}}</a-checkbox>
           </div>
-            <div class="check_div ">
+          <div class="check_div ">
             <a-checkbox v-model="checkitem03">{{$tc("register.checkitem",2)}}</a-checkbox>
           </div>
         </div>
@@ -66,7 +66,7 @@ export default {
     return {
       loginStatus: true,
       showPassword: false,
-      password: '', // 主密码
+      password: '',
       newPassword: '',
       confirmPassword: '',
       checkitem01: false, // 条款

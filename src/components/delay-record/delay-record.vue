@@ -26,7 +26,7 @@
 import noData from '@/components/nodata/nodata'
 import { delayOrders } from '@/api/account'
 import { convertTime } from '@/utils/gen'
-import {unit, timestampToLocalTime} from '@/utils/utils'
+import {unit, timestampToTime} from '@/utils/utils'
 const columns = [{
   title: i18n.t('delay_record.table_columns.th01'),
   dataIndex: 'senderId'
@@ -74,7 +74,7 @@ export default {
     computedTime (expired) {
       const diff = expired - this.height
       const second = diff * 3
-      return timestampToLocalTime((Date.now() / 1000 + second) * 1000)
+      return timestampToTime((Date.now() / 1000 + second) * 1000)
     },
     async delayRecord (params = {address: this.address, mode: 0}) {
       this.loading = true

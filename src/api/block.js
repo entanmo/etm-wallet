@@ -31,7 +31,7 @@ export const getHighest = () => {
   })
 }
 /**
- * 根据公钥或者用户名获取受托人详情
+ * 根据公钥或者用户名获取正式矿工详情
  * @param {*} params
  */
 export const getDelegate = (params) => {

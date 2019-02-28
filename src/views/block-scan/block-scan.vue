@@ -247,7 +247,6 @@ export default {
   },
   components: {
     'no-data': noData
-
   }
 }
 </script>

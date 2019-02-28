@@ -14,7 +14,19 @@ export function timestampToTime (timestamp) {
   let s = addZero(date.getSeconds())
   return Y + M + D + h + m + s
 }
-
+export function timestampToDay (timestamp) {
+  let addZero = function (num) {
+    if (num <= 9) {
+      return '0' + num
+    }
+    return num
+  }
+  let date = new Date(timestamp)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  let Y = date.getFullYear() + '-'
+  let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  let D = addZero(date.getDate()) + ' '
+  return Y + M + D
+}
 export function timestampToLocalTime (timestamp) {
   let addZero = function (num) {
     if (num <= 9) {
@@ -24,6 +36,7 @@ export function timestampToLocalTime (timestamp) {
   }
   let date = new Date(timestamp)// 时间戳为10位需*1000，时间戳为13位的话不需乘1000
   let offset = date.getTimezoneOffset() / 60
+  console.log(offset)
   let Y = date.getFullYear() + '-'
   let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
   let D = addZero(date.getDate()) + ' '

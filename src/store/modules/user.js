@@ -1,4 +1,4 @@
-import {login, getAccount, getBalance} from '@/api/account'
+import {login, getAccount, getBalance, effectAccount} from '@/api/account'
 import {genPublicKey} from '@/utils/gen'
 
 const user = {
@@ -91,6 +91,13 @@ const user = {
       } catch (error) {
         console.log(error)
       }
+    },
+    /**
+     * 有效用户
+     */
+    _effectAccount () {
+      const params = {address: this.state.user.accountInfo.address}
+      return effectAccount(params)
     }
   }
 }

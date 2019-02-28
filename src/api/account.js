@@ -23,7 +23,7 @@ export const getAccount = (address) => {
   })
 }
 /**
- * 受托人列表
+ * 矿工列表
  * @param {*} params
  */
 export const getVoteLists = (params) => {
@@ -31,6 +31,15 @@ export const getVoteLists = (params) => {
     url: '/api/delegates',
     method: 'get',
     params
+  })
+}
+/**
+ * 矿工总数
+ */
+export const numVoteAll = () => {
+  return http({
+    url: '/api/delegates/count',
+    method: 'get'
   })
 }
 /**
@@ -157,7 +166,7 @@ export const delayOrders = (params) => {
   })
 }
 /**
- * 注册受托人
+ * 注册正式矿工
  * @param {*} params
  */
 export const setDelegate = (params) => {
