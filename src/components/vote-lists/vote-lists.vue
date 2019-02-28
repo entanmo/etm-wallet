@@ -177,7 +177,7 @@ export default {
       this.loading = true
       try {
         const result = await getVoteLists(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.totalCount = result.data.totalCount
           this.data = result.data.delegates
           if (result.data.delegates.length === 0) {
@@ -198,7 +198,7 @@ export default {
         const params = {address: this.address}
         this.loading = true
         const result = await getRecord(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.totalVoters = result.data.delegates.length
           this.haveVoted = result.data.delegates
           this._getVoteLists()
@@ -226,7 +226,7 @@ export default {
     // 提交投票接口
     async _submitVoter (params = {secret: this.secret, delegates: this.voted}) {
       const result = await submitVoter(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         const param = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
         axios.post('/api/votes/add', param)
         this.$notification.info({

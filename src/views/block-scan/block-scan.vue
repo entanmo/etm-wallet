@@ -169,13 +169,13 @@ export default {
       this.visible = true
       const params = {height: height}
       const result = await searchBlock(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         this.blockDetail = result.data.block
       }
     },
     async nextBlock () {
       const result = await getHighest()
-      if (result.data.success) {
+      if (result && result.data.success) {
         if (this.detailHeight === result.data.height) {
           this.$notification.info({
             message: i18n.t('tip.title'),
@@ -212,7 +212,7 @@ export default {
     async _search (params = {}) {
       this.loading = true
       const result = await searchBlock(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         if (result.data.count === 0) {
           this.nodata = true
         }
@@ -226,7 +226,7 @@ export default {
     async _getTableLists (params = {limit: 10, orderBy: 'height:desc'}) {
       this.loading = true
       const result = await blocks(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         this.loading = false
         this.data = result.data.blocks
         const pagination = { ...this.pagination }

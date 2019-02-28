@@ -70,7 +70,7 @@ export default {
       this.loading = true
       const params = {publicKey: this.publicKey}
       const result = await voteForMe(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         this.loading = false
         if (result.data.accounts.length === 0) {
           this.nodata = true

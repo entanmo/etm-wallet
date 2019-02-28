@@ -54,7 +54,7 @@ const user = {
       const secret = JSON.parse(informations).account.secret
       const publicKey = genPublicKey(secret)
       const result = await getAccount(address)
-      if (result.data.success) {
+      if (result && result.data.success) {
         let info = {...result.data.account, ...result.data.latestBlock, ...result.data.version}
         info.publicKey = publicKey
         commit('SET_INFO', info)
@@ -67,7 +67,7 @@ const user = {
         const informations = sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')
         const address = JSON.parse(informations).account.address
         const result = await getAccount(address)
-        if (result.data.success) {
+        if (result && result.data.success) {
           const balance = result.data.account.balance
           const height = result.data.latestBlock.height
           commit('SET_BALANCE', balance)
@@ -84,7 +84,7 @@ const user = {
       try {
         const params = {address: this.state.user.accountInfo.address}
         const result = await getBalance(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           const balance = result.data.balance
           commit('SET_BALANCE', balance)
         }

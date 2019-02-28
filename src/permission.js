@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
       if (!store.getters.secret) {
         try {
           const result = await store.dispatch('GetInfo')
-          if (result.data.success) {
+          if (result && result.data.success) {
             next()
           }
         } catch (err) {

@@ -143,7 +143,7 @@ export default {
     // 提交接口
     async _submitVoter (params = {secret: this.secret, delegates: this.cancelVote}) {
       const result = await submitVoter(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         this.$notification.info({
           message: i18n.t('tip.title'),
           description: i18n.t('tip.delete_success')
@@ -171,7 +171,7 @@ export default {
         const params = {address: this.address}
         this.loading = true
         const result = await getRecord(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.loading = false
           this.totalVoters = result.data.delegates.length
           if (this.totalVoters === 0) {

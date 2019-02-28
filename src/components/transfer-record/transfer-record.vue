@@ -102,8 +102,7 @@ export default {
     async _getTransaction (params = {senderId: this.address, orderBy: 't_timestamp:desc', limit: 10}) {
       this.loading = true
       const result = await getTransaction(params)
-      console.log(result)
-      if (result.data.success) {
+      if (result && result.data.success) {
         if (result.data.count === 0) {
           this.nodata = true
         } else {

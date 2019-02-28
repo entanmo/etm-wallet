@@ -135,7 +135,7 @@ export default {
     async _transactions (params = {secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount}) {
       try {
         const result = await transactions(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.modal2Visible = false
           // this.$store.dispatch('GetInfo')
           this.$notification.info({

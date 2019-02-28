@@ -94,6 +94,9 @@
   </div>
 </template>
 <script>
+import { getDelegate } from '@/api/block'
+import {numVoteAll} from '@/api/account'
+import {incomeSum, incomeTop, votesTop} from '@/api/extend'
 import {unit, timestampToDay} from '@/utils/utils'
 import TransferRecord from '@/components/transfer-record/transfer-record'
 import AnimatedInteger from '@/components/animated-integer/animated-integer'
@@ -104,10 +107,7 @@ import MiniProgress from '@/components/chart/miniProgress'
 import Trend from '@/components/chart/trend'
 import RankingList from '@/components/chart/rankingList'
 import Tab from '@/components/tab/tab'
-import axios from 'axios'
 import {blocks} from '@/utils/mixins'
-import { getDelegate } from '@/api/block'
-import {numVoteAll} from '@/api/account'
 
 export default {
   mixins: [blocks],
@@ -278,7 +278,7 @@ export default {
         let beginTime = timestampToDay(Date.now() + start * 24 * 1000 * 60 * 60)
         let endTime = timestampToDay(Date.now() + end * 24 * 1000 * 60 * 60)
         const params = {'address': this.address, 'beginTime': beginTime, 'endTime': endTime}
-        return axios.post('/api/income/sum', params)
+        return incomeSum(params)
       } catch (error) {
         console.log(error)
       }
@@ -322,7 +322,7 @@ export default {
       try {
         this.rankLoading1 = true
         const params = {'beginTime': beginTime, 'endTime': endTime}
-        const result = await axios.post('/api/income/count/top', params)
+        const result = await incomeTop(params)
         if (result.data.code === '200') {
           this.rankLoading1 = false
           this.incomeRankList = result.data.data
@@ -335,7 +335,7 @@ export default {
       try {
         this.rankLoading2 = true
         const params = {'beginTime': beginTime, 'endTime': endTime}
-        const result = await axios.post('/api/votes/count/top', params)
+        const result = await votesTop(params)
         if (result.data.code === '200') {
           this.rankLoading2 = false
           this.votesRankList = result.data.data

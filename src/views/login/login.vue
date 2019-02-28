@@ -112,7 +112,7 @@ export default {
           this.$message.error(i18n.t('login.tip_err'))
         } else {
           let result = await this.login(this.password)
-          if (result.data.success) {
+          if (result && result.data.success) {
             result.data.account.secret = this.password
             const data = JSON.stringify(result.data)
             if (this.status) {

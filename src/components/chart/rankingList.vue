@@ -14,7 +14,7 @@
       <ul class="list" style="float:right">
         <li :key="index" v-for="(item, index) in second">
           <span >{{index + 6}}</span>
-          <span  title="aaa">{{item.userName || item.voter | long}}</span>
+          <span >{{item.userName || item.voter | long}}</span>
           <span v-if="item.quantity" >{{item.quantity}} ETM</span>
           <span v-else >{{item.votes}}</span>
         </li>

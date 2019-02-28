@@ -244,7 +244,7 @@ export default {
     async _lockVote (params = {secret: this.secret, args: this.lockValue}) {
       try {
         const result = await lockVote(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.lock_success')
@@ -268,7 +268,7 @@ export default {
     async removeLock (params = {secret: this.secret, args: []}) {
       try {
         const result = await lockRemove(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.unlock_success')

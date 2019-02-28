@@ -101,7 +101,7 @@ export default {
     },
     async setSecondSecret (password) {
       const result = await setSecondSecret(this.secret, password)
-      if (result.data.success) {
+      if (result && result.data.success) {
         this.$store.commit('SET_SECONDSECRET', true)
         this.$notification.info({
           message: i18n.t('tip.title'),

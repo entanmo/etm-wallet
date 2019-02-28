@@ -302,7 +302,7 @@ export default {
     async _getDelegateDetail (params = {publicKey: this.publicKey}) { // 获取矿工详情
       try {
         const result = await getDelegate(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           this.onOff = i18n.t('block_production.status.has_register')
           this.delegateInfo = result.data.delegate
           this.isDelegate = result.data.delegate.isDelegate
@@ -321,7 +321,7 @@ export default {
     async _myBlock (params = {limit: 1, orderBy: 'height:desc'}) { // 监听块
       try {
         const result = await blocks(params)
-        if (result.data.success) {
+        if (result && result.data.success) {
           const myPublicKey = result.data.blocks[0].generatorPublicKey
           if (this.height1 === result.data.blocks[0].height) {
             return
@@ -338,7 +338,7 @@ export default {
     async _getTableLists (params = {generatorPublicKey: this.publicKey, limit: 10, orderBy: 'height:desc'}) { // 所托人详情列表
       this.loading = true
       const result = await blocks(params)
-      if (result.data.success) {
+      if (result && result.data.success) {
         if (result.data.count === 0) {
           this.nodata = true
         }
