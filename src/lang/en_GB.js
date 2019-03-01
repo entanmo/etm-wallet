@@ -212,7 +212,7 @@ export default {
     },
     'note': {
       'label': 'Notice',
-      'msg': 'Registration requires 1000 ETM fee'
+      'msg': 'Registration requires 500 ETM fee'
     },
     'tip': {
       'title': 'Confirm cancellation of miner?',

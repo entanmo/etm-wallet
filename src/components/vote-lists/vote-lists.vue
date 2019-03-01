@@ -31,12 +31,12 @@
 </template>
 <script>
 import {getRecord, getVoteLists, submitVoter} from '@/api/account'
+import {votesAdd} from '@/api/extend'
 import {mapState} from 'vuex'
 import PopPassword from '@/components/pop-password/pop-password'
 import PopVoted from '@/components/pop-voted/pop-voted'
 import {unit} from '@/utils/utils'
 import noData from '@/components/nodata/nodata'
-import axios from 'axios'
 const columns = [{
   title: i18n.t('vote_lists.columns.th01'),
   dataIndex: 'rate'
@@ -225,29 +225,33 @@ export default {
     },
     // 提交投票接口
     async _submitVoter (params = {secret: this.secret, delegates: this.voted}) {
-      const result = await submitVoter(params)
-      if (result && result.data.success) {
-        const param = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
-        axios.post('/api/votes/add', param)
-        this.$notification.info({
-          message: i18n.t('tip.title'),
-          description: i18n.t('tip.vote_success')
-        })
-        this.modal1Visible = false
-        this.modal2Visible = false
-        this.selectedRowKeys = []
-        this.selectedRows = []
-        setTimeout(() => {
-          this.$store.dispatch('GetInfo')
-          this._getRecord()
-        }, 5000)
-      } else {
-        this.modal1Visible = false
-        this.modal2Visible = false
-        this.$notification.info({
-          message: i18n.t('tip.title'),
-          description: result.data.error
-        })
+      try {
+        const result = await submitVoter(params)
+        if (result && result.data.success) {
+          const param = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
+          votesAdd(param)
+          this.$notification.info({
+            message: i18n.t('tip.title'),
+            description: i18n.t('tip.vote_success')
+          })
+          this.modal1Visible = false
+          this.modal2Visible = false
+          this.selectedRowKeys = []
+          this.selectedRows = []
+          setTimeout(() => {
+            this.$store.dispatch('GetInfo')
+            this._getRecord()
+          }, 5000)
+        } else {
+          this.modal1Visible = false
+          this.modal2Visible = false
+          this.$notification.info({
+            message: i18n.t('tip.title'),
+            description: result.data.error
+          })
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
   },

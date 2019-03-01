@@ -31,9 +31,9 @@ class MiddleWare {
     }
     if (!handled) {
       let code = res.data
-      if (code.success) {
+      if (code.success || code.code === '200') {
         return res
-      } else {
+      } else if (code.error) {
         notification.error({
           message: '提示',
           description: code.error

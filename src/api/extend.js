@@ -35,3 +35,10 @@ export const votesTop = (params) => {
     data: params
   })
 }
+export const votesAdd = (params) => {
+  return http({
+    url: '/extend/votes/add',
+    method: 'post',
+    data: params
+  })
+}

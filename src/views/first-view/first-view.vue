@@ -108,7 +108,6 @@ import Trend from '@/components/chart/trend'
 import RankingList from '@/components/chart/rankingList'
 import Tab from '@/components/tab/tab'
 import {blocks} from '@/utils/mixins'
-
 export default {
   mixins: [blocks],
   sockets: {
@@ -256,7 +255,7 @@ export default {
     async blockDay () {
       try {
         const result = await this.blockDayHandle(-1, 0)
-        if (result.data.code === '200' && result.data.data.length > 0) {
+        if (result && result.data.code === '200' && result.data.data.length > 0) {
           this.block.total = result.data.data[0].total
         }
       } catch (error) {
@@ -266,7 +265,7 @@ export default {
     async userVoteDay () {
       try {
         const result = await this.votesDayHandle(0, 1)
-        if (result.data.code === '200' && result.data.data.length > 0) {
+        if (result && result.data.code === '200' && result.data.data.length > 0) {
           this.block.voteNum = result.data.data[0].votes
         }
       } catch (error) {
@@ -286,11 +285,11 @@ export default {
     async userIncome () {
       try {
         const result = await this.incomeDayHandle(-1, 0)
-        if (result.data.code === '200' && result.data.data > 0) {
+        if (result && result.data.code === '200' && result.data.data > 0) {
           this.block.quantity = result.data.data
         }
         const oldResult = await this.incomeDayHandle(-8, -7)
-        if (oldResult.data.code === '200' && oldResult.data.data > 0) {
+        if (oldResult && oldResult.data.code === '200' && oldResult.data.data > 0) {
           const oldQuantity = oldResult.data.data
           this.block.rate = this.block.quantity / oldQuantity
           if (this.block.rate > 1) {
@@ -311,7 +310,7 @@ export default {
           this.block.rewards = result.data.delegate.rewards
           const num = await numVoteAll()
           if (num && num.data.success) {
-            this.block.allDelegates = num.data.count
+            this.block.allDelegates = 100
           }
         }
       } catch (error) {
@@ -323,7 +322,7 @@ export default {
         this.rankLoading1 = true
         const params = {'beginTime': beginTime, 'endTime': endTime}
         const result = await incomeTop(params)
-        if (result.data.code === '200') {
+        if (result && result.data.code === '200') {
           this.rankLoading1 = false
           this.incomeRankList = result.data.data
         }
@@ -336,7 +335,7 @@ export default {
         this.rankLoading2 = true
         const params = {'beginTime': beginTime, 'endTime': endTime}
         const result = await votesTop(params)
-        if (result.data.code === '200') {
+        if (result && result.data.code === '200') {
           this.rankLoading2 = false
           this.votesRankList = result.data.data
         }
