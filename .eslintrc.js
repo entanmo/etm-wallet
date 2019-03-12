@@ -4,6 +4,7 @@ module.exports = {
   root: true,
   parserOptions: {
     parser: 'babel-eslint'
+
   },
   "globals": {
     "i18n": true

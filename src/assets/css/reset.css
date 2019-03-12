@@ -2,13 +2,13 @@
 @charset "utf-8";
 /* CSS Document */
 body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input,button,a{margin:0;padding:0;}
-body{background-color:#F5F5F5;font-family: "Microsoft YaHei",arial;font-size: 14px;}
+body{background-color:#fff;font-family: "Microsoft YaHei",arial;font-size: 14px;}
 h1,h2,h3,h4{font-weight:normal}
 img{border:none;}
 li{list-style:none;}
 input,select,textarea,button{outline:none;border:none; background:none;}
 textarea{resize:none;font-family: "Microsoft YaHei",arial;}
-a{color:#FFFAF9;text-decoration:none;outline:0;}
+a{color:#1890ff;text-decoration:none;outline:0;}
 button,a:hover{text-decoration:none;cursor: pointer;}
 
 /*清浮动*/

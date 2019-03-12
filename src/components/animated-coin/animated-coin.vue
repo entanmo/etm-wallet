@@ -35,19 +35,6 @@ export default{
       return Array(this.amount).fill(1)
     }
   },
-  created () {
-    // const rect = this.$refs
-    // console.log(rect.coin)
-    // this.tween()
-
-    // console.log(this.$refs.coin)
-  },
-  mounted () {
-    // console.log(this.$refs.coin)
-    // if (this.index) {
-    //   this.tween()
-    // }
-  },
   methods: {
     dataToNumber (obj, rect) {
       const toNumber = (v, full) => {
@@ -85,11 +72,6 @@ export default{
         .onUpdate((object) => {
           this.$refs.coin.style.transform = `translate(${object.x}px, ${object.y}px)`
         })
-        .onComplete(() => {
-          // this.back()
-
-          // console.log(this.show)
-        })
         .start()
       animate()
     },
@@ -101,9 +83,8 @@ export default{
 }
 </script>
 <style lang="less" scoped>
-
 .addMoneyAnim {
-  background: url('https://gw.alipayobjects.com/zos/rmsportal/fseEOKMDOXOieJiHKuQg.png') no-repeat;
+  background: url('../../assets/images/fseEOKMDOXOieJiHKuQg.png') no-repeat;
   background-size: 420px 104px;
   width: 52px;
   height: 52px;

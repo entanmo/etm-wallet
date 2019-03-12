@@ -21,7 +21,7 @@
         </template>
         </a-table>
       </div>
-        <no-data v-show="nodata"  ></no-data>
+        <no-data v-show="nodata"></no-data>
     </div>
   </div>
 </template>

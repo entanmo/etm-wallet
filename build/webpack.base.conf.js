@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const webpack = require('webpack')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
@@ -28,7 +29,8 @@ module.exports = {
     'vue': 'Vue',
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
-    'axios': 'axios'
+    'axios': 'axios',
+    'viser-vue':'ViserVue'
   },
   output: {
     path: config.build.assetsRoot,
@@ -91,6 +93,12 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.DllReferencePlugin({
+      context: path.resolve(__dirname, '..'),
+      manifest: require('./vendor-manifest.json')
+    })
+  ],
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).

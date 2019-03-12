@@ -111,7 +111,6 @@ import { setTimeout } from 'timers'
 
 const columns = [{
   title: i18n.t('block_production.columns.th01'),
-  width: 80,
   dataIndex: 'height',
   fixed: 'left'
 }, {
@@ -159,7 +158,9 @@ export default {
       data: [],
       columns,
       pagination: {
-        defaultPageSize: 10 // 每页个数
+        defaultPageSize: 10, // 每页个数
+        current: 1,
+        pageSize: 10
       },
       loading: false,
       nodata: false,
@@ -335,7 +336,7 @@ export default {
         console.log(error)
       }
     },
-    async _getTableLists (params = {generatorPublicKey: this.publicKey, limit: 10, orderBy: 'height:desc'}) { // 所托人详情列表
+    async _getTableLists (params = {generatorPublicKey: this.publicKey, limit: 10, orderBy: 'height:desc', offset: this.pagination.pageSize * (this.pagination.current - 1)}) { // 所托人详情列表
       this.loading = true
       const result = await blocks(params)
       if (result && result.data.success) {
@@ -365,7 +366,6 @@ export default {
     'no-data': noData,
     'pop-password': popPassword,
     'animated-coin': AnimatedCoin
-
   }
 }
 </script>

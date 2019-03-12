@@ -9,7 +9,6 @@ import Viser from 'viser-vue'
 import './assets/css/reset.css'
 
 import './components.js'
-import 'ant-design-vue/dist/antd.css'
 // qrcode
 import VueQrcode from '@xkeshi/vue-qrcode'
 import store from '@/store'

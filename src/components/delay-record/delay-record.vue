@@ -2,21 +2,26 @@
   <div class="income">
     <div class="income-table">
       <div >
-        <a-table :columns="columns"
-                 :rowKey="record => record.transactionId"
-                 :dataSource="data"
-                :pagination="pagination"
-                :loading="loading"
-                  :scroll="{ x: 1300 }"
+        <a-table
+          :columns="columns"
+          :row-key="record => record.transactionId"
+          :data-source="data"
+          :pagination="pagination"
+          :loading="loading"
+          :scroll="{ x: 1300 }"
         >
-          <template slot="expired" slot-scope="text,record">
-            {{computedTime(record.expired)}}
+          <template
+            slot="expired"
+            slot-scope="text,record">
+            {{ computedTime(record.expired) }}
           </template>
-          <template slot="amount"  slot-scope="text,record">
-            {{unit(record.amount)}}
+          <template
+            slot="amount"
+            slot-scope="text,record">
+            {{ unit(record.amount) }}
           </template>
         </a-table>
-        <no-data v-show="nodata"></no-data>
+        <no-data v-show="nodata"/>
       </div>
     </div>
   </div>
@@ -40,6 +45,9 @@ const columns = [{
   scopedSlots: {customRender: 'amount'}
 }]
 export default {
+  components: {
+    'no-data': noData
+  },
   props: {
     delay: {
       type: Boolean,
@@ -93,9 +101,6 @@ export default {
         this.loading = false
       }
     }
-  },
-  components: {
-    'no-data': noData
   }
 }
 </script>

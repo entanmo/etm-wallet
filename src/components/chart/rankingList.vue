@@ -1,7 +1,7 @@
 <template>
   <div class="rank clearfix">
     <a-spin  :spinning="loading">
-    <div>
+    <div style="height:211px">
       <h4 class="title">{{title}}</h4>
       <ul class="list">
         <li :key="index" v-for="(item, index) in first">
@@ -87,7 +87,7 @@ export default {
 <style lang="less" scoped>
   .rank{
     padding: 0 8px 16px 16px;
-    width: 100%;
+    min-width: 600px;
     position: relative;
     height: 222px;
     .wrapper{

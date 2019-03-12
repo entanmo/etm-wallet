@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import { notification } from 'ant-design-vue'
 import qs from 'qs'
 import middleWare from './middleWare'
 const http = axios.create({

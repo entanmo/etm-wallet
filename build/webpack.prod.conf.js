@@ -19,7 +19,16 @@ const webpackConfig = merge(baseWebpackConfig, {
       sourceMap: config.build.productionSourceMap,
       extract: true,
       usePostCSS: true
-    })
+    }),
+    loaders: [{
+      'loader': 'babel-loader',
+      'test': /\.js$/,
+      'exclude': /node_modules/,
+      'query': {
+          'plugins': ['lodash'],
+          'presets': ['es2015']
+      }
+  }]
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {

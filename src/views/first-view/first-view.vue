@@ -439,7 +439,7 @@ export default {
   }
   .part-content{
     background-color: #fff;
-
+    overflow: auto;
   }
 
 }
