@@ -63,9 +63,29 @@ export default {
       'th04': 'Receiver',
       'th05': 'Date',
       'th06': 'Remark',
-      'th07': 'Amount(ETM)'
+      'th07': 'Amount(ETM)',
+      'th08': 'Fee (ETM)'
     },
     'transfer': 'Ordinary transfer',
+    'filter': {
+      'transfer_btn': 'Transfer',
+      'vote_btn': 'Vote',
+      'sure': 'Ok',
+      'reset': 'Reset'
+    },
+    'modal': {
+      'title': 'Transaction Details',
+      'btn_ok': 'Ok',
+      'type': 'Type',
+      'time': 'Date',
+      'transfer': 'Transfer Amount',
+      'fee': 'Fee',
+      'senderId': 'Sender Id',
+      'recipientId': 'Recipient Id',
+      'blockId': 'Block Id',
+      'blockHeight': 'Block Height',
+      'message': 'Message'
+    },
     'set': 'Set secondary password',
     'register_voter': 'Registered miner',
     'unregister_voter': 'UnRegistered miner',
@@ -91,7 +111,28 @@ export default {
         'weekBtn': 'Week',
         'monthBtn': 'Month',
         'yearBtn': 'Year'
+      },
+      'bonus': 'Bonus (ETM)',
+      'allBonus': 'Cumulative Dividend Income',
+      'voteMinerNum': 'Miner Blocks Released Yesterday',
+      'voteMinerPopular': 'Miner Popularity',
+      'voteMinerRank': 'Miner Ranking',
+      'tip': {
+        'tip_bonus': 'Bonus : Earnings dividends obtained through voting yesterday.',
+        'tip_voteMinerNum': 'Miner Blocks Released Yesterday : The number of miners you voted for yesterday.',
+        'tip_voteDailyNum': 'Average Number of Blocks : The average number of miners who voted for your vote.',
+        'tip_voteMinerPopular': 'Miner Popularity : The total number of votes won by miners who voted yesterday.',
+        'tip_vote_average': 'Average Popularity : Average number of votes per day for polling miners.',
+        'tip_income': 'Yesterday Earnings : All the income generated yesterday.',
+        'tip_rate': 'Same Week : The ratio of yesterday block earnings to the year-on-year increase or decrease in block earnings.',
+        'tip_formula': "Formula : same week = ( yesterday's block income - block gains in the same period last week ) / block earnings in the same period last week × 100%",
+        'tip_allIncome': 'Accumulated Gains : All proceeds from the block.',
+        'tip_blockNum': 'Blocks Released Yesterday : The number of blocks produced by mining yesterday.',
+        'tip_dailyNum': 'Average Number of Blocks : The number of blocks excavated on average per day.',
+        'tip_myPopularity': 'My Popularity : The total number of votes I have received.',
+        'tip_average': 'Average Popularity : Average number of votes per day.'
       }
+
     }
   },
   'person': {
@@ -301,7 +342,8 @@ export default {
     'fee': 'Fee',
     'remark': {
       'label': 'Remark',
-      'msg': 'Please enter the remark'
+      'msg': 'Please enter the remark',
+      'help': 'Remarks are too long'
     },
     'note': {
       'label': 'Notice',
@@ -329,6 +371,9 @@ export default {
     'returnBtn': 'Return Home'
   },
   'no_found': {
-    'p': 'Sorry, no relevant data yet.'
+    'p': 'Sorry, no relevant data yet.',
+    'miner': 'This feature only miners have data!',
+    'btn_miner': 'register'
+
   }
 }

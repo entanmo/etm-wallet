@@ -8,7 +8,8 @@
         :dataSource="data"
         :pagination="pagination"
         :loading="loading"
-          :scroll="{ x: 1300 }"
+        :scroll="{ x: 800 }"
+        :locale="{'filterConfirm':$t('first-view.filter.sure'),'filterReset':$t('first-view.filter.reset')}"
         @change="handleTableChange"
           >
           <template slot="typeIN" slot-scope="text,record">
@@ -18,12 +19,68 @@
             {{convertTime(record.timestamp)}}
           </template>
           <template slot="amount" slot-scope="text,record">
-            {{unit(record.amount)}}
+            {{record.type === 2 ? 0:unit(record.amount)}}
           </template>
+          <template slot="fee" slot-scope="text,record">
+            {{record.type === 2 ? unit(record.amount+record.fee):unit(record.fee)}}
+          </template>
+          <template slot="action" slot-scope="text, record, index">
+          <a slot="action"  @click="showDetails(record)" href="javascript:;">{{$t('block_scan.click_details')}}</a>
+        </template>
         <template slot="footer" slot-scope="text,record">
-          {{$t("first-view.all")}}:      {{totalAmount().toFixed(2)}} ETM
+          <!-- {{$t("first-view.all")}}:      {{totalAmount().toFixed(2)}} ETM -->
         </template>
         </a-table>
+      <!-- 详情 -->
+      <a-modal
+      :title="$t('first-view.modal.title')"
+      width='800px'
+      v-model="visible"
+    >
+      <template slot="footer">
+        <div class="detail-foot">
+        <a-button  type="primary"  @click="handleOk">{{$t('first-view.modal.btn_ok')}}</a-button>
+        </div>
+      </template>
+      <div class="transfer-details">
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.type')}}：</label>
+          <span>{{mapType(transferDetal.type)}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.time')}}：</label>
+          <span>{{convertTime(transferDetal.timestamp)}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.transfer')}}：</label>
+          <span>{{transferDetal.type === 2 ? 0:unit(transferDetal.amount)}} ETM</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.fee')}}：</label>
+          <span>{{transferDetal.type === 2 ? unit(transferDetal.amount+transferDetal.fee):unit(transferDetal.fee)}} ETM</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.senderId')}}：</label>
+          <span>{{transferDetal.senderId}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.recipientId')}}：</label>
+          <span>{{transferDetal.recipientId}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.blockId')}}：</label>
+          <span>{{transferDetal.blockId}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.blockHeight')}}：</label>
+          <span>{{transferDetal.height}}</span>
+        </div>
+        <div class="transfer-item">
+          <label>{{$t('first-view.modal.message')}}：</label>
+          <span>{{transferDetal.message}}</span>
+        </div>
+      </div>
+      </a-modal>
       </div>
       <no-data v-show="nodata"></no-data>
     </div>
@@ -39,24 +96,31 @@ import { getTransaction } from '@/api/account'
 const columns = [{
   title: i18n.t('first-view.table_columns.th02'),
   scopedSlots: { customRender: 'typeIN' },
-  dataIndex: 'type'
-}, {
-  title: i18n.t('first-view.table_columns.th03'),
-  dataIndex: 'senderId'
-}, {
-  title: i18n.t('first-view.table_columns.th04'),
-  dataIndex: 'recipientId'
+  dataIndex: 'type',
+  filters: [{
+    text: i18n.t('first-view.filter.transfer_btn'),
+    value: '3'
+  }, {
+    text: i18n.t('first-view.filter.vote_btn'),
+    value: '0'
+  }],
+  onFilter: (value, record) => record.type.toString().indexOf(value) === 0
 }, {
   title: i18n.t('first-view.table_columns.th05'),
   dataIndex: 'timestamp',
   scopedSlots: {customRender: 'time'}
 }, {
-  title: i18n.t('first-view.table_columns.th06'),
-  dataIndex: 'message'
-}, {
   title: i18n.t('first-view.table_columns.th07'),
   dataIndex: 'amount',
   scopedSlots: {customRender: 'amount'}
+}, {
+  title: i18n.t('first-view.table_columns.th08'),
+  dataIndex: 'fee',
+  scopedSlots: {customRender: 'fee'}
+}, {
+  title: i18n.t('block_scan.columns.th09'),
+  key: 'operation',
+  scopedSlots: { customRender: 'action' }
 }]
 export default {
   data () {
@@ -70,7 +134,9 @@ export default {
       nodata: false,
       recipientFlag: false,
       unit: unit,
-      convertTime: convertTime // 方法
+      convertTime: convertTime, // 方法
+      visible: false,
+      transferDetal: {}
 
     }
   },
@@ -99,6 +165,13 @@ export default {
         orderBy: 't_timestamp:desc'
       })
     },
+    showDetails (record) {
+      this.visible = true
+      this.transferDetal = record
+    },
+    handleOk () {
+      this.visible = false
+    },
     async _getTransaction (params = {senderId: this.address, orderBy: 't_timestamp:desc', limit: 10}) {
       this.loading = true
       const result = await getTransaction(params)
@@ -115,7 +188,8 @@ export default {
         this.loading = false
       }
     },
-    handleTableChange (pagination) {
+    handleTableChange (pagination, filters) {
+      console.log(filters)
       const pager = {...this.pagination}
       pager.current = pagination.current
       this.pagination = pager
@@ -206,5 +280,22 @@ export default {
   padding:10px;
   min-height: 500px;
   }
+
+  }
+    .transfer-details{
+    display: flex;
+    flex-direction: column;
+    .transfer-item{
+      padding-left: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content:flex-start;
+      font-size: 16px;
+      line-height: 36px;
+      color: #343434;
+      label{
+        margin-right: 10px;
+      }
+    }
   }
 </style>

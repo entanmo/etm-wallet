@@ -1,7 +1,7 @@
 <template>
   <div class="mini-progress">
     <a-tooltip :title="'我的排名：' + target">
-      <div class="target" :style="{left: target + '%'}">
+      <div class="target" :style="{left: (target>100?100:target) + '%'}">
         <span :style="{backgroundColor: color}" />
         <span :style="{backgroundColor: color}" />
       </div>

@@ -56,17 +56,10 @@ export default {
       width: '100%'
     }
   },
-  watch: {
-    'effectUser': function () {
-      if (this.effectUser) {
-        this.userVoteDay()
-      }
-    }
-  },
   methods: {
-    async userVoteDay () {
+    async userVoteDayChart (address) {
       try {
-        const result = await this.votesDayHandle(-13, 1)
+        const result = await this.votesDayHandle(address, -13, 1)
         if (result.data.code === '200' && result.data.data.length > 0) {
           let arr = []
           for (let i = 0; i < this.data1.length; i++) {

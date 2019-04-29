@@ -3,9 +3,9 @@
     <div class="chart-card-header">
       <div class="meta">
         <span class="chart-card-title">{{title}}</span>
-        <!-- <span class="chart-card-action">
+        <span class="chart-card-action">
         <slot name="action"></slot>
-      </span> -->
+      </span>
       </div>
       <div class="total"><animated-integer  :point='point' :value='total'></animated-integer></div>
     </div>

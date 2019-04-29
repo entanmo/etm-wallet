@@ -21,16 +21,18 @@
         </template>
         </a-table>
       </div>
-        <no-data v-show="nodata"></no-data>
+        <component v-show="nodata" :is="showComponent" ></component>
     </div>
   </div>
 </template>
 <script>
 import {voteForMe} from '@/api/account'
+import { getDelegate } from '@/api/block'
+import noDataMiner from '@/components/nodata/nodataminer'
 import noData from '@/components/nodata/nodata'
 const columns = [{
   title: i18n.t('vote_for_me.columns.th01'),
-  dataIndex: 'name'
+  dataIndex: 'username'
 }, {
   title: i18n.t('vote_for_me.columns.th02'),
   dataIndex: 'address'
@@ -48,29 +50,38 @@ export default {
       pagination: {
         defaultPageSize: 10 // 每页个数
       },
+      isDelegate: false,
       loading: false,
       nodata: false
     }
   },
   created () {
-    this._voteForMe(0)
+    this._getDelegateDetail()
   },
   computed: {
     publicKey () {
       const data = JSON.parse(sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')).account.publicKey
       return this.$store.state.user.accountInfo.publicKey || data
+    },
+    showComponent () {
+      return this.isDelegate ? 'no-data' : 'no-data-miner'
     }
   },
   methods: {
     refresh () {
-      this.nodata = false
-      this._voteForMe(this.pagination.current)
+      if (this.isDelegate) {
+        this.nodata = false
+        this._voteForMe(this.pagination.current)
+      } else {
+        this._getDelegateDetail()
+      }
     },
     async _voteForMe (p) {
       this.loading = true
       const params = {publicKey: this.publicKey}
       const result = await voteForMe(params)
       if (result && result.data.success) {
+        this.nodata = false
         this.loading = false
         if (result.data.accounts.length === 0) {
           this.nodata = true
@@ -87,10 +98,25 @@ export default {
     },
     handleTableChange (pagination) {
       this.voteForMe(pagination.current - 1)
+    },
+    async _getDelegateDetail (params = {publicKey: this.publicKey}) { // 获取矿工详情
+      try {
+        const result = await getDelegate(params)
+        if (result && result.data.success) {
+          this.isDelegate = true
+          this._voteForMe(0)
+        } else {
+          this.isDelegate = false
+          this.nodata = true
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   components: {
-    noData
+    noData,
+    noDataMiner
   }
 }
 </script>

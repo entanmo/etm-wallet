@@ -54,17 +54,10 @@ export default {
       height: 100
     }
   },
-  watch: {
-    'effectUser': function () {
-      if (this.effectUser) {
-        this.getDaysBlock()
-      }
-    }
-  },
   methods: {
-    async getDaysBlock () {
+    async getDaysBlock (address) {
       try {
-        const result = await this.blockDayHandle(-13, 1)
+        const result = await this.blockDayHandle(address, -13, 1)
         if (result.data.code === '200' && result.data.data.length > 0) {
           let arr = []
           for (let i = 0; i < this.data1.length; i++) {

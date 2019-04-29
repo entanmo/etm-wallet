@@ -65,9 +65,29 @@ export default {
       'th04': '接收者',
       'th05': '日期',
       'th06': '备注',
-      'th07': '转账金额（ETM）'
+      'th07': '转账金额（ETM）',
+      'th08': '手续费 (ETM)'
     },
     'transfer': '普通转账',
+    'filter': {
+      'transfer_btn': '转账',
+      'vote_btn': '投票',
+      'sure': '确认',
+      'reset': '重置'
+    },
+    'modal': {
+      'title': '交易详情',
+      'btn_ok': '确定',
+      'type': '类型',
+      'time': '时间',
+      'transfer': '转账金额',
+      'fee': '手续费',
+      'senderId': '发送者',
+      'recipientId': '接收者地址',
+      'blockId': '区块ID',
+      'blockHeight': '区块高度',
+      'message': '备注'
+    },
     'set': '设置二级密码',
     'register_voter': '注册矿工',
     'unregister_voter': '注销矿工',
@@ -93,7 +113,29 @@ export default {
         'weekBtn': '本周',
         'monthBtn': '本月',
         'yearBtn': '本年'
+      },
+      'bonus': '分红收益 (ETM)',
+      'allBonus': '累计分红收益',
+      'voteMinerNum': '投票矿工昨日出块数量',
+      'voteMinerPopular': '投票矿工的人气',
+      'voteMinerRank': '投票矿工的排名',
+      'tip': {
+        'tip_bonus': '分红收益：昨日通过投票获得的出块分红收益。',
+        'tip_voteMinerNum': '投票矿工昨日出块数量:昨日您投票选择的矿工的出块数量。',
+        'tip_voteDailyNum': '平均日出块数量：您投票选择的矿工出块数量的平均数。',
+        'tip_voteMinerPopular': '昨日投票矿工的人气：昨日投票选择的矿工获得的投票总数。',
+        'tip_vote_average': '平均人气：投票矿工的平均每日获得的投票数。',
+        'tip_income': '昨日出块收益：昨日出块产生的全部收益。',
+        'tip_rate': '同周比：昨日出块收益与上周同期出块收益同比上升或下降的比例。',
+        'tip_formula': '公式：同周比 =（ 昨日出块收益-上周同期出块收益 ）/ 上周同期出块收益×100%。',
+        'tip_allIncome': '累计出块收益：通过出块获得的全部收益。',
+        'tip_blockNum': '昨日出块数量：昨日挖矿产出的区块数量。',
+        'tip_dailyNum': '平均日出块数量：平均每天挖出的区块数量。',
+        'tip_myPopularity': '我的人气：我累计获得的投票数量。',
+        'tip_average': '平均人气：平均每天获得的投票数量。'
+
       }
+
     }
   },
   'person': {
@@ -304,7 +346,8 @@ export default {
     'fee': '费用',
     'remark': {
       'label': '备注',
-      'msg': '请输入备注'
+      'msg': '请输入备注',
+      'help': '备注长度过长'
     },
     'note': {
       'label': '注意',
@@ -332,6 +375,8 @@ export default {
     'returnBtn': '返回首页'
   },
   'no_found': {
-    'p': '抱歉，暂无相关数据'
+    'p': '抱歉，暂无相关数据',
+    'miner': '此功能只有矿工有数据！',
+    'btn_miner': '注册成为矿工'
   }
 }

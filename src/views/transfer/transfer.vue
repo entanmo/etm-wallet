@@ -41,7 +41,12 @@
       :wrapperCol="wrapperCol"
       :label="$t('transfer.remark.label')"
       >
-      <a-input :placeholder="$t('transfer.remark.msg')" />
+      <a-input
+         v-decorator="[
+          'message',
+         {rules: [{require:false,max:255,message: $t('transfer.remark.help')}]}
+        ]"
+       :placeholder="$t('transfer.remark.msg')" />
       </a-form-item>
       <a-form-item
        :labelCol="labelCol"
@@ -50,13 +55,13 @@
       {{$t('transfer.note.msg')}}
       </a-form-item>
       <a-form-item
-      :wrapperCol="{ span: 12, offset: 2 }">
+      :wrapperCol="{ span: 12, offset: 2 }"
+      :labelCol="labelCol"
+      >
       <a-button @click="check" type='primary' >
         {{$t('transfer.submitBtn')}}
       </a-button>
-
     </a-form-item>
-
     </a-form>
     <pop-password :modal2Visible.sync="modal2Visible" @secondSubmit="handleSecondOk"></pop-password>
   </div>
@@ -66,11 +71,6 @@ import {mapState} from 'vuex'
 import {transactions} from '@/api/block'
 import popPassword from '@/components/pop-password/pop-password'
 export default {
-  // sockets: {
-  //   'blocks/change': function (data) {
-  //     this.$store.dispatch('_getBalance')
-  //   }
-  // },
   beforeCreate () {
     this.form = this.$form.createForm(this)
   },
@@ -92,6 +92,7 @@ export default {
       recipientId: '',
       amount: '',
       fee: '0.1',
+      message: '',
       modal2Visible: false
     }
   },
@@ -111,18 +112,17 @@ export default {
       this.form.validateFields(
         (err, values) => {
           if (!err) {
+            this.message = values.message
+            this.recipientId = values.recipientId
+            this.amount = values.amount
             if (this.balance < 0.1) {
               this.$notification.info({
                 message: i18n.t('tip.title'),
                 description: i18n.t('tip.balance_enough')
               })
             } else if (this.secondSignature) {
-              this.recipientId = values.recipientId
-              this.amount = values.amount
               this.modal2Visible = true
             } else {
-              this.recipientId = values.recipientId
-              this.amount = values.amount
               this._transactions()
             }
           }
@@ -130,14 +130,13 @@ export default {
       )
     },
     handleSecondOk (secondSecret) {
-      this._transactions({secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret})
+      this._transactions({secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret, message: this.message})
     },
-    async _transactions (params = {secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount}) {
+    async _transactions (params = {secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, message: this.message}) {
       try {
         const result = await transactions(params)
         if (result && result.data.success) {
           this.modal2Visible = false
-          // this.$store.dispatch('GetInfo')
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.transfer_success')

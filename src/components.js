@@ -41,7 +41,7 @@ import {
   Slider,
   Spin,
   // Steps,
-  // Switch,
+  Switch,
   Table,
   // Transfer,
   // Tree,
@@ -106,7 +106,7 @@ Vue.use(Select)
 Vue.use(Slider)
 Vue.use(Spin)
 // Vue.use(Steps)
-// Vue.use(Switch)
+Vue.use(Switch)
 Vue.use(Table)
 // Vue.use(Transfer)
 // Vue.use(Tree)

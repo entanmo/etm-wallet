@@ -93,10 +93,10 @@ export default {
     .wrapper{
       height: 222px;
     }
-    .title{
-      // border-bottom: 1px solid rgb(232, 232, 232);
-      // line-height: 35px;
-    }
+    // .title{
+    //   // border-bottom: 1px solid rgb(232, 232, 232);
+    //   // line-height: 35px;
+    // }
     .list{
       padding: 0;
       list-style: none;

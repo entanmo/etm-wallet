@@ -27,12 +27,13 @@ export default {
       type: Array,
       default: () => btnName
     },
+    fn: {
+      type: Function,
+      default: () => {}
+    },
     tabIndex: {
       type: Number,
       default: 0
-    },
-    fnName: {
-      type: String
     }
   },
   data () {
@@ -43,7 +44,8 @@ export default {
   methods: {
     changeTab (key) {
       this.$emit('update:tabIndex', key)
-      this.$emit(this.fnName, key)
+      this.fn(key)
+      // this.$emit(this.fnName, key)
     }
   }
 }

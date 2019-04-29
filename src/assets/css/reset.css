@@ -53,3 +53,11 @@ html,body,.page-container{
 .ant-layout.ant-layout-has-sider > .ant-layout-content {
   overflow: hidden;
 }
+
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease-in;
+}
+.component-fade-enter, .component-fade-leave-to
+/* .component-fade-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+}

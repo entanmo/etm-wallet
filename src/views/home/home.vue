@@ -4,7 +4,6 @@
       <sider-menu ></sider-menu>
     </drawer>
       <sider-menu v-else :collapsed="collapsed" ></sider-menu>
-
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <a-icon
@@ -15,7 +14,7 @@
         <a-icon class="trigger logout" :title="$t('router.loginOutTitle')" @click="logout" type="logout"/>
         <a-button size="small" @click="changeLang"  class="lang">{{ lang_text }}</a-button>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', paddingTop: '0', minHeight: '100vh' }">
+      <a-layout-content :style="{ margin: '24px 16px', paddingTop: '0', minHeight: '100vh',position:'relative' }">
         <div class="main-title">
           {{title}}
         </div>

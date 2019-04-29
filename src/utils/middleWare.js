@@ -35,7 +35,7 @@ class MiddleWare {
         return res
       } else if (code.error) {
         notification.error({
-          message: '提示',
+          message: '参数错误',
           description: code.error
         })
       }

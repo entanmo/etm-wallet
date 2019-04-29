@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="switch-chart"><span class="title">矿工模式 </span>  <a-switch   @change='handleSwitch'/></div>
     <!-- 信息 -->
     <div class="information">
       <a-row class="etm-info" type="flex" justify="space-around" align="middle">
@@ -19,41 +20,9 @@
     </div>
     <!-- 图表 -->
     <div class="charts">
-      <a-row>
-        <a-col :sm="24" :md="12" :xl="6" class="part part-row-left">
-          <chart-card :title="$t('first-view.chart.income')" :point='2' :total='block.quantity'>
-            <div>
-              <trend style="margin-right: 16px" :term="$t('first-view.chart.rate')" :percent="block.rate" :is-increase="block.increase" :scale="2" />
-            </div>
-            <div slot="footer">{{$t('first-view.chart.allIncome')}}<span> {{unit(block.rewards)}} ETM</span></div>
-          </chart-card>
-        </a-col>
-        <a-col :sm="24" :md="12" :xl="6" class="part part-row-right row01">
-          <chart-card :title="$t('first-view.chart.blockNum')" :total="block.total">
-            <div>
-              <mini-area :effectUser="block.effectUser" :average.sync="block.numAverage" />
-            </div>
-            <div slot="footer">{{$t('first-view.chart.dailyNum')}}<span> {{block.numAverage}}</span></div>
-          </chart-card>
-        </a-col>
-        <a-col :sm="24" :md="12" :xl="6" class="part part-row-left row01" >
-          <chart-card :title="$t('first-view.chart.myPopularity')" :total="block.voteNum">
-            <div>
-              <mini-bar :effectUser="block.effectUser" :average.sync="block.popularAverage" ref="countBar" />
-            </div>
-            <div slot="footer">{{$t('first-view.chart.average')}} <span> {{block.popularAverage}}</span></div>
-          </chart-card>
-        </a-col>
-        <a-col :sm="24" :md="12" :xl="6" class="part part-row-right">
-          <chart-card :title="$t('first-view.chart.myRank')" :total="block.myRank">
-            <div>
-              <mini-progress :target="block.myRank" :percent="block.allDelegates" color="#13C2C2" height="8px"/>
-            </div>
-            <div slot="footer" style="height:21px">
-            </div>
-          </chart-card>
-        </a-col>
-      </a-row>
+        <transition name="component-fade" mode="out-in">
+            <component :is="showChart" ></component>
+        </transition>
     </div>
     <!-- 排名 -->
     <div class="rank">
@@ -61,7 +30,7 @@
         <a-col :sm="24" :md="24" :xl="12" class="part-left">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
           <div class="extra-wrap" slot="tabBarExtraContent">
-            <tab :tabIndex.sync="tabIncomeIndex" :fnName="fnIncomeName" @incomeTimeHandle="incomeTimeHandle"></tab>
+            <tab :tabIndex.sync="tabIncomeIndex"  :fn="incomeTimeHandle"></tab>
           </div>
           <a-tab-pane loading="true" :tab="$t('first-view.chart.incomeRank')" key="1">
           <ranking-list :loading="rankLoading1"  :list="incomeRankList"/>
@@ -71,7 +40,7 @@
         <a-col :sm="24" :md="24" :xl="12" class="part-right">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
           <div class="extra-wrap" slot="tabBarExtraContent">
-            <tab :tabIndex.sync="tabVotesIndex" :fnName="fnVotesName" @voteTimeHandle="voteTimeHandle"></tab>
+            <tab :tabIndex.sync="tabVotesIndex"  :fn="voteTimeHandle"></tab>
             </div>
           <a-tab-pane loading="true" :tab="$t('first-view.chart.votesRank')" key="1">
             <ranking-list :loading="rankLoading2"  :list="votesRankList"/>
@@ -94,17 +63,13 @@
   </div>
 </template>
 <script>
-import { getDelegate } from '@/api/block'
-import {numVoteAll} from '@/api/account'
-import {incomeSum, incomeTop, votesTop} from '@/api/extend'
+
+import {incomeTop, votesTop} from '@/api/extend'
 import {unit, timestampToDay} from '@/utils/utils'
 import TransferRecord from '@/components/transfer-record/transfer-record'
 import AnimatedInteger from '@/components/animated-integer/animated-integer'
-import ChartCard from '@/components/card/card'
-import MiniArea from '@/components/chart/miniArea'
-import MiniBar from '@/components/chart/miniBar'
-import MiniProgress from '@/components/chart/miniProgress'
-import Trend from '@/components/chart/trend'
+import ChartView from '@/components/chart-view/chart-view'
+import ChartViewMiner from '@/components/chart-view-miner/chart-view-miner'
 import RankingList from '@/components/chart/rankingList'
 import Tab from '@/components/tab/tab'
 import {blocks} from '@/utils/mixins'
@@ -116,7 +81,6 @@ export default {
     },
     'rounds/change': function (data) {
       this.$store.dispatch('_getBalance')
-      this.effectUser()
       this.voteTimeHandle()
       this.incomeTimeHandle()
     }
@@ -124,29 +88,16 @@ export default {
   data () {
     return {
       rankList: [], // 排名
+      active: false,
+      tabIncomeIndex: 0, // 收益排名index
+      tabVotesIndex: 0,
       incomeRankList: [],
       votesRankList: [],
       rankLoading1: false,
       rankLoading2: false,
-      active: false,
-      block: {
-        effectUser: false,
-        total: 0,
-        quantity: 0,
-        rewards: 0, // 收益
-        rate: 0,
-        increase: true,
-        voteNum: 0,
-        numAverage: 0,
-        popularAverage: 0,
-        myRank: 0,
-        allDelegates: 0
-      },
-      tabIncomeIndex: 0, // 收益排名index
-      tabVotesIndex: 0,
-      fnIncomeName: 'incomeTimeHandle',
-      fnVotesName: 'voteTimeHandle',
-      unit: unit
+      unit: unit,
+      switchChange: false,
+      minerLoading: false
     }
   },
   computed: {
@@ -162,22 +113,21 @@ export default {
     publicKey () {
       const data = JSON.parse(sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')).account.publicKey
       return this.$store.state.user.accountInfo.publicKey || data
+    },
+    showChart () {
+      return this.switchChange ? 'ChartViewMiner' : 'ChartView'
     }
   },
   components: {
     TransferRecord,
-    'animated-integer': AnimatedInteger,
-    'chart-card': ChartCard,
-    'mini-area': MiniArea,
-    'mini-bar': MiniBar,
-    'mini-progress': MiniProgress,
-    'ranking-list': RankingList,
-    Trend,
-    Tab
+    AnimatedInteger,
+    ChartView,
+    Tab,
+    RankingList,
+    ChartViewMiner
   },
   created () {
     this.$store.dispatch('GetInfo')
-    this.effectUser()
     this.voteTimeHandle()
     this.incomeTimeHandle()
   },
@@ -189,22 +139,8 @@ export default {
     //     this.$refs.income.getIncome()
     //   }
     // }
-    async effectUser () {
-      try {
-        const result = await this.$store.dispatch('_effectAccount')
-        const resultDelegate = await getDelegate({publicKey: this.publicKey})
-        if (result && resultDelegate && result.data.success && resultDelegate.data.success) {
-          if (result.data.effectivity) {
-            this.block.effectUser = result.data.effectivity
-            this.blockDay()
-            this.userVoteDay()
-            this.myRank()
-            this.userIncome()
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
+    handleSwitch (checked) {
+      this.switchChange = checked
     },
     voteTimeHandle (key) {
       const beginTime = timestampToDay(Date.now())
@@ -250,71 +186,6 @@ export default {
           break
         default:
           this.incomeRank(beginTime, endTime)
-      }
-    },
-    async blockDay () {
-      try {
-        const result = await this.blockDayHandle(-1, 0)
-        if (result && result.data.code === '200' && result.data.data.length > 0) {
-          this.block.total = result.data.data[0].total
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async userVoteDay () {
-      try {
-        const result = await this.votesDayHandle(0, 1)
-        if (result && result.data.code === '200' && result.data.data.length > 0) {
-          this.block.voteNum = result.data.data[0].votes
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    incomeDayHandle (start, end) {
-      try {
-        let beginTime = timestampToDay(Date.now() + start * 24 * 1000 * 60 * 60)
-        let endTime = timestampToDay(Date.now() + end * 24 * 1000 * 60 * 60)
-        const params = {'address': this.address, 'beginTime': beginTime, 'endTime': endTime}
-        return incomeSum(params)
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async userIncome () {
-      try {
-        const result = await this.incomeDayHandle(-1, 0)
-        if (result && result.data.code === '200' && result.data.data > 0) {
-          this.block.quantity = result.data.data
-        }
-        const oldResult = await this.incomeDayHandle(-8, -7)
-        if (oldResult && oldResult.data.code === '200' && oldResult.data.data > 0) {
-          const oldQuantity = oldResult.data.data
-          this.block.rate = this.block.quantity / oldQuantity
-          if (this.block.rate > 1) {
-            this.block.increase = true
-          } else {
-            this.block.increase = false
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async myRank (params = {publicKey: this.publicKey}) {
-      try {
-        const result = await getDelegate(params)
-        if (result && result.data.success) {
-          this.block.myRank = result.data.delegate.rate
-          this.block.rewards = result.data.delegate.rewards
-          const num = await numVoteAll()
-          if (num && num.data.success) {
-            this.block.allDelegates = 100
-          }
-        }
-      } catch (error) {
-        console.log(error)
       }
     },
     async incomeRank (beginTime, endTime) {
@@ -426,6 +297,20 @@ export default {
     }
   }
 }
+.switch-chart{
+  text-align: right;
+  position: absolute;
+  right: 0;
+  top:0;
+  .title{
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+}
+// .voteCharts, .charts{
+//   transition: all 1s;
+
+// }
 .charts{
   margin-top: 20px;
 }
