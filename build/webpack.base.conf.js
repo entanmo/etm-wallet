@@ -29,8 +29,8 @@ module.exports = {
     'vue': 'Vue',
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
-    'axios': 'axios',
-    'viser-vue':'ViserVue'
+    'axios': 'axios'
+    // 'viser-vue':'ViserVue'
   },
   output: {
     path: config.build.assetsRoot,

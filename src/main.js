@@ -5,7 +5,6 @@ import i18n from '@/lang'
 import App from './App'
 import VueSocketIO from 'vue-socket.io'
 import router from './router'
-import Viser from 'viser-vue'
 import './assets/css/reset.css'
 
 import './components.js'
@@ -23,7 +22,7 @@ Vue.use(new VueSocketIO({
   }
 }))
 Vue.component(VueQrcode.name, VueQrcode)
-Vue.use(Viser)
+
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

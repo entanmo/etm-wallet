@@ -8,7 +8,6 @@
               <template slot="title">
                 <div >{{$t('first-view.chart.tip.tip_income')}}</div>
                 <div >{{$t('first-view.chart.tip.tip_rate')}}</div>
-                <div>{{$t('first-view.chart.tip.tip_formula')}}</div>
                 <div>{{$t('first-view.chart.tip.tip_allIncome')}}</div>
               </template>
               <a-icon type="info-circle-o" />

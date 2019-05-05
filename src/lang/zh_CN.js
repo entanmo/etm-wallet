@@ -40,7 +40,19 @@ export default {
     'returnBtn': '返回登录',
     'create': '创建钱包',
     'tip_err_limit': '请仔细阅读并勾选须知',
-    'tip_err_same': '输入的主密码不一致'
+    'tip_err_same': '输入的主密码不一致',
+    'tip_password_err': '密码错误',
+    'tip_password_des': '您的密码顺序错误，请仔细检查，按照正确的顺序填入密码。',
+    'tip_password_success': '验证成功',
+    'check_title': '请依次点选密码进行验证',
+    'previous_btn': '返回上一页',
+    'sure_btn': '确定',
+    'cancel_btn': '我再想想',
+    'modal': {
+      'tip_title': '友情提示',
+      'tip_content': '您是否已备份好自己的密码?',
+      'tip_content1': '密码丢失将无法找回!'
+    }
   },
   'router': {
     'home': '首页',

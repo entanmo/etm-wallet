@@ -16,7 +16,9 @@ export default {
     'empty_hight': 'Height cannot be empty',
     'lock_success': 'Locked Successfully',
     'unlock_success': 'Unlocked Successfully',
-    'unlock_error': 'Please select the lock item'
+    'unlock_error': 'Please select the lock item',
+    'copy_success': 'Successful copy',
+    'copy_error': 'The browser does not support automatic copying'
   },
   'login': {
     'placeholder': 'Type the master secret',
@@ -38,7 +40,19 @@ export default {
     'returnBtn': 'Back',
     'create': 'Create Master Secret',
     'tip_err_limit': 'Please read carefully and tick the instructions.',
-    'tip_err_same': 'The entered master secret is inconsistent.'
+    'tip_err_same': 'The entered master secret is inconsistent.',
+    'tip_password_err': 'Wrong Password',
+    'tip_password_des': 'Your passwords are in the wrong order. Please double check and fill in the passwords in the correct order.',
+    'tip_password_success': 'Successful Verification',
+    'check_title': 'Please Select The Password To Verify',
+    'previous_btn': ' Previous Page',
+    'sure_btn': 'Ok',
+    'cancel_btn': 'Cancel',
+    'modal': {
+      'tip_title': 'Friendly Reminder',
+      'tip_content': 'Have you backed up your password?',
+      'tip_content1': 'Lost password will not be retrieved!'
+    }
   },
   'router': {
     'home': 'Home',

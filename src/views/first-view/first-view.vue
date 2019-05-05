@@ -73,6 +73,9 @@ import ChartViewMiner from '@/components/chart-view-miner/chart-view-miner'
 import RankingList from '@/components/chart/rankingList'
 import Tab from '@/components/tab/tab'
 import {blocks} from '@/utils/mixins'
+import Vue from 'vue'
+import Viser from 'viser-vue'
+Vue.use(Viser)
 export default {
   mixins: [blocks],
   sockets: {

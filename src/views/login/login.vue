@@ -4,7 +4,7 @@
       <div class="head_img">
         <img class="logo" src="../../assets/images/walletlogo.png" />
       </div>
-    <form v-if="loginStatus" class="login_form">
+    <form  class="login_form">
       <div style="position:relative;">
           <a-input :type="showPassword ? 'text' : 'password'" class="pwd_ipt" v-model="password" :placeholder="$t('login.placeholder')"/>
           <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
@@ -23,33 +23,6 @@
         <a-button @click="register" >{{$t("login.registerBtn")}}</a-button>
       </div>
     </form>
-    <form v-else class="register">
-      <div>
-        <h2>{{$t("register.title")}}</h2>
-        <div class="register-in">
-           <a-textarea v-model="newPassword" id="key" style="padding-right:23px;"  :autosize="{ minRows: 2, maxRows: 6 }" />
-           <a-icon title="复制"  type="copy" class="copy"  data-clipboard-target="#key" @click="copy" ></a-icon>
-        </div>
-        <div class="register-in">
-           <a-textarea v-model="confirmPassword" :placeholder="$t('register.placeholder')" :autosize="{ minRows: 2, maxRows: 6 }" />
-        </div>
-        <div class="items">
-            <div class="check_div">
-            <a-checkbox v-model="checkitem01">{{$tc("register.checkitem",0)}}</a-checkbox>
-          </div>
-            <div class="check_div">
-            <a-checkbox v-model="checkitem02">{{$tc("register.checkitem",1)}}</a-checkbox>
-          </div>
-          <div class="check_div ">
-            <a-checkbox v-model="checkitem03">{{$tc("register.checkitem",2)}}</a-checkbox>
-          </div>
-        </div>
-      <div class="div_btn">
-        <a-button @click="returnLogin" type="primary">{{$t("register.returnBtn")}}</a-button>
-        <a-button @click="createWallet">{{$t("register.create")}}</a-button>
-      </div>
-      </div>
-    </form>
     </div>
   </div>
 </template>
@@ -59,19 +32,12 @@
 import bip39 from 'bip39'
 import {mapActions} from 'vuex'
 import {setup} from '@/lang'
-import Clipboard from 'clipboard'
 
 export default {
   data () {
     return {
-      loginStatus: true,
       showPassword: false,
       password: '',
-      newPassword: '',
-      confirmPassword: '',
-      checkitem01: false, // 条款
-      checkitem02: false,
-      checkitem03: false,
       status: false, // 是否保存密码
       lang: '' // 语言
     }
@@ -88,24 +54,6 @@ export default {
     ...mapActions([
       'login'
     ]),
-    copy () {
-      const clipboard = new Clipboard('.copy')
-      clipboard.on('success', e => {
-        this.$notification.info({
-          message: i18n.t('tip.title'),
-          description: i18n.t('tip.copy_success')
-        })
-        e.clearSelection()
-        clipboard.destroy()
-      })
-      clipboard.on('error', e => {
-        this.$notification.info({
-          message: i18n.t('tip.title'),
-          description: i18n.t('tip.copy_error')
-        })
-        clipboard.destroy()
-      })
-    },
     async handleSubmit () {
       try {
         if (!bip39.validateMnemonic(this.password)) {
@@ -131,23 +79,9 @@ export default {
       }
     },
     register () {
-      this.loginStatus = false
-      this.newPassword = bip39.generateMnemonic()
-      this.confirmPassword = ''
-      this.checkitem01 = this.checkitem02 = this.checkitem03 = false
+      this.$router.push({'path': '/register'})
     },
-    returnLogin () {
-      this.loginStatus = true
-    },
-    createWallet () {
-      if (!this.checkitem01 || !this.checkitem02 || !this.checkitem03) {
-        this.$message.error(i18n.t('register.tip_err_limit'))
-      } else if (this.confirmPassword !== this.newPassword) {
-        this.$message.error(i18n.t('register.tip_err_same'))
-      } else {
-        this.loginStatus = true
-      }
-    },
+
     changeLocale (lang) { // 切换语言
       setup(lang)
       this.lang = lang
@@ -234,30 +168,5 @@ export default {
 .div_btn > button {
   width: 175px;
   height: 38px;
-}
-.register h2 {
-  margin-bottom: 10px;
-  margin-top: 10px;
-  font-size: 20px;
-  text-align: center;
-}
-.register .register-in {
-  text-align: center;
-  margin-bottom: 15px;
-  position: relative;
-}
-.register-in .copy{
- position: absolute;
- font-size: 20px;
- top: 14px;
- cursor: pointer;
- right: 10px;
-}
-.register .items {
-  margin-bottom: 10px;
-}
-.register .items .check_div {
-  margin-bottom: 2px;
-  color: rgba(56, 56, 56, 1);
 }
 </style>

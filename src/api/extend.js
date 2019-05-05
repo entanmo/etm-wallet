@@ -1,4 +1,4 @@
-import http from '../utils/axios2'
+import http from '../utils/axios'
 
 export const blockDay = (params) => {
   return http({
