@@ -30,8 +30,9 @@
   </div>
 </template>
 <script>
-import {getRecord, getVoteLists, submitVoter} from '@/api/account'
+import {getRecord, getVoteLists} from '@/api/account'
 import {votesAdd} from '@/api/extend'
+import {transactionSigned} from '@/api/trs'
 import {mapState} from 'vuex'
 import PopPassword from '@/components/pop-password/pop-password'
 import PopVoted from '@/components/pop-voted/pop-voted'
@@ -165,7 +166,7 @@ export default {
     },
     // 二次密码确认
     secondSubmit (secondSecret) {
-      this._submitVoter({secret: this.secret, delegates: this.voted, secondSecret: secondSecret})
+      this._submitVoter({type: 3, fee: 10000000, secret: this.secret, votes: this.voted, secondSecret: secondSecret})
     },
     // 选中事件
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -224,12 +225,12 @@ export default {
       })
     },
     // 提交投票接口
-    async _submitVoter (params = {secret: this.secret, delegates: this.voted}) {
+    async _submitVoter (params = {type: 3, fee: 10000000, secret: this.secret, votes: this.voted}) {
       try {
-        const result = await submitVoter(params)
+        const result = await transactionSigned(params)
         if (result && result.data.success) {
-          const param = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
-          votesAdd(param)
+          const paramAdd = {'address': this.selectedRows[0].address, 'voter': this.selectedRows[0].username}
+          votesAdd(paramAdd)
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.vote_success')
@@ -245,10 +246,6 @@ export default {
         } else {
           this.modal1Visible = false
           this.modal2Visible = false
-          this.$notification.info({
-            message: i18n.t('tip.title'),
-            description: result.data.error
-          })
         }
       } catch (error) {
         console.log(error)

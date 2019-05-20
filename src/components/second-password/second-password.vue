@@ -1,6 +1,6 @@
 <template>
   <div class="second-password">
-    <a-form :form="form" >
+    <a-form :form="form">
       <a-form-item
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
@@ -41,7 +41,8 @@
   </div>
 </template>
 <script>
-import {setSecondSecret} from '@/api/account'
+import {transactionSigned} from '@/api/trs'
+
 import {unit} from '@/utils/utils'
 
 export default {
@@ -63,7 +64,6 @@ export default {
         sm: { span: 12 },
         md: {span: 8},
         lg: {span: 8}
-
       }
     }
   },
@@ -100,7 +100,7 @@ export default {
       )
     },
     async setSecondSecret (password) {
-      const result = await setSecondSecret(this.secret, password)
+      const result = await transactionSigned({type: 1, fee: 500000000, secret: this.secret, secondSecret: password})
       if (result && result.data.success) {
         this.$store.commit('SET_SECONDSECRET', true)
         this.$notification.info({
@@ -113,7 +113,6 @@ export default {
         }, 4000)
       }
     }
-
   }
 }
 </script>

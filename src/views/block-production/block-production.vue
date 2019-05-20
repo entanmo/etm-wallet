@@ -102,7 +102,8 @@
 import noData from '@/components/nodata/nodata'
 import popPassword from '@/components/pop-password/pop-password'
 import { getDelegate, blocks } from '@/api/block'
-import {setDelegate, cancelDelegate} from '@/api/account'
+// import {setDelegate, cancelDelegate} from '@/api/account'
+import {transactionSigned} from '@/api/trs'
 import { convertTime } from '@/utils/gen'
 import {mapState} from 'vuex'
 import {unit} from '@/utils/utils'
@@ -255,11 +256,11 @@ export default {
     },
     async cancelDelegate () { // 注销正式矿工
       try {
-        const params = {secret: this.secret}
+        const params = {secret: this.secret, type: 120, fee: 10000000}
         if (this.secondSignature) {
           params.secondSecret = this.secondSecret
         }
-        const result = await cancelDelegate(params)
+        const result = await transactionSigned(params)
         if (result && result.data.success) {
           this.modal2Visible = false
           this.$notification.info({
@@ -278,12 +279,14 @@ export default {
       try {
         const params = {
           secret: this.secret,
-          username: this.delegateName
+          username: this.delegateName,
+          type: 2,
+          fee: 10000000
         }
         if (this.secondSignature) {
           params.secondSecret = this.secondSecret
         }
-        const res = await setDelegate(params)
+        const res = await transactionSigned(params)
         if (res.data.success) {
           this.modal1Visible = false
           this.modal2Visible = false

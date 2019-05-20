@@ -87,4 +87,11 @@ export default {
 .foot{
   text-align: center;
 }
+@media (max-width: 600px) {
+  .input-list {
+    .input-line{
+      font-size: 12px;
+    }
+  }
+}
 </style>

@@ -99,10 +99,10 @@ const columns = [{
   dataIndex: 'type',
   filters: [{
     text: i18n.t('first-view.filter.transfer_btn'),
-    value: '3'
+    value: '0'
   }, {
     text: i18n.t('first-view.filter.vote_btn'),
-    value: '0'
+    value: '3'
   }],
   onFilter: (value, record) => record.type.toString().indexOf(value) === 0
 }, {
@@ -295,6 +295,18 @@ export default {
       color: #343434;
       label{
         margin-right: 10px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .transfer-details{
+      .transfer-item{
+        flex-wrap: wrap;
+        padding-left: 0;
+        span{
+          word-break: break-all;
+        }
       }
     }
   }

@@ -68,7 +68,8 @@
 </template>
 <script>
 import {mapState} from 'vuex'
-import {transactions} from '@/api/block'
+// import {transactions} from '@/api/block'
+import {transactionSigned} from '@/api/trs'
 import popPassword from '@/components/pop-password/pop-password'
 export default {
   beforeCreate () {
@@ -130,11 +131,11 @@ export default {
       )
     },
     handleSecondOk (secondSecret) {
-      this._transactions({secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret, message: this.message})
+      this._transactions({type: 0, fee: 10000000, secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret, message: this.message})
     },
-    async _transactions (params = {secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, message: this.message}) {
+    async _transactions (params = {type: 0, fee: 10000000, secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, message: this.message}) {
       try {
-        const result = await transactions(params)
+        const result = await transactionSigned(params)
         if (result && result.data.success) {
           this.modal2Visible = false
           this.$notification.info({

@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <!-- <a-spin  :spinning="loading"> -->
     <a-row>
       <a-col :sm="24" :md="12" :xl="6" class="part part-row-left">
@@ -120,9 +120,9 @@ export default {
     async effectUser () {
       try {
         const result = await this.$store.dispatch('_effectAccount')
-        const isVoteResult = await this.isVote()
-        if (result && result.data.success) {
-          if (result.data.effectivity && isVoteResult) {
+        if (result && result.data.success && result.data.effectivity) {
+          const isVoteResult = await this.isVote()
+          if (isVoteResult) {
             this.$refs.countArea.getDaysBlock(this.minerAddress)
             this.$refs.countBar.userVoteDayChart(this.minerAddress)
             this.blockDay(this.minerAddress)

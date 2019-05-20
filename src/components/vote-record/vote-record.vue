@@ -2,7 +2,7 @@
   <div class="record">
     <a-row type="flex" justify="space-between" align="middle">
         <a-col class="count" >{{$tc("vote_record.total",1)}}   {{totalVoters}}   {{$tc("vote_record.total",0)}}</a-col>
-        <a-col >
+        <a-col>
           <a-button class="refresh" type="primary" @click="refresh">{{$t("vote_record.refresh")}}</a-button>
           <a-button type="primary" @click="deleteRecord" >{{$t("vote_record.delete")}}</a-button>
           </a-col>
@@ -15,7 +15,7 @@
           :dataSource="data"
           :pagination="pagination"
           :loading="loading"
-           :scroll="{ x: 1300 }"
+          :scroll="{ x: 1300 }"
           @change="handleTableChange"
           >
           <template slot="productivity" slot-scope="text,record">
@@ -30,7 +30,8 @@
   </div>
 </template>
 <script>
-import {getRecord, submitVoter} from '@/api/account'
+import {getRecord} from '@/api/account'
+import {transactionSigned} from '@/api/trs'
 import {mapState} from 'vuex'
 import PopPassword from '@/components/pop-password/pop-password'
 import PopVoted from '@/components/pop-voted/pop-voted'
@@ -48,7 +49,6 @@ const columns = [{
 }, {
   title: i18n.t('vote_record.columns.th04'),
   dataIndex: 'vote'
-
 }, {
   title: i18n.t('vote_record.columns.th05'),
   dataIndex: 'producedblocks'
@@ -59,7 +59,6 @@ const columns = [{
   width: 110,
   fixed: 'right'
 }]
-
 export default {
   data () {
     return {
@@ -133,7 +132,7 @@ export default {
     },
     // 二级密码提交
     secondSubmit (secondSecret) {
-      this._submitVoter({secret: this.secret, delegates: this.cancelVote, secondSecret: secondSecret})
+      this._submitVoter({type: 3, fee: 10000000, secret: this.secret, votes: this.cancelVote, secondSecret: secondSecret})
     },
     // 选中事件
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -141,8 +140,8 @@ export default {
       this.selectedRows = selectedRows
     },
     // 提交接口
-    async _submitVoter (params = {secret: this.secret, delegates: this.cancelVote}) {
-      const result = await submitVoter(params)
+    async _submitVoter (params = {type: 3, fee: 10000000, secret: this.secret, votes: this.cancelVote}) {
+      const result = await transactionSigned(params)
       if (result && result.data.success) {
         this.$notification.info({
           message: i18n.t('tip.title'),
@@ -180,7 +179,6 @@ export default {
           this.data = result.data.delegates.slice(
             this.pagination.defaultPageSize * p,
             this.pagination.defaultPageSize * p + 10
-
           )
           const pagination = { ...this.pagination }
           pagination.total = result.data.delegates.length

@@ -8,7 +8,7 @@
           :data-source="data"
           :pagination="pagination"
           :loading="loading"
-          :scroll="{ x: 1300 }"
+          :scroll="{ x: 800 }"
         >
           <template
             slot="expired"
@@ -87,7 +87,6 @@ export default {
     async delayRecord (params = {address: this.address, mode: 0}) {
       this.loading = true
       const result = await delayOrders(params)
-      console.log(result)
       if (result && result.data.success) {
         if (result.data.result.length === 0) {
           this.nodata = true

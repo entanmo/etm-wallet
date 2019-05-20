@@ -39,7 +39,7 @@
         </a-col>
         <a-col :sm="24" :md="24" :xl="12" class="part-right">
           <a-tabs default-active-key="1" class="part-content" size="large" :tab-bar-style="{marginBottom: '15px', paddingLeft: '16px'}">
-          <div class="extra-wrap" slot="tabBarExtraContent">
+          <div class="extra-wrap aaa" slot="tabBarExtraContent">
             <tab :tabIndex.sync="tabVotesIndex"  :fn="voteTimeHandle"></tab>
             </div>
           <a-tab-pane loading="true" :tab="$t('first-view.chart.votesRank')" key="1">
@@ -327,7 +327,9 @@ export default {
   }
   .part-content{
     background-color: #fff;
-    overflow: auto;
+  }
+  .ant-tabs-top-content{
+    overflow:auto;
   }
 
 }

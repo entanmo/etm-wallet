@@ -1,5 +1,5 @@
 <template>
-  <div class="rank clearfix">
+  <div class="rank clearfix" :class="[nodata?'norank':'']" >
     <a-spin  :spinning="loading">
     <div style="height:211px">
       <h4 class="title">{{title}}</h4>
@@ -85,6 +85,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .norank{
+    min-width:200px!important;
+  }
   .rank{
     padding: 0 8px 16px 16px;
     min-width: 600px;

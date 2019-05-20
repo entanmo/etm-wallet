@@ -85,7 +85,8 @@ import {mapState} from 'vuex'
 import { convertTime } from '@/utils/gen'
 import { unit } from '@/utils/utils'
 import noData from '@/components/nodata/nodata'
-import {allLock, lockVote, lockRemove, effectAccount} from '@/api/account'
+import {allLock, effectAccount} from '@/api/account'
+import {transactionSigned} from '@/api/trs'
 import popPassword from '@/components/pop-password/pop-password'
 const columns = [{
   title: i18n.t('lock_up.colums.th01'),
@@ -220,7 +221,7 @@ export default {
       if (this.secondSignature) {
         this.modal2Visible = true
       } else {
-        this.removeLock({secret: this.secret, args: this.singleLockId})
+        this.removeLock({type: 102, fee: 10000000, secret: this.secret, args: this.singleLockId})
       }
     },
     bulkUnlock () {
@@ -237,13 +238,13 @@ export default {
         if (this.secondSignature) {
           this.modal2Visible = true
         } else {
-          this.removeLock({secret: this.secret, args: this.argsLockId})
+          this.removeLock({type: 102, fee: 10000000, secret: this.secret, args: this.argsLockId})
         }
       }
     },
-    async _lockVote (params = {secret: this.secret, args: this.lockValue}) {
+    async _lockVote (params = {type: 101, fee: 10000000, secret: this.secret, args: this.lockValue}) {
       try {
-        const result = await lockVote(params)
+        const result = await transactionSigned(params)
         if (result && result.data.success) {
           this.$notification.info({
             message: i18n.t('tip.title'),
@@ -265,9 +266,9 @@ export default {
         console.log(error)
       }
     },
-    async removeLock (params = {secret: this.secret, args: []}) {
+    async removeLock (params = {type: 102, fee: 10000000, secret: this.secret, args: []}) {
       try {
-        const result = await lockRemove(params)
+        const result = await transactionSigned(params)
         if (result && result.data.success) {
           this.$notification.info({
             message: i18n.t('tip.title'),
@@ -346,11 +347,11 @@ export default {
     },
     secondSubmit (secondSecret) {
       if (this.amount) {
-        this._lockVote({secret: this.secret, args: this.lockValue, secondSecret: secondSecret})
+        this._lockVote({type: 101, fee: 10000000, secret: this.secret, args: this.lockValue, secondSecret: secondSecret})
       } else if (this.singleLockId.length > 0) {
-        this.removeLock({secret: this.secret, args: this.singleLockId, secondSecret: secondSecret})
+        this.removeLock({type: 102, fee: 10000000, secret: this.secret, args: this.singleLockId, secondSecret: secondSecret})
       } else if (this.argsLockId.length > 0) {
-        this.removeLock({secret: this.secret, args: this.argsLockId, secondSecret: secondSecret})
+        this.removeLock({type: 102, fee: 10000000, secret: this.secret, args: this.argsLockId, secondSecret: secondSecret})
       }
     }
   },
