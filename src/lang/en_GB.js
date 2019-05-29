@@ -18,7 +18,8 @@ export default {
     'unlock_success': 'Unlocked Successfully',
     'unlock_error': 'Please select the lock item',
     'copy_success': 'Successful copy',
-    'copy_error': 'The browser does not support automatic copying'
+    'copy_error': 'The browser does not support automatic copying',
+    'time_out_login': 'Login expired, please log in again'
   },
   'login': {
     'placeholder': 'Type the master secret',
@@ -62,6 +63,7 @@ export default {
     'block_scan': 'Block Listing',
     'vote': 'Vote',
     'transfer': 'Transfer',
+    'assets': 'Issuing assets',
     'tip_success': 'Exit Success',
     'loginOutTitle': 'Exit'
 
@@ -220,6 +222,8 @@ export default {
     'tip': {
       'title': 'Do you need to unlock?',
       'content': 'Need to charge 0.1ETM fee',
+      'lock_num': 'The locked amount must be a number greater than 1.',
+      'lock_max': 'Locked amount is out of range',
       'btn_ok': 'ok',
       'btn_cancel': 'cancel'
     }
@@ -363,7 +367,11 @@ export default {
       'label': 'Notice',
       'msg': 'Please make sure that you are sending ETM to the correct address. This operation cannot be undone.'
     },
-    'submitBtn': 'Submit'
+    'submitBtn': 'Submit',
+    'tip': {
+      'tip_amount': 'The transfer amount must be a number greater than zero',
+      'tip_max': 'Transfer amount is out of range'
+    }
   },
   'pop_voted': {
     'cancel_vote': 'Cancel Vote',

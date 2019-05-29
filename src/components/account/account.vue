@@ -43,8 +43,8 @@ export default {
       return this.$store.state.user.accountInfo || {}
     },
     publicKey () {
-      if (sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')) {
-        const data = JSON.parse(sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')).account.publicKey
+      if (this.$storage.getItem('etmUse', false) || this.$storage.getItem('etmUse', true)) {
+        const data = (this.$storage.getItem('etmUse') || this.$storage.getItem('etmUse', true)).account.publicKey
         return this.$store.state.user.accountInfo.publicKey || data
       } else {
         return ''

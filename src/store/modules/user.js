@@ -1,6 +1,8 @@
 import {login, getAccount, getBalance, effectAccount} from '@/api/account'
 import {genPublicKey} from '@/utils/gen'
-
+import {Decrypt} from '@/utils/aes'
+import Storage from '@/utils/storage'
+let storage = new Storage()
 const user = {
   state: {
     accountInfo: {}, // 用户信息
@@ -44,28 +46,32 @@ const user = {
       commit('LOGIN_OUT', {})
       commit('SET_SECRET', '')
       commit('SET_SECONDSECRET', '')
-      sessionStorage.removeItem('etmUse')
-      localStorage.removeItem('etmUse')
+      storage.removeItem('etmUse')
+      storage.removeItem('etmUse', true)
       sessionStorage.removeItem('localeLanguage')
     },
     async GetInfo ({commit}) {
-      const informations = sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')
-      const address = JSON.parse(informations).account.address
-      const secret = JSON.parse(informations).account.secret
-      const publicKey = genPublicKey(secret)
-      const result = await getAccount(address)
-      if (result && result.data.success) {
-        let info = {...result.data.account, ...result.data.latestBlock, ...result.data.version}
-        info.publicKey = publicKey
-        commit('SET_INFO', info)
-        commit('SET_SECRET', secret)
+      try {
+        const informations = storage.getItem('etmUse') || storage.getItem('etmUse', true)
+        const address = informations.account.address
+        const secret = Decrypt(informations.account.secret)
+        const publicKey = genPublicKey(secret)
+        const result = await getAccount(address)
+        if (result && result.data.success) {
+          let info = {...result.data.account, ...result.data.latestBlock, ...result.data.version}
+          info.publicKey = publicKey
+          commit('SET_INFO', info)
+          commit('SET_SECRET', secret)
+        }
+        return result
+      } catch (error) {
+        console.log(error)
       }
-      return result
     },
     async _getInfo ({commit}) {
       try {
-        const informations = sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')
-        const address = JSON.parse(informations).account.address
+        const informations = storage.getItem('etmUse') || storage.getItem('etmUse')
+        const address = informations.account.address
         const result = await getAccount(address)
         if (result && result.data.success) {
           const balance = result.data.account.balance

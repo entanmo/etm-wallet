@@ -4,9 +4,9 @@
       <div class="head_img">
         <img class="logo" src="../../assets/images/walletlogo.png" />
       </div>
-    <form  class="login_form">
+    <form class="login_form">
       <div style="position:relative;">
-          <a-input :type="showPassword ? 'text' : 'password'" class="pwd_ipt" v-model="password" :placeholder="$t('login.placeholder')"/>
+          <a-input :type="showPassword ? 'text' : 'password'" autocomplete="off" class="pwd_ipt" v-model="password" :placeholder="$t('login.placeholder')"/>
           <i class="icon" :class="toggelIcon" @click="showPassword=!showPassword"></i>
       </div>
       <div class="check_div">
@@ -26,13 +26,12 @@
     </div>
   </div>
 </template>
-
 <script>
 
 import bip39 from 'bip39'
 import {mapActions} from 'vuex'
 import {setup} from '@/lang'
-
+import {Encrypt} from '@/utils/aes'
 export default {
   data () {
     return {
@@ -61,12 +60,12 @@ export default {
         } else {
           let result = await this.login(this.password)
           if (result && result.data.success) {
-            result.data.account.secret = this.password
-            const data = JSON.stringify(result.data)
+            result.data.account.secret = Encrypt(this.password)
+            const data = result.data
             if (this.status) {
-              localStorage.setItem('etmUse', data)
+              this.$storage.setItem({name: 'etmUse', localStorage: true, value: data, expires: 1000 * 3600 * 24 * 15})
             } else {
-              sessionStorage.setItem('etmUse', data)
+              this.$storage.setItem({name: 'etmUse', localStorage: false, value: data, expires: 1000 * 60 * 30})
             }
             this.$message.success(i18n.t('login.tip_success'))
             this.$router.push('/')

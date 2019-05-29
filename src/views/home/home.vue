@@ -30,6 +30,7 @@ import {mapActions} from 'vuex'
 import {setup} from '@/lang'
 import drawer from '@/components/drawer/drawer'
 import siderMenu from '@/components/sider-menu/sider-menu'
+import { setTimeout } from 'timers'
 export default {
   data () {
     return {

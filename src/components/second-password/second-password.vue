@@ -6,7 +6,7 @@
       :wrapperCol="wrapperCol"
       :label="$t('second_password.password.label')"
       >
-      <a-input type="password"
+      <a-input type="password" autocomplete="off"
         v-decorator="[
           'password',
           {rules: [{ required: true, message: $t('second_password.password.msg'),whitespace: true }]}
@@ -18,7 +18,7 @@
       :wrapperCol="wrapperCol"
       :label="$t('second_password.confirm_password.label')"
       >
-      <a-input type="password"
+      <a-input type="password" autocomplete="off"
       v-decorator="[
         'confirm_password',
         {rules: [{ required: true, message :$t('second_password.confirm_password.msg'),whitespace: true }]}

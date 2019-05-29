@@ -18,7 +18,8 @@ export default {
     'unlock_success': '解锁成功',
     'unlock_error': '请选择锁仓项',
     'copy_success': '复制成功',
-    'copy_error': '该浏览器不支持自动复制'
+    'copy_error': '该浏览器不支持自动复制',
+    'time_out_login': '登录过期,请重新登录'
   },
   'login': {
     'placeholder': '输入主密码',
@@ -62,6 +63,7 @@ export default {
     'block_scan': '区块浏览',
     'vote': '投票',
     'transfer': '转账',
+    'assets': '发行资产',
     'tip_success': '退出成功',
     'loginOutTitle': '退出'
 
@@ -222,6 +224,8 @@ export default {
     'tip': {
       'title': '您需要解锁吗?',
       'content': '需要收取0.1ETM手续费',
+      'lock_num': '锁仓金额必须为大于1的数字',
+      'lock_max': '锁仓金额超出范围',
       'btn_ok': '确认',
       'btn_cancel': '取消'
     }
@@ -365,7 +369,11 @@ export default {
       'label': '注意',
       'msg': '请确保您正在发送ETM给正确的地址，本操作无法撤消'
     },
-    'submitBtn': '发送'
+    'submitBtn': '发送',
+    'tip': {
+      'tip_amount': '转账金额必须为大于零的数字',
+      'tip_max': '转账金额超出范围'
+    }
   },
   'pop_voted': {
     'cancel_vote': '取消投票',

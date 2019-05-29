@@ -11,7 +11,7 @@
       :labelCol="{ span: 6 }"
       :wrapperCol="{ span: 16 }"
       >
-        <a-input type="password"
+        <a-input type="password" autocomplete="off"
         v-decorator="[
           'secondSecret',
           {rules: [{ required: true, message: $t('pop_password.secondSecret.msg') }]}

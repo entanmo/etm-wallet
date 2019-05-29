@@ -145,7 +145,7 @@ export default {
     }),
     lockValue () {
       let arrValue = []
-      arrValue.push(parseInt(this.amount * Math.pow(10, 8)).toString())
+      arrValue.push(this.changeAmount(this.amount).toString())
       return arrValue
     }
   },
@@ -153,6 +153,22 @@ export default {
     this._effectAccount()
   },
   methods: {
+    changeAmount (str) {
+      if (str.includes('.')) {
+        const num = 8
+        const pointPos = str.lastIndexOf('.')
+        let last = str.length - str.lastIndexOf('.') - 1
+        if (last > 8) {
+          str = str.substr(0, pointPos + 9)
+          last = str.length - str.lastIndexOf('.') - 1
+        }
+        const zero = ''.padEnd(num - last, '0')
+        return parseInt(str.replace('.', '') + zero)
+      } else {
+        const zero = ''.padEnd(8, '0')
+        return parseInt(str + zero)
+      }
+    },
     empty () {
       this.selectedRowKeys = []
       this.selectedRows = []
@@ -203,12 +219,21 @@ export default {
       this.form.validateFields(
         (err, values) => {
           if (!err) {
-            if (this.secondSignature) {
-              this.amount = values.amount
+            this.amount = values.amount
+            if (!/^\d+\.?\d*$/.test(this.amount) || this.amount < 1) {
+              this.$notification.info({
+                message: i18n.t('tip.title'),
+                description: i18n.t('lock_up.tip.lock_num')
+              })
+            } else if (this.amount * Math.pow(10, 8) > Number.MAX_SAFE_INTEGER) {
+              this.$notification.info({
+                message: i18n.t('tip.title'),
+                description: i18n.t('lock_up.tip.lock_max')
+              })
+            } else if (this.secondSignature) {
               this.visible = false
               this.modal2Visible = true
             } else {
-              this.amount = values.amount
               this._lockVote()
             }
           }

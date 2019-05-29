@@ -191,7 +191,7 @@ export default {
       balance: state => state.user.accountInfo.balance
     }),
     publicKey () {
-      const data = JSON.parse(sessionStorage.getItem('etmUse') || localStorage.getItem('etmUse')).account.publicKey
+      const data = (this.$storage.getItem('etmUse', false) || this.$storage.getItem('etmUse', true)).account.publicKey
       return this.$store.state.user.accountInfo.publicKey || data
     },
     coins () {

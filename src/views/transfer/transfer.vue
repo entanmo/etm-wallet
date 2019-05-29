@@ -68,7 +68,6 @@
 </template>
 <script>
 import {mapState} from 'vuex'
-// import {transactions} from '@/api/block'
 import {transactionSigned} from '@/api/trs'
 import popPassword from '@/components/pop-password/pop-password'
 export default {
@@ -105,10 +104,26 @@ export default {
       balance: state => state.user.accountInfo.balance || 0
     }),
     computedAmount () {
-      return parseInt(this.amount * Math.pow(10, 8)) // 必须为整数
+      return this.changeAmount(this.amount)
     }
   },
   methods: {
+    changeAmount (str) {
+      if (str.includes('.')) {
+        const num = 8
+        const pointPos = str.lastIndexOf('.')
+        let last = str.length - str.lastIndexOf('.') - 1
+        if (last > 8) {
+          str = str.substr(0, pointPos + 9)
+          last = str.length - str.lastIndexOf('.') - 1
+        }
+        const zero = ''.padEnd(num - last, '0')
+        return parseInt(str.replace('.', '') + zero)
+      } else {
+        const zero = ''.padEnd(8, '0')
+        return parseInt(str + zero)
+      }
+    },
     check () {
       this.form.validateFields(
         (err, values) => {
@@ -120,6 +135,16 @@ export default {
               this.$notification.info({
                 message: i18n.t('tip.title'),
                 description: i18n.t('tip.balance_enough')
+              })
+            } else if (!/^[0-9]+\.?[0-9]*$/.test(this.amount)) {
+              this.$notification.info({
+                message: i18n.t('tip.title'),
+                description: i18n.t('transfer.tip.tip_amount')
+              })
+            } else if (this.amount * Math.pow(10, 8) > Number.MAX_SAFE_INTEGER) { // 超出范围
+              this.$notification.info({
+                message: i18n.t('tip.title'),
+                description: i18n.t('transfer.tip.tip_max')
               })
             } else if (this.secondSignature) {
               this.modal2Visible = true
