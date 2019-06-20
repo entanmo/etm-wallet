@@ -16,7 +16,7 @@
         </div>
       </div>
       <template slot="footer" >
-        <p style="text-align:center">{{$t('pop_voted.note')}}</p>
+        <p style="text-align:center;marginBottom:10px;">{{$t('pop_voted.note')}}</p>
         <div class="foot">
           <a-button  type="primary" @click="handleOk">
             {{$t('pop_voted.submitBtn')}}

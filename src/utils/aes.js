@@ -1,6 +1,7 @@
+import storeKey from '../../.key'
 const CryptoJS = require('crypto-js')
-const key = CryptoJS.enc.Utf8.parse('wedfggffdsxvghyt')
-const iv = CryptoJS.enc.Utf8.parse('qqrhkoplmnbgytrf')
+const key = CryptoJS.enc.Utf8.parse(storeKey.key)
+const iv = CryptoJS.enc.Utf8.parse(storeKey.iv)
 
 export function Encrypt (word) {
   let srcs = CryptoJS.enc.Utf8.parse(word)
