@@ -1,4 +1,7 @@
-import storeKey from '../../key.js'
+const storeKey = {
+  key: 'etm123456', // 配置自己的key和iv
+  iv: 'etm123456'
+}
 const CryptoJS = require('crypto-js')
 const key = CryptoJS.enc.Utf8.parse(storeKey.key)
 const iv = CryptoJS.enc.Utf8.parse(storeKey.iv)
