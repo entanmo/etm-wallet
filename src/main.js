@@ -1,46 +1,38 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import 'babel-polyfill'
 import Vue from 'vue'
+import i18n from '@/lang'
 import App from './App'
-import Login from './components/login'
+import VueSocketIO from 'vue-socket.io'
+import Storage from '@/utils/storage'
 import router from './router'
-import store from './store'
+import './assets/css/reset.css'
+
+import './components.js'
 
 // qrcode
 import VueQrcode from '@xkeshi/vue-qrcode'
-
-import './assets/css/reset.css'
-import './assets/css/public.css'
-import './assets/iconfont/iconfont.css'
-import '../static/browserify-entanmo-min'
-
-import echarts from 'echarts'
-import axios from 'axios'
-Vue.component('qrcode', VueQrcode)
-Vue.prototype.$echarts = echarts
-Vue.prototype.$http = axios
+import store from '@/store'
+import './permission'
+Vue.prototype.$storage = new Storage()
+Vue.use(new VueSocketIO({
+  debug: false,
+  connection: process.env.BASE_API,
+  vuex: {
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
+  }
+}))
+Vue.component(VueQrcode.name, VueQrcode)
 
 Vue.config.productionTip = false
-window.Bus = new Vue()
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  i18n,
   router,
   store,
-  components: { App, Login },
-  // template: '<App/>',
-  // 根据密码状态来渲染登录页或者是首页
-  render (h) {
-    return h(this.etmsecret ? 'app' : 'login')
-  },
-  data () {
-    return {
-      etmsecret: ''
-    }
-  },
-  created () {
-    this.etmsecret = localStorage.getItem('etmsecret') || sessionStorage.getItem('etmsecret')
-  }
+  components: { App },
+  template: '<App/>'
 })
