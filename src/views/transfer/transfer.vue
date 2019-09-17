@@ -21,13 +21,36 @@
       <a-form-item
       :labelCol="labelCol"
       :wrapperCol="wrapperCol"
+      :label="$t('transfer.type.label')">
+      <a-select
+        :filterOption="filterOption"
+         showSearch
+        v-decorator="[
+          'type',
+          { initialValue: 'ETM' },
+          {rules: [{ required: false, message: $t('transfer.type.msg') }]}
+        ]"
+        :placeholder="$t('transfer.type.msg')"
+      >
+        <a-select-option value="ETM"  :key="ETM">
+          ETM
+        </a-select-option>
+        <a-select-option :value="item.name"  v-for="item in data" :key="item.issureId">
+          {{item.name}}
+        </a-select-option>
+      </a-select>
+      </a-form-item>
+      <a-form-item
+      :labelCol="labelCol"
+      :wrapperCol="wrapperCol"
       :label="$t('transfer.amount.label')">
       <a-input type="number"
          v-decorator="[
           'amount',
          {rules: [{ required: true, message: $t('transfer.amount.msg') }]}
         ]"
-       :placeholder="$t('transfer.amount.msg')" addonAfter="ETM" />
+       :placeholder="$t('transfer.amount.msg')"  >
+       </a-input>
       </a-form-item>
       <a-form-item
       :labelCol="labelCol"
@@ -70,6 +93,8 @@
 import {mapState} from 'vuex'
 import {transactionSigned} from '@/api/trs'
 import popPassword from '@/components/pop-password/pop-password'
+import {assets} from '@/api/funds'
+import Big from 'big.js'
 export default {
   beforeCreate () {
     this.form = this.$form.createForm(this)
@@ -93,7 +118,9 @@ export default {
       amount: '',
       fee: '0.1',
       message: '',
-      modal2Visible: false
+      type: '',
+      modal2Visible: false,
+      data: []
     }
   },
   computed: {
@@ -105,9 +132,22 @@ export default {
     }),
     computedAmount () {
       return this.changeAmount(this.amount)
+    },
+    precision () {
+      return this.data.filter(item => item.name === this.type)[0].precision
     }
   },
+  created () {
+    this.assetsInfo()
+  },
   methods: {
+    filterOption (input, option) {
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    AmountBigger (str, precision) {
+      const num = Math.pow(10, precision)
+      return new Big(str).times(num).toString()
+    },
     changeAmount (str) {
       if (str.includes('.')) {
         const num = 8
@@ -131,6 +171,7 @@ export default {
             this.message = values.message
             this.recipientId = values.recipientId
             this.amount = values.amount
+            this.type = values.type
             if (this.balance < 0.1) {
               this.$notification.info({
                 message: i18n.t('tip.title'),
@@ -148,6 +189,8 @@ export default {
               })
             } else if (this.secondSignature) {
               this.modal2Visible = true
+            } else if (this.type !== 'ETM') {
+              this.issuerNameTransaction()
             } else {
               this._transactions()
             }
@@ -155,8 +198,36 @@ export default {
         }
       )
     },
+    async assetsInfo () {
+      try {
+        const result = await assets()
+        if (result && result.data.assets) {
+          this.data = result.data.assets
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async issuerNameTransaction (params = {type: 14, secret: this.secret, recipientId: this.recipientId, fee: 10000000, message: this.message, currency: this.type, amount: this.AmountBigger(this.amount, this.precision)}) {
+      try {
+        const result = await transactionSigned(params)
+        if (result && result.data.success) {
+          this.modal2Visible = false
+          this.$notification.info({
+            message: i18n.t('tip.title'),
+            description: i18n.t('tip.transfer_success')
+          })
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
     handleSecondOk (secondSecret) {
-      this._transactions({type: 0, fee: 10000000, secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret, message: this.message})
+      if (this.type !== 'ETM') {
+        this.issuerNameTransaction({type: 14, secret: this.secret, recipientId: this.recipientId, fee: 10000000, currency: this.type, amount: this.AmountBigger(this.amount, this.precision), secondSecret: secondSecret, message: this.message})
+      } else {
+        this._transactions({type: 0, fee: 10000000, secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, secondSecret: secondSecret, message: this.message})
+      }
     },
     async _transactions (params = {type: 0, fee: 10000000, secret: this.secret, recipientId: this.recipientId, amount: this.computedAmount, message: this.message}) {
       try {

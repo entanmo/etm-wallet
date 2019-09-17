@@ -153,6 +153,7 @@ export default {
   },
   'person': {
     'tab': 'Account Detail | Second Secret | Lock Setting',
+    'assets': 'Asset information',
     'delay': 'Freeze Bill'
   },
   'account': {
@@ -189,6 +190,12 @@ export default {
     'note': 'Notice',
     'p': 'Please confirm that you have safely saved the second secret. Once lost, your property in the ETM system will not be retrieved. Setting the second secret requires 5 ETM fee.',
     'submitBtn': 'Submit'
+  },
+  'assets_info': {
+    'table_columns': {
+      'th01': 'Asset Name',
+      'th02': 'Balance'
+    }
   },
   'delay_record': {
     'table_columns': {
@@ -357,6 +364,10 @@ export default {
       'label': 'Amount',
       'msg': 'Please enter the transfer amount'
     },
+    'type': {
+      'label': 'type',
+      'msg': 'Please select a transaction type'
+    },
     'fee': 'Fee',
     'remark': {
       'label': 'Remark',
@@ -373,6 +384,50 @@ export default {
       'tip_max': 'Transfer amount is out of range'
     }
   },
+  'issuing_assets': {
+    'my_assets': 'The assets I issued',
+    'register_assets': 'Registered assets',
+    'register_publisher': 'Registered publisher',
+    'become_publisher': 'Become a Publisher',
+    'not_publisher': 'You are not a publisher yet',
+    'refresh': 'Refresh',
+    'name': 'Name',
+    'operating': 'Operate',
+    'agree': 'Agree',
+    'submit': 'submit',
+    'cancel': 'Cancel',
+    'user_agreement': 'User Agreement',
+    'agreement_tip': 'Registered publishers will consume 100 ETM',
+    'publisher_form': {
+      'name': {
+        'label': 'Name',
+        'msg': 'The name can only be a 16-bit combination of numbers and letters'
+      },
+      'desc': {
+        'label': 'Introduction',
+        'msg': 'Please enter the content, the length is within 500 characters'
+      }
+    },
+    'columns': {
+      'th01': 'Asset Name',
+      'th02': 'Maximum Circulation',
+      'th03': 'Precision',
+      'th04': 'Current Stock',
+      'th05': 'Date',
+      'th06': 'Whitelist',
+      'th07': 'Blacklist',
+      'th08': 'Logout',
+      'th09': 'Issued'
+    },
+    'tip': {
+      'tip': 'tip',
+      'successful_release': 'Successful Release',
+      'successful_release_assets': 'Successful Registration Of Assets',
+      'resgister': 'Registration Success',
+      'err_params': 'Parameter Error',
+      'insufficient_balance': 'Insufficient Balance'
+    }
+  },
   'pop_voted': {
     'cancel_vote': 'Cancel Vote',
     'new_vote': 'New Vote',
@@ -387,6 +442,59 @@ export default {
       'placeholder': 'Please enter second secret'
     },
     'submitBtn': 'Submit'
+  },
+  'create_assets': {
+    'title': 'Registered Assets',
+    'submit': 'Submit',
+    'cancel': 'Cancel',
+    'form': {
+      'name': {
+        'label': 'Name',
+        'msg': 'Up to five uppercase English characters'
+      },
+      'desc': {
+        'label': 'Introduct',
+        'msg': 'Please enter the publisher profile'
+      },
+      'limt': {
+        'label': 'Limit',
+        'err': 'Total issuance, no additional issuance',
+        'msg': 'Please enter the release limit'
+      },
+      'precision': {
+        'label': 'Precision',
+        'err': '0~16 decimal places',
+        'msg': 'Please enter the precision'
+      },
+      'strategy': {
+        'label': 'Strategy',
+        'msg': 'Please enter a release strategy'
+      },
+      'features': {
+        'label': 'Additional',
+        'whitelist': 'whitelist',
+        'blacklist': 'blacklist',
+        'logout': 'logout'
+      },
+      'note': '500 ETM is required to issue assets'
+    }
+  },
+  'issuing_tokens': {
+    'title': 'Issuing Assets',
+    'submit': 'Submit',
+    'cancel': 'Cancel',
+    'form': {
+      'token': {
+        'label': 'Name'
+
+      },
+      'circulation': {
+        'label': 'This Circulation',
+        'err': 'This circulation cannot be empty',
+        'msg': 'Please enter this circulation'
+      },
+      'note': 'Fees for issuing assets: 0.1 ETM'
+    }
   },
   'no_data': {
     'p': 'Sorry, the page you visited does not exist.',

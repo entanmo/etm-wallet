@@ -154,6 +154,7 @@ export default {
   },
   'person': {
     'tab': '账户信息 | 二级密码 | 锁仓',
+    'assets': '资产信息',
     'delay': '冻结账单'
 
   },
@@ -191,6 +192,12 @@ export default {
     'note': '注意',
     'p': '请确认您已经安全保存了二级密码，一旦丢失，您在 ETM 系统中的财产将无法找回，设置二级密码需要 5ETM 手续费',
     'submitBtn': '提交'
+  },
+  'assets_info': {
+    'table_columns': {
+      'th01': '资产名称',
+      'th02': '余额'
+    }
   },
   'delay_record': {
     'table_columns': {
@@ -360,6 +367,10 @@ export default {
       'msg': '请输入转账金额'
     },
     'fee': '费用',
+    'type': {
+      'label': '类型',
+      'msg': '请选择交易类型'
+    },
     'remark': {
       'label': '备注',
       'msg': '请输入备注',
@@ -373,6 +384,50 @@ export default {
     'tip': {
       'tip_amount': '转账金额必须为大于零的数字',
       'tip_max': '转账金额超出范围'
+    }
+  },
+  'issuing_assets': {
+    'my_assets': '我发行的资产',
+    'register_assets': '注册资产',
+    'register_publisher': '注册发行商',
+    'become_publisher': '成为发行商',
+    'not_publisher': '您还不是发行商',
+    'refresh': '刷新',
+    'name': '名称',
+    'operating': '操作',
+    'agree': '同意',
+    'submit': '提交',
+    'cancel': '取消',
+    'user_agreement': '用户协议',
+    'agreement_tip': '注册发行商将消耗100 ETM',
+    'publisher_form': {
+      'name': {
+        'label': '名称',
+        'msg': '名称只能为数字和字母的16位组合'
+      },
+      'desc': {
+        'label': '简介',
+        'msg': '请输入内容，长度在500字符长度以内'
+      }
+    },
+    'columns': {
+      'th01': '资产名称',
+      'th02': '最大发行量',
+      'th03': '精度',
+      'th04': '当前存量',
+      'th05': '日期',
+      'th06': '白名单',
+      'th07': '黑名单',
+      'th08': '注销',
+      'th09': '发行'
+    },
+    'tip': {
+      'tip': '提示',
+      'successful_release': '发行成功',
+      'successful_release_assets': '注册资产成功',
+      'resgister': '注册成功',
+      'err_params': '参数错误',
+      'insufficient_balance': '余额不足'
     }
   },
   'pop_voted': {
@@ -389,6 +444,59 @@ export default {
       'placeholder': '请输入二级密码'
     },
     'submitBtn': '提交'
+  },
+  'create_assets': {
+    'title': '注册资产',
+    'submit': '提交',
+    'cancel': '取消',
+    'form': {
+      'name': {
+        'label': '名称',
+        'msg': '最多五个大写英文字符'
+      },
+      'desc': {
+        'label': '简介',
+        'msg': '请输入发行商简介'
+      },
+      'limt': {
+        'label': '发行上限',
+        'err': '发行总量，不可增发',
+        'msg': '请输入发行上限'
+      },
+      'precision': {
+        'label': '精度',
+        'err': '0~16位小数',
+        'msg': '请输入精度'
+      },
+      'strategy': {
+        'label': '策略',
+        'msg': '请输入释放策略'
+      },
+      'features': {
+        'label': '附加功能',
+        'whitelist': '白名单',
+        'blacklist': '黑名单',
+        'logout': '注销'
+      },
+      'note': '发行资产需消耗 500 ETM'
+    }
+  },
+  'issuing_tokens': {
+    'title': '发行资产',
+    'submit': '确定',
+    'cancel': '取消',
+    'form': {
+      'token': {
+        'label': '名称'
+
+      },
+      'circulation': {
+        'label': '本次发行量',
+        'err': '本次发行量不能为空',
+        'msg': '请输入本次发行量'
+      },
+      'note': '发行资产需支付手续费：0.1 ETM'
+    }
   },
   'no_data': {
     'p': '抱歉你访问的页面不存在',

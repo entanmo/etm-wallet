@@ -123,20 +123,20 @@ export default new Router({
       ]
 
     },
-    //  {
-    //   path: '/issuing-assets',
-    //   component: Home,
-    //   redirect: '/issuing-assets',
-    //   children: [
-    //     {
-    //       path: '',
-    //       name: 'MinersList',
-    //       component: () => import('@/views/issuing-assets/issuing-assets'),
-    //       meta: {title: 'assets'}
-    //     }
-    //   ]
+    {
+      path: '/issuing-assets',
+      component: Home,
+      redirect: '/issuing-assets',
+      children: [
+        {
+          path: '',
+          name: 'MinersList',
+          component: () => import('@/views/issuing-assets/issuing-assets'),
+          meta: {title: 'assets'}
+        }
+      ]
 
-    // },
+    },
     {
       path: '*',
       redirect: '/404'

@@ -7,7 +7,10 @@
       <a-tab-pane :tab="$tc('person.tab',1)" key="2" forceRender>
         <second-password></second-password>
       </a-tab-pane>
-      <a-tab-pane v-if="delay" :tab="$t('person.delay')" key="3" >
+      <a-tab-pane :tab="$t('person.assets')" key="3" forceRender>
+        <assets-info></assets-info>
+      </a-tab-pane>
+      <a-tab-pane v-if="delay" :tab="$t('person.delay')" key="4" >
         <delay-record  ></delay-record>
       </a-tab-pane>
     </a-tabs>
@@ -18,7 +21,7 @@ import { delayOrders } from '@/api/account'
 import Account from '@/components/account/account'
 import SecondPassword from '@/components/second-password/second-password'
 import DelayRecord from '@/components/delay-record/delay-record'
-
+import AssetsInfo from '@/components/assets-info/assets-info'
 export default {
   data () {
     return {
@@ -49,6 +52,7 @@ export default {
   components: {
     Account,
     SecondPassword,
+    AssetsInfo,
     DelayRecord
   }
 }
