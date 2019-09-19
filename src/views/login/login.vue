@@ -65,7 +65,7 @@ export default {
             if (this.status) {
               this.$storage.setItem({name: 'etmUse', localStorage: true, value: data, expires: 1000 * 3600 * 24 * 15})
             } else {
-              this.$storage.setItem({name: 'etmUse', localStorage: false, value: data, expires: 1000 * 60 * 30})
+              this.$storage.setItem({name: 'etmUse', localStorage: false, value: data, expires: 1000 * 60 * 60 * 2})
             }
             this.$message.success(i18n.t('login.tip_success'))
             this.$router.push('/')

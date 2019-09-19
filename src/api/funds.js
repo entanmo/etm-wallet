@@ -22,3 +22,10 @@ export const getDappBanlance = (address) => {
     method: 'get'
   })
 }
+export const loginDapp = (data) => {
+  return http({
+    url: `http://192.168.2.8:8080/wx/auth/login_by_wallet`,
+    method: 'post',
+    data
+  })
+}

@@ -239,12 +239,19 @@ export default {
   'application': {
     'app_list': 'DApp List | Installed',
     'create_new': 'Create New DApp',
-    'app': {
+    'app01': {
       'title': 'Epony Horse',
       'content': 'Epony Horse is a mechanical horse game with unique genomes based on the block-chain En-Tan-Mo. Players can open the horse containers, breed, sell and rent, obtain dividends, join horse racing in this game.',
       'btn01': 'Website',
       'btn02': 'Recharge',
       'btn03': 'Cash'
+    },
+    'app02': {
+      'title': 'ETM 商城',
+      'content': 'ETM 商城',
+      'btn01': '官网',
+      'btn02': '充值',
+      'btn03': '提现'
     }
   },
   'block_production': {
@@ -401,7 +408,7 @@ export default {
     'publisher_form': {
       'name': {
         'label': 'Name',
-        'msg': 'The name can only be a 16-bit combination of numbers and letters'
+        'msg': 'The name can only be a combination of up to 16 letters'
       },
       'desc': {
         'label': 'Introduction',
@@ -425,7 +432,8 @@ export default {
       'successful_release_assets': 'Successful Registration Of Assets',
       'resgister': 'Registration Success',
       'err_params': 'Parameter Error',
-      'insufficient_balance': 'Insufficient Balance'
+      'insufficient_balance': 'Insufficient Balance',
+      'resgister_publisher_first': 'Please register the publisher first'
     }
   },
   'pop_voted': {

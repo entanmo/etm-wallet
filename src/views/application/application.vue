@@ -21,9 +21,9 @@
                       <a-avatar class="card-avatar" slot="avatar" :src="item.avatar" size="large" />
                       <div class="meta-content" :title="item.content" slot="description">{{item.content}}</div>
                     </a-card-meta>
-                    <a href="http://epony.cn/" target='_blank' slot="actions">{{$t('application.app.btn01')}}</a>
-                    <a slot="actions">{{$t('application.app.btn02')}}</a>
-                    <a slot="actions">{{$t('application.app.btn03')}}</a>
+                    <a href="javascript:;" @click="link(item.href)"  slot="actions">{{item.enter}}</a>
+                    <a href="javascript:;" @click="link(item.recharge)" slot="actions">{{$t('application.app01.btn02')}}</a>
+                    <a href="javascript:;" @click="link(item.withdraw)" slot="actions">{{$t('application.app01.btn03')}}</a>
                   </a-card>
                 </template>
               </a-list-item>
@@ -41,17 +41,48 @@
 </template>
 <script>
 import noData from '@/components/nodata/nodata'
+import {loginDapp} from '@/api/funds'
+import {mapState} from 'vuex'
 export default {
   data () {
     return {
       dataSource: [
         {
-          title: i18n.t('application.app.title'),
+          title: i18n.t('application.app01.title'),
+          href: 'http://epony.cn/',
+          enter: i18n.t('application.app01.btn01'),
           avatar: 'static/epony.png',
-          content: i18n.t('application.app.content')
+          content: i18n.t('application.app01.content')
+        }, {
+          title: i18n.t('application.app02.title'),
+          href: 'http://192.168.2.47:6255/#/',
+          enter: i18n.t('application.app02.btn01'),
+          withdraw: 'http://192.168.2.47:6255/#/withdraw',
+          recharge: 'http://192.168.2.47:6255/#/recharge',
+          avatar: 'static/shop.png',
+          content: i18n.t('application.app02.content')
         }, {}
       ],
       tableData: []
+    }
+  },
+  computed: {
+    ...mapState({
+      secret: state => state.user.secret || '',
+      address: state => state.user.accountInfo.address || ''
+    })
+  },
+  methods: {
+    async link (href) {
+      try {
+        const result = await loginDapp({secret: this.secret, address: this.address})
+        if (result && result.data.errno === 0) {
+          let token = result.data.data.token
+          window.location.href = href + '?token=' + token
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   components: {
@@ -66,7 +97,7 @@ export default {
   min-height: 600px;
   .tab{
   position: relative;
-  height: 500px;
+  min-height: 500px;
   }
 }
 .card-list{

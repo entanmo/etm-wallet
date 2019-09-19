@@ -309,6 +309,7 @@ export default {
             this.issuersInfo()
           }, 4000)
         } else {
+          this.loadingBtn = false
           this.modal2Visible = false
           this.visible1 = false
           this.params = {}
@@ -327,6 +328,9 @@ export default {
             message: i18n.t('issuing_assets.tip.err_params'),
             description: i18n.t('issuing_assets.tip.insufficient_balance')
           })
+          setTimeout(() => {
+            this.loadingBtn = false
+          }, 500)
         } else if (res && res.data.effectivity) {
           this.params = {type: 9, secret: this.secret, fee: 10000000000, ...options}
           if (this.secondSignature) {
@@ -382,7 +386,14 @@ export default {
       this.currentColumn = record
     },
     registeredAssets () {
-      this.visible2 = true
+      if (!this.publisher.name) {
+        this.$notification.info({
+          message: i18n.t('tip.title'),
+          description: i18n.t('issuing_assets.tip.resgister_publisher_first')
+        })
+      } else {
+        this.visible2 = true
+      }
     },
     cancel () {
       this.visible = false
@@ -422,6 +433,7 @@ export default {
   .assets{
     .table{
       position: relative;
+      min-height: 500px;
     }
     .part-left{
       padding-right: 12px;
