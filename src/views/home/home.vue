@@ -26,11 +26,15 @@
   </a-layout>
 </template>
 <script>
+import Vue from 'vue'
 import {mapActions} from 'vuex'
 import {setup} from '@/lang'
 import drawer from '@/components/drawer/drawer'
 import siderMenu from '@/components/sider-menu/sider-menu'
 import { setTimeout } from 'timers'
+import {Layout} from 'ant-design-vue'
+Vue.use(Layout)
+
 export default {
   data () {
     return {
@@ -80,6 +84,7 @@ export default {
   },
   components: {
     drawer,
+    Layout,
     'sider-menu': siderMenu
   }
 }

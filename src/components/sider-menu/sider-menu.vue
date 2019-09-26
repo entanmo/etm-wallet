@@ -47,6 +47,9 @@
     </a-layout-sider>
 </template>
 <script>
+import Vue from 'vue'
+import {Menu} from 'ant-design-vue'
+Vue.use(Menu)
 export default {
   props: {
     collapsed: {

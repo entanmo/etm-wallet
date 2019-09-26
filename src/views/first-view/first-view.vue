@@ -75,6 +75,10 @@ import Tab from '@/components/tab/tab'
 import {blocks} from '@/utils/mixins'
 import Vue from 'vue'
 import Viser from 'viser-vue'
+// qrcode
+import VueQrcode from '@xkeshi/vue-qrcode'
+Vue.component(VueQrcode.name, VueQrcode)
+
 Vue.use(Viser)
 export default {
   mixins: [blocks],

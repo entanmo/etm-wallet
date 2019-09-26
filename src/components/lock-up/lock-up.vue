@@ -81,6 +81,8 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import {Alert} from 'ant-design-vue'
 import {mapState} from 'vuex'
 import { convertTime } from '@/utils/gen'
 import { unit } from '@/utils/utils'
@@ -88,6 +90,7 @@ import noData from '@/components/nodata/nodata'
 import {allLock, effectAccount} from '@/api/account'
 import {transactionSigned} from '@/api/trs'
 import popPassword from '@/components/pop-password/pop-password'
+Vue.use(Alert)
 const columns = [{
   title: i18n.t('lock_up.colums.th01'),
   dataIndex: 'timestamp',

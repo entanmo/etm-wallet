@@ -2,7 +2,7 @@
   <div class="account">
     <div class="list">
         <ul>
-          <li><span>{{$t('account.info.balance')}}：</span><span>{{unit(accounts.balance).toFixed(2)}} ETM</span></li>
+          <li><span>{{$t('account.info.balance')}}：</span><span>{{unit(accounts.balance)}} ETM</span></li>
           <li class="phone"><span>{{$t('account.info.address')}}：</span><span id="address" >{{accounts.address}}<a-icon title="复制"  type="copy" class="copy copyAddress"  data-clipboard-target="#address" @click="copyAddress" ></a-icon></span></li>
           <li><span>{{$t('account.info.secondSecret')}}：</span><span>{{accounts.secondSignature ? $t('account.secretStatus.hasSet') : $t('account.secretStatus.notSet')}}</span></li>
           <!-- <li><span>{{$t('account.info.status')}}：</span><span>{{$t("account.lockedStatus.notSet")}}</span></li> -->

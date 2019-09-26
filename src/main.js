@@ -10,8 +10,6 @@ import './assets/css/reset.css'
 
 import './components.js'
 
-// qrcode
-import VueQrcode from '@xkeshi/vue-qrcode'
 import store from '@/store'
 import './permission'
 Vue.prototype.$storage = new Storage()
@@ -24,7 +22,6 @@ Vue.use(new VueSocketIO({
     mutationPrefix: 'SOCKET_'
   }
 }))
-Vue.component(VueQrcode.name, VueQrcode)
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */

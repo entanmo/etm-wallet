@@ -3,8 +3,8 @@ import {
   // Affix,
   // Anchor,
   // AutoComplete,
-  Alert,
-  Avatar,
+  // Alert,
+  // Avatar,
   // BackTop,
   // Badge,
   // Breadcrumb,
@@ -23,11 +23,11 @@ import {
   Icon,
   Input,
   InputNumber,
-  Layout,
-  List,
+  // Layout,
+  // List,
   // LocaleProvider,
   message,
-  Menu,
+  // Menu,
   Modal,
   notification,
   Pagination,
@@ -38,7 +38,7 @@ import {
   // Rate,
   Row,
   Select,
-  Slider,
+  // Slider,
   Spin,
   // Steps,
   Switch,
@@ -47,7 +47,7 @@ import {
   // Tree,
   // TreeSelect,
   Tabs,
-  Tag,
+  // Tag,
   // TimePicker,
   // Timeline,
   Tooltip
@@ -69,8 +69,8 @@ Vue.prototype.$confirm = Modal.confirm
 // Vue.use(Affix)
 // Vue.use(Anchor)
 // Vue.use(AutoComplete)
-Vue.use(Alert)
-Vue.use(Avatar)
+// Vue.use(Alert)
+// Vue.use(Avatar)
 // Vue.use(BackTop)
 // Vue.use(Badge)
 // Vue.use(Breadcrumb)
@@ -90,10 +90,10 @@ Vue.use(Form)
 Vue.use(Icon)
 Vue.use(Input)
 Vue.use(InputNumber)
-Vue.use(Layout)
-Vue.use(List)
+// Vue.use(Layout)
+// Vue.use(List)
 // Vue.use(LocaleProvider)
-Vue.use(Menu)
+// Vue.use(Menu)
 Vue.use(Modal)
 Vue.use(Pagination)
 // Vue.use(Popconfirm)
@@ -103,7 +103,7 @@ Vue.use(Radio)
 // Vue.use(Rate)
 Vue.use(Row)
 Vue.use(Select)
-Vue.use(Slider)
+// Vue.use(Slider)
 Vue.use(Spin)
 // Vue.use(Steps)
 Vue.use(Switch)
@@ -112,7 +112,7 @@ Vue.use(Table)
 // Vue.use(Tree)
 // Vue.use(TreeSelect)
 Vue.use(Tabs)
-Vue.use(Tag)
+// Vue.use(Tag)
 // Vue.use(TimePicker)
 // Vue.use(Timeline)
 Vue.use(Tooltip)

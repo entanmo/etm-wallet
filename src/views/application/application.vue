@@ -43,6 +43,11 @@
 import noData from '@/components/nodata/nodata'
 import {loginDapp} from '@/api/funds'
 import {mapState} from 'vuex'
+import Vue from 'vue'
+import {Avatar, List} from 'ant-design-vue'
+Vue.use(Avatar)
+Vue.use(List)
+
 export default {
   data () {
     return {
@@ -55,10 +60,10 @@ export default {
           content: i18n.t('application.app01.content')
         }, {
           title: i18n.t('application.app02.title'),
-          href: 'http://192.168.2.47:6255/#/',
+          href: 'http://47.111.165.42:8088/#/',
           enter: i18n.t('application.app02.btn01'),
-          withdraw: 'http://192.168.2.47:6255/#/withdraw',
-          recharge: 'http://192.168.2.47:6255/#/recharge',
+          withdraw: 'http://47.111.165.42:8088/#/withdraw',
+          recharge: 'http://47.111.165.42:8088/#/recharge',
           avatar: 'static/shop.png',
           content: i18n.t('application.app02.content')
         }, {}
