@@ -43,7 +43,8 @@ export default{
       new TWEEN.Tween({tweeningValue: startValue})
         .to({tweeningValue: endValue}, this.speed)
         .onUpdate(function (object) {
-          vm.tweeningValue = object.tweeningValue.toFixed(vm.point)
+          // vm.tweeningValue = object.tweeningValue.toFixed(vm.point)
+          vm.tweeningValue = Math.floor(object.tweeningValue * Math.pow(10, vm.point)) / Math.pow(10, vm.point)
         })
         .start()
       animate()

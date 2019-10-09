@@ -81,7 +81,7 @@
       :wrapperCol="{ span: 12, offset: 2 }"
       :labelCol="labelCol"
       >
-      <a-button @click="check" type='primary' >
+      <a-button @click="check" type='primary' :loading="loading">
         {{$t('transfer.submitBtn')}}
       </a-button>
     </a-form-item>
@@ -120,7 +120,8 @@ export default {
       message: '',
       type: '',
       modal2Visible: false,
-      data: []
+      data: [],
+      loading: false
     }
   },
   computed: {
@@ -190,8 +191,10 @@ export default {
             } else if (this.secondSignature) {
               this.modal2Visible = true
             } else if (this.type !== 'ETM') {
+              this.loading = true
               this.issuerNameTransaction()
             } else {
+              this.loading = true
               this._transactions()
             }
           }
@@ -211,13 +214,18 @@ export default {
     async issuerNameTransaction (params = {type: 14, secret: this.secret, recipientId: this.recipientId, fee: 10000000, message: this.message, currency: this.type, amount: this.AmountBigger(this.amount, this.precision)}) {
       try {
         const result = await transactionSigned(params)
+
         if (result && result.data.success) {
+          this.loading = false
           this.modal2Visible = false
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.transfer_success')
           })
         }
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
       } catch (error) {
         console.log(error)
       }
@@ -233,12 +241,16 @@ export default {
       try {
         const result = await transactionSigned(params)
         if (result && result.data.success) {
+          this.loading = false
           this.modal2Visible = false
           this.$notification.info({
             message: i18n.t('tip.title'),
             description: i18n.t('tip.transfer_success')
           })
         }
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
       } catch (err) {
         console.log(err)
       }

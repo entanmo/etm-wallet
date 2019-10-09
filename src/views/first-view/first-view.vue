@@ -115,7 +115,7 @@ export default {
       return this.$store.state.user.accountInfo.address
     },
     balance () {
-      return unit(this.accounts.balance).toFixed(2) * 1 || 0
+      return unit(this.accounts.balance) * 1 || 0
     },
     publicKey () {
       const data = (this.$storage.getItem('etmUse', false) || this.$storage.getItem('etmUse', true)).account.publicKey
