@@ -457,10 +457,11 @@ export default {
     'title': '注册资产',
     'submit': '提交',
     'cancel': '取消',
+    'tipName': '名称必须为大写英文字母且不超过五位',
     'form': {
       'name': {
         'label': '名称',
-        'msg': '最多五个大写英文字符'
+        'msg': '请输入最多五位的大写英文字母的名称'
       },
       'desc': {
         'label': '简介',
@@ -473,7 +474,7 @@ export default {
       },
       'precision': {
         'label': '精度',
-        'err': '0~16位小数',
+        'err': '范围 0~16',
         'msg': '请输入精度'
       },
       'strategy': {

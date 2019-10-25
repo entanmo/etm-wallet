@@ -32,7 +32,7 @@
             <span>{{$t("router.transfer")}}</span>
         </router-link>
         <router-link  class="ant-menu-item" role="menuitem" tag="li"  to="/issuing-assets">
-            <a-icon type="appstore" />
+            <a-icon type="money-collect" />
             <span>{{$t("router.assets")}}</span>
         </router-link>
         <router-link  class="ant-menu-item" role="menuitem" tag="li"  to="/application">

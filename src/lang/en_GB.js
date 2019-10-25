@@ -455,6 +455,7 @@ export default {
     'title': 'Registered Assets',
     'submit': 'Submit',
     'cancel': 'Cancel',
+    'tipName': 'Name must be capitalized and no more than five digits',
     'form': {
       'name': {
         'label': 'Name',
@@ -471,7 +472,7 @@ export default {
       },
       'precision': {
         'label': 'Precision',
-        'err': '0~16 decimal places',
+        'err': '0~16 ',
         'msg': 'Please enter the precision'
       },
       'strategy': {

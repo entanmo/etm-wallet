@@ -17,7 +17,6 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         :label="$t('create_assets.form.name.label')"
-
         >
         <div  class="setName">
         <span>{{name}}. </span>
@@ -61,7 +60,8 @@
         <a-input type="number"
         v-decorator="[
           'precision',
-          {rules: [{ required: true, message :$t('create_assets.form.precision.err'),whitespace: true }]}
+          {rules: [{ required: true, message :$t('create_assets.form.precision.err'),whitespace: true, validator:(rule,value,cb) => (value <= 16 && value >=0 ? cb() : cb(false)) }],
+          },
         ]"
         :placeholder="$t('create_assets.form.precision.msg')" />
         </a-form-item>
@@ -149,6 +149,13 @@ export default {
           values.allowBlacklist = +this.blacklist
           values.allowWhitelist = +this.whitelist
           values.allowWriteoff = +this.logout
+          if (!/[A-Z]{1,5}/g.test(values.name)) {
+            this.$notification.info({
+              message: i18n.t('tip.title'),
+              description: i18n.t('create_assets.tipName')
+            })
+            return false
+          }
           values.name = `${this.name}.${values.name}`
           values.strategy = ''
           if (this.secondSignature) {
