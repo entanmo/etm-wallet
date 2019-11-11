@@ -14,7 +14,19 @@
                     <a-icon type="plus" />  {{$t('application.create_new')}}
                   </a-button>
                 </template>
-                <template v-else>
+                 <template v-if="item.href==='http://epony.cn/'">
+                  <a-card :hoverable="true">
+                    <a-card-meta >
+                      <div class="title" style="margin-bottom: 3px" slot="title">{{item.title}}</div>
+                      <a-avatar class="card-avatar" slot="avatar" :src="item.avatar" size="large" />
+                      <div class="meta-content" :title="item.content" slot="description">{{item.content}}</div>
+                    </a-card-meta>
+                    <a :href="item.href" target="_blank"  slot="actions">{{item.enter}}</a>
+                    <a href="javascript:;"  slot="actions">{{$t('application.app01.btn02')}}</a>
+                    <a href="javascript:;" slot="actions">{{$t('application.app01.btn03')}}</a>
+                  </a-card>
+                </template>
+                <template v-if="item.withdraw">
                   <a-card :hoverable="true">
                     <a-card-meta >
                       <div class="title" style="margin-bottom: 3px" slot="title">{{item.title}}</div>
