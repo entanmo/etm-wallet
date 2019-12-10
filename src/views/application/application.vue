@@ -64,21 +64,23 @@ export default {
   data () {
     return {
       dataSource: [
-        {
-          title: i18n.t('application.app01.title'),
-          href: 'http://epony.cn/',
-          enter: i18n.t('application.app01.btn01'),
-          avatar: 'static/epony.png',
-          content: i18n.t('application.app01.content')
-        }, {
-          title: i18n.t('application.app02.title'),
-          href: 'http://47.111.165.42:8088/#/',
-          enter: i18n.t('application.app02.btn01'),
-          withdraw: 'http://47.111.165.42:8088/#/withdraw',
-          recharge: 'http://47.111.165.42:8088/#/recharge',
-          avatar: 'static/shop.png',
-          content: i18n.t('application.app02.content')
-        }, {}
+        // {
+        //   title: i18n.t('application.app01.title'),
+        //   href: 'http://epony.cn/',
+        //   enter: i18n.t('application.app01.btn01'),
+        //   avatar: 'static/epony.png',
+        //   content: i18n.t('application.app01.content')
+        // },
+        //  {
+        //   title: i18n.t('application.app02.title'),
+        //   href: 'http://47.111.165.42:8088/#/',
+        //   enter: i18n.t('application.app02.btn01'),
+        //   withdraw: 'http://47.111.165.42:8088/#/withdraw',
+        //   recharge: 'http://47.111.165.42:8088/#/recharge',
+        //   avatar: 'static/shop.png',
+        //   content: i18n.t('application.app02.content')
+        // },
+        {}
       ],
       tableData: []
     }

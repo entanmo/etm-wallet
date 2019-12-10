@@ -212,7 +212,7 @@ export default {
       this.form.validateFields(
         (err, values) => {
           if (!err) {
-            if (unit(this.balance) < 500) {
+            if (unit(this.balance) < 1000) {
               this.$notification.info({
                 message: i18n.t('tip.title'),
                 description: i18n.t('tip.balance_enough')

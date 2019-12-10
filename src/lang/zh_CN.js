@@ -287,7 +287,7 @@ export default {
     },
     'note': {
       'label': '注意',
-      'msg': '注册需支付 500 ETM'
+      'msg': '注册需支付 1000 ETM'
     },
     'tip': {
       'title': '确认注销矿工?',

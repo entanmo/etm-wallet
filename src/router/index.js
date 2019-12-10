@@ -109,34 +109,33 @@ export default new Router({
         }
       ]
 
-    }, {
-      path: '/miners-list',
-      component: Home,
-      redirect: '/miners-list',
-      children: [
-        {
-          path: '',
-          name: 'MinersList',
-          component: () => import('@/views/miners-list/miners-list'),
-          meta: {title: 'SCV矿工列表'}
-        }
-      ]
-
     },
-    {
-      path: '/issuing-assets',
-      component: Home,
-      redirect: '/issuing-assets',
-      children: [
-        {
-          path: '',
-          name: 'MinersList',
-          component: () => import('@/views/issuing-assets/issuing-assets'),
-          meta: {title: 'assets'}
-        }
-      ]
-
-    },
+    //  {
+    //   path: '/miners-list',
+    //   component: Home,
+    //   redirect: '/miners-list',
+    //   children: [
+    //     {
+    //       path: '',
+    //       name: 'MinersList',
+    //       component: () => import('@/views/miners-list/miners-list'),
+    //       meta: {title: 'SCV矿工列表'}
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/issuing-assets',
+    //   component: Home,
+    //   redirect: '/issuing-assets',
+    //   children: [
+    //     {
+    //       path: '',
+    //       name: 'MinersList',
+    //       component: () => import('@/views/issuing-assets/issuing-assets'),
+    //       meta: {title: 'assets'}
+    //     }
+    //   ]
+    // },
     {
       path: '*',
       redirect: '/404'
