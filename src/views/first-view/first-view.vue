@@ -14,7 +14,7 @@
           </a-col>
           <a-col class="etm-info-li last" :span="8">
             <p>{{$tc("first-view.information",2)}}</p>
-            <p>V{{accounts.version }}</p>
+            <p>V1.1.0</p>
           </a-col>
       </a-row>
     </div>
